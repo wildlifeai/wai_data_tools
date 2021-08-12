@@ -1,4 +1,5 @@
 
+import logging
 from pathlib import Path
 from typing import Any, Tuple, List
 
@@ -6,6 +7,7 @@ import imageio
 import numpy as np
 import pandas as pd
 
+import setup_logging
 import read_excel
 
 
@@ -27,19 +29,23 @@ def calculate_frames_in_timespan(t_start: np.ndarray, t_end: np.ndarray, fps: fl
     :return: array with frame indices
     """
 
+    logging.info("Calculating start and end frame.")
+
     t_frame = 1 / fps
 
     frame_start = t_start / t_frame
 
     if frame_start % 1 > 0:
-        # TODO: add log statement here
+        logging.info("Remainder when calculating the index for start frame is not zero. Performing floor operation.")
         frame_start = np.floor(frame_start)
 
     frame_end = t_end / t_frame
 
     if frame_end % 1 > 0:
-        # TODO: add log statement here
+        logging.info("Remainder when calculating the index for end frame is not zero. Performing ceiling operation.")
         frame_end = np.ceil(frame_end)
+
+    logging.info("Frames with label start at frame %s and ends at %s", frame_start, frame_end)
 
     return np.arange(frame_start, frame_end)
 
@@ -55,6 +61,7 @@ def filter_images_in_video(video_reader: Any,
              and images for frames that don't contain the label.
     """
 
+    logging.info("Filtering frames in video to label and non label frames")
     label_list = []
     no_label_list = []
     for frame_ind, frame_img in enumerate(video_reader):
@@ -74,6 +81,9 @@ def split_video_file_to_frame_files(video_filepath: Path,
     :param excel_dataframe: Dataframe with file information
     :param new_dir: Path to directory to store new data
     """
+
+    logging.info("Splitting video file to frame files...")
+
     reader = get_video_reader(video_filepath=video_filepath)
     meta = reader.get_meta_data()
 
@@ -86,12 +96,14 @@ def split_video_file_to_frame_files(video_filepath: Path,
 
     label_list, no_label_list = filter_images_in_video(video_reader=reader, frames_with_label=label_frames)
 
+    logging.info("Saving label frames")
     for frame_ind, frame_img in label_list:
         output_filename = f"{video_filepath.stem}___{frame_ind}.jpeg"
         output_label_dir = new_dir / video_filepath.stem / "label"
         output_label_dir.mkdir(parents=True, exist_ok=True)
         imageio.imwrite(output_label_dir / output_filename, frame_img)
 
+    logging.info("Saving non label frames")
     for frame_ind, frame_img in no_label_list:
         output_filename = f"{video_filepath.stem}___{frame_ind}.jpeg"
         output_label_dir = new_dir / video_filepath.stem / "no_label"
@@ -110,27 +122,33 @@ def split_video_files_to_frame_files(video_dir: Path,
     :param new_dir: Path to directory to store new data
     :param label: Label to use when filtering the dataframe
     """
-    excel_df_dict = read_excel.read_excel_to_dataframe(excel_file_path=excel_path)
 
+    logging.info("Reading and formatting excel dataframe")
+    excel_df_dict = read_excel.read_excel_to_dataframe(excel_file_path=excel_path)
     excel_df = read_excel.append_rows_from_dataframe_dictionary(dataframe_dict=excel_df_dict)
 
+    logging.info("Filtering dataframe based on label %s", label)
     single_label_df = excel_df[excel_df["label"] == label]
 
     video_filepaths = video_dir.glob("*.mjpg")
-
     for video_filepath in video_filepaths:
-        print(f"Now processing: {video_filepath.name}")
-        # TODO: add logging here
+        logging.info("Now processing file %s", video_filepath.name)
         split_video_file_to_frame_files(video_filepath=video_filepath,
                                         excel_dataframe=single_label_df,
                                         new_dir=new_dir)
 
 
-new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\split-test")
-excel_path = Path(r"C:\Users\david\Desktop\wildlife.ai\ww_labels.xlsx")
-video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\Dataset\weta")
+def main():
+    setup_logging.setup_logging()
+    new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\split-test")
+    excel_path = Path(r"C:\Users\david\Desktop\wildlife.ai\ww_labels.xlsx")
+    video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\Dataset\weta")
 
-split_video_files_to_frame_files(video_dir=video_dir,
-                                 excel_path=excel_path,
-                                 new_dir=new_dir,
-                                 label="weta")
+    split_video_files_to_frame_files(video_dir=video_dir,
+                                     excel_path=excel_path,
+                                     new_dir=new_dir,
+                                     label="weta")
+
+
+if __name__ == "__main__":
+    main()
