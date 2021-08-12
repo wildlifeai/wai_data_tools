@@ -9,6 +9,8 @@ def setup_logging():
     """
     logging_dir = Path(r'C:\git\wildlife_ai_file_filter\logs')
 
-    logging.basicConfig(filename=str(logging_dir / datetime.now().strftime('wildlife_log_%H_%M_%d_%m_%Y.log')),
+    logging_dir.mkdir(exist_ok=True)
+
+    logging.basicConfig(filename=str(logging_dir / datetime.datetime.now().strftime('wildlife_log_%H_%M_%d_%m_%Y.log')),
                         encoding='utf-8',
                         level=logging.DEBUG)
