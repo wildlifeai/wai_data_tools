@@ -90,6 +90,12 @@ class Callbacks:
         plt.pause(0.001)
 
     def toggle_label(self, event):
+
+        logging.info("Toggling Frame %s from %s to %s",
+                     self.index,
+                     self.frame_dict[self.index]["label"],
+                     not self.frame_dict[self.index]["label"])
+
         self.frame_dict[self.index]["label"] = not self.frame_dict[self.index]["label"]
         self.ax_togg.set_title(f"Class: {self.frame_dict[self.index]['label']}")
         plt.pause(0.001)
@@ -107,6 +113,8 @@ class Callbacks:
         new_video_path = self.new_dir / video_name
         label_dir = new_video_path / "label"
         no_label_dir = new_video_path / "no_label"
+
+        logging.info("Saving frames to %s", new_video_path)
 
         label_dir.mkdir(exist_ok=True, parents=True)
         no_label_dir.mkdir(exist_ok=True, parents=True)
@@ -155,7 +163,9 @@ def main():
     setup_logging.setup_logging()
     frame_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\split-test\H_210228_04_00612050")
     new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\cleaned_dataset")
+
     frame_dict = load_frames(frame_dir=frame_dir)
+
     manual_annotation_plot(frame_dict=frame_dict,
                            frame_dir=frame_dir,
                            new_dir=new_dir)
