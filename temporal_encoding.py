@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 def temporal_encoding(frame_dicts, window_size=-1):
     new_frame_dicts = {}
+
     # skip first two because we need two previous frames for encoding
     for frame_ind in range(2, len(frame_dicts)):
 
@@ -59,6 +60,26 @@ def temporal_encoding(frame_dicts, window_size=-1):
             "label": frame_dicts[frame_ind]["label"]
         }
         new_frame_dicts[frame_ind] = new_frame_dict
+    return new_frame_dicts
+
+
+def create_grayscale_bg_removed(frame_dicts):
+    pass
+
+
+def create_3_frame_rgb(frame_dicts):
+    new_frame_dicts = {}
+
+    # skip first two because we need two previous frames for encoding
+    for curr_frame_ind in range(2, len(frame_dicts)):
+        transformed_im = np.zeros_like(frame_dicts[curr_frame_ind]["img"]).astype(float)
+        for frame_increment in range(0, 3):
+            transformed_im[:, :, frame_increment] = frame_dicts[curr_frame_ind - frame_increment]["img"][:, :, 0]
+        new_frame_dict = {
+            "img": transformed_im,
+            "label": frame_dicts[curr_frame_ind]["label"]
+        }
+        new_frame_dicts[curr_frame_ind] = new_frame_dict
     return new_frame_dicts
 
 
