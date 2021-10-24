@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+Script for classifying images on deployed devices with edge impulse using its Python SDK.
+"""
+
 import cv2
 import os
 import sys, getopt
@@ -8,8 +12,10 @@ from edge_impulse_linux.image import ImageImpulseRunner
 
 runner = None
 
+
 def help():
     print('python classify-image.py <path_to_model.eim> <path_to_image.jpg>')
+
 
 def main(argv):
     try:
@@ -71,6 +77,7 @@ def main(argv):
         finally:
             if (runner):
                 runner.stop()
+
 
 if __name__ == "__main__":
    main(sys.argv[1:])
