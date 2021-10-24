@@ -47,8 +47,40 @@ def load_frames(frame_dir: Path) -> Dict[int, Dict[str, Union[bool, np.ndarray]]
     return frame_dict
 
 
-class Callbacks:
+def save_frames(frame_dir: Path,
+                new_dir: Path,
+                frames_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]]):
+    """
+    Saves frames to new file structure.
+    :param frame_dir: Path to directory to frame images
+    :param new_dir: Path to new directory to save frame images in
+    :param frames_dict: Dictionary where key is frame index and value is a dictionary with the label class
+                        and frame image
+    """
+    video_name = frame_dir.stem
+    new_video_path = new_dir / video_name
+    label_dir = new_video_path / "label"
+    no_label_dir = new_video_path / "no_label"
 
+    logging.info("Saving frames to %s", new_video_path)
+
+    label_dir.mkdir(exist_ok=True, parents=True)
+    no_label_dir.mkdir(exist_ok=True, parents=True)
+
+    for frame_ind, f_dict in frames_dict.items():
+        frame_filename = f"{video_name}___{frame_ind}.jpeg"
+        if f_dict["label"]:
+            total_path = label_dir / frame_filename
+        else:
+            total_path = no_label_dir / frame_filename
+        imageio.imwrite(total_path, f_dict["img"])
+    print(f"Saved! {video_name}")
+
+
+class Callbacks:
+    """
+    Class for handling callbacks for annotation GUI.
+    """
     def __init__(self,
                  frame_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]],
                  ax_img,
@@ -66,7 +98,6 @@ class Callbacks:
         self.max_index = max(self.frame_dict.keys())
 
     def next(self, event):
-
         if self.index < self.max_index:
             self.index += 1
         else:
@@ -75,7 +106,6 @@ class Callbacks:
         self.draw_img()
 
     def prev(self, event):
-
         if self.index > 0:
             self.index -= 1
         else:
@@ -90,7 +120,6 @@ class Callbacks:
         plt.pause(0.001)
 
     def toggle_label(self, event):
-
         logging.info("Toggling Frame %s from %s to %s",
                      self.index,
                      self.frame_dict[self.index]["label"],
@@ -109,24 +138,9 @@ class Callbacks:
             self.next(event=None)
 
     def save_frames(self, event):
-        video_name = self.frame_dir.stem
-        new_video_path = self.new_dir / video_name
-        label_dir = new_video_path / "label"
-        no_label_dir = new_video_path / "no_label"
-
-        logging.info("Saving frames to %s", new_video_path)
-
-        label_dir.mkdir(exist_ok=True, parents=True)
-        no_label_dir.mkdir(exist_ok=True, parents=True)
-
-        for frame_ind, f_dict in self.frame_dict.items():
-            frame_filename = f"{video_name}___{frame_ind}.jpeg"
-            if f_dict["label"]:
-                total_path = label_dir / frame_filename
-            else:
-                total_path = no_label_dir / frame_filename
-            imageio.imwrite(total_path, f_dict["img"])
-        print("Saved!")
+        save_frames(frame_dir=self.frame_dir,
+                    new_dir=self.new_dir,
+                    frames_dict=self.frame_dict)
 
 
 def manual_annotation_plot(frame_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]],
@@ -161,14 +175,16 @@ def manual_annotation_plot(frame_dict: Dict[int, Dict[str, Union[bool, np.ndarra
 
 def main():
     setup_logging.setup_logging()
-    frame_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\split-test\H_210228_04_00612050")
-    new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\cleaned_dataset")
+    video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\pessimistic-dataset")
+    for frame_dir in video_dir.iterdir():
 
-    frame_dict = load_frames(frame_dir=frame_dir)
+        new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\balanced-dataset")
 
-    manual_annotation_plot(frame_dict=frame_dict,
-                           frame_dir=frame_dir,
-                           new_dir=new_dir)
+        frame_dict = load_frames(frame_dir=frame_dir)
+
+        manual_annotation_plot(frame_dict=frame_dict,
+                               frame_dir=frame_dir,
+                               new_dir=new_dir)
 
 
 if __name__ == "__main__":

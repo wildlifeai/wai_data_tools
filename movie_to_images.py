@@ -140,14 +140,14 @@ def split_video_files_to_frame_files(video_dir: Path,
 
 def main():
     setup_logging.setup_logging()
-    new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\split-test")
-    excel_path = Path(r"C:\Users\david\Desktop\wildlife.ai\ww_labels.xlsx")
-    video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\Dataset\weta")
+    new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\nothing-video-frames")
+    excel_path = Path(r"C:\Users\david\Desktop\wildlife.ai\raw-data\ww_labels.xlsx")
+    video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\background-data\small-dataset")
 
     split_video_files_to_frame_files(video_dir=video_dir,
                                      excel_path=excel_path,
                                      new_dir=new_dir,
-                                     label="weta")
+                                     label="nothing")
 
 
 if __name__ == "__main__":

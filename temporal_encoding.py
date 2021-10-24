@@ -133,7 +133,7 @@ def main():
         save_frames(frame_dir=frame_dir,
                     new_dir=Path(
                         r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\temporal-encoding-trials\ws_3\background-test"),
-                    frame_dict=new_frame_dicts)
+                    frames_dict=new_frame_dicts)
 
 
 if __name__ == "__main__":
