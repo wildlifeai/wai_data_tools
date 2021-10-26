@@ -113,7 +113,7 @@ def create_3_frame_rgb(frame_dicts: Dict[int, Dict[str, Union[bool, np.ndarray]]
         for frame_increment in range(0, 3):
             transformed_im[:, :, frame_increment] = frame_dicts[curr_frame_ind - frame_increment]["img"][:, :, 0]
         new_frame_dict = {
-            "img": transformed_im,
+            "img": transformed_im.astype(np.uint8),
             "label": frame_dicts[curr_frame_ind]["label"]
         }
         new_frame_dicts[curr_frame_ind] = new_frame_dict
@@ -128,11 +128,11 @@ def main():
         print(frame_dir.name)
         frame_dicts = load_frames(frame_dir=frame_dir)
 
-        new_frame_dicts = temporal_encoding(frame_dicts=frame_dicts, window_size=3)
+        new_frame_dicts = temporal_encoding(frame_dicts=frame_dicts, window_size=40, rgb=True)
 
         save_frames(frame_dir=frame_dir,
                     new_dir=Path(
-                        r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\temporal-encoding-trials\ws_3\background-test"),
+                        r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\temporal-encoding-trials\rgb_40\background-test"),
                     frames_dict=new_frame_dicts)
 
 
