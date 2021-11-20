@@ -121,7 +121,7 @@ def create_3_frame_rgb(frame_dicts: Dict[int, Dict[str, Union[bool, np.ndarray]]
 
 
 def main():
-    data_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\clean-lens\background-test")
+    data_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\rat-cleaned\background-test")
 
     frame_dirs = list(data_dir.glob("*"))
     for frame_dir in frame_dirs:
@@ -132,7 +132,7 @@ def main():
 
         save_frames(frame_dir=frame_dir,
                     new_dir=Path(
-                        r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\temporal-encoding-trials\rgb_40\background-test"),
+                        r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\temporal-encoding-trials\rat_rgb_40\background-test"),
                     frames_dict=new_frame_dicts)
 
 

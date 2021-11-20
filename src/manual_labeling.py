@@ -175,10 +175,10 @@ def manual_annotation_plot(frame_dict: Dict[int, Dict[str, Union[bool, np.ndarra
 
 def main():
     setup_logging.setup_logging()
-    video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\pessimistic-dataset")
+    video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\rat")
     for frame_dir in video_dir.iterdir():
 
-        new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\balanced-dataset")
+        new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\rat-cleaned")
 
         frame_dict = load_frames(frame_dir=frame_dir)
 

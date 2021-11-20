@@ -90,6 +90,7 @@ def split_video_file_to_frame_files(video_filepath: Path,
     video_row = excel_dataframe[excel_dataframe["filename"] == video_filepath.name]
     if video_row.shape[0] > 1:
         raise ValueError("More than 1 entry found that matches the query in the dataframe")
+
     label_frames = calculate_frames_in_timespan(t_start=video_row["start"].values,
                                                 t_end=video_row["end"].values,
                                                 fps=meta["fps"])
@@ -140,14 +141,14 @@ def split_video_files_to_frame_files(video_dir: Path,
 
 def main():
     setup_logging.setup_logging()
-    new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\nothing-video-frames")
+    new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\rat")
     excel_path = Path(r"C:\Users\david\Desktop\wildlife.ai\raw-data\ww_labels.xlsx")
-    video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\background-data\small-dataset")
+    video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\raw-data-label-sorted\rat")
 
     split_video_files_to_frame_files(video_dir=video_dir,
                                      excel_path=excel_path,
                                      new_dir=new_dir,
-                                     label="nothing")
+                                     label="rat")
 
 
 if __name__ == "__main__":
