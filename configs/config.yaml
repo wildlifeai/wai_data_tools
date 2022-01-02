@@ -1,0 +1,12 @@
+paths:
+  input_dir: ./path/to/input/data
+  output_dir: ./path/to/store/result
+processing:
+  labels:
+    - label1
+    - label2
+  background-labels:
+    - bglabel1
+    - bglabel2
+  transformations:
+    img_size: (48, 48)
