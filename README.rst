@@ -34,10 +34,17 @@ wai_data_tools
 ==============
 
 
-    Add a short description here!
+    Tools and scripts for manipulating the wildlife AI camera data for working with Edge Impulse.
 
 
-A longer description of your project goes here...
+This repository contains good tools for formatting data for the Weta Watcher project.
+Typically you would want to use this package if you:
+ - Want to format the file structure of your image files
+ - Create dataset for Edge impulse image classification models
+ - Split video files to image files
+ - Re-label incorrect or missing images
+ - Apply preprocessing transformations(TODO)
+ - Convert structure to a format which is easier to upload to Edge Impulse
 
 
 .. _pyscaffold-notes:
