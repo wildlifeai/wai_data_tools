@@ -7,9 +7,9 @@ import shutil
 
 
 # Set this to the folder where data is stored.
-CURRENT_DATA_DIR = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\temporal-encoding-trials\rat_rgb_40\test")
+CURRENT_DATA_DIR = Path(r"C:\Users\david\Desktop\wildlife.ai\label-mix-big\images\train")
 # Set this to the folder you want the converted file structure to be stored.
-UPLOAD_DATA_DIR = Path(r"C:\Users\david\Desktop\wildlife.ai\to-upload\rat_rgb_40\test")
+UPLOAD_DATA_DIR = Path(r"C:\Users\david\Desktop\wildlife.ai\to-upload\bg-label-mix-big\train")
 
 
 for frame_dir in CURRENT_DATA_DIR.iterdir():

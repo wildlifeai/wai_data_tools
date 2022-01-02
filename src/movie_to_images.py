@@ -91,14 +91,20 @@ def split_video_file_to_frame_files(video_filepath: Path,
     if video_row.shape[0] > 1:
         raise ValueError("More than 1 entry found that matches the query in the dataframe")
 
-    label_frames = calculate_frames_in_timespan(t_start=video_row["start"].values,
-                                                t_end=video_row["end"].values,
-                                                fps=meta["fps"])
+    # label_frames = calculate_frames_in_timespan(t_start=video_row["start"].values,
+    #                                             t_end=video_row["end"].values,
+    #                                             fps=meta["fps"])
+
+    label_frames = np.array([])
 
     label_list, no_label_list = filter_images_in_video(video_reader=reader, frames_with_label=label_frames)
 
     logging.info("Saving label frames")
     for frame_ind, frame_img in label_list:
+
+        if frame_ind % 4 != 0:
+            continue
+
         output_filename = f"{video_filepath.stem}___{frame_ind}.jpeg"
         output_label_dir = new_dir / video_filepath.stem / "label"
         output_label_dir.mkdir(parents=True, exist_ok=True)
@@ -106,6 +112,10 @@ def split_video_file_to_frame_files(video_filepath: Path,
 
     logging.info("Saving non label frames")
     for frame_ind, frame_img in no_label_list:
+
+        if frame_ind % 4 != 0:
+            continue
+
         output_filename = f"{video_filepath.stem}___{frame_ind}.jpeg"
         output_label_dir = new_dir / video_filepath.stem / "no_label"
         output_label_dir.mkdir(parents=True, exist_ok=True)
@@ -141,11 +151,20 @@ def split_video_files_to_frame_files(video_dir: Path,
 
 def main():
     setup_logging.setup_logging()
-    new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\rat")
-    excel_path = Path(r"C:\Users\david\Desktop\wildlife.ai\raw-data\ww_labels.xlsx")
-    video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\raw-data-label-sorted\rat")
 
-    split_video_files_to_frame_files(video_dir=video_dir,
+    base_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\label-mix-big\train")
+    new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\label-mix-big\images\train")
+    excel_path = Path(r"C:\Users\david\Desktop\wildlife.ai\raw-data\ww_labels.xlsx")
+    # mix_dirs = base_dir.glob("*")
+
+    #for mix_dir in mix_dirs:
+    #     video_dir = mix_dir
+
+    # new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\label-mix-small\images\train")
+    # excel_path = Path(r"C:\Users\david\Desktop\wildlife.ai\raw-data\ww_labels.xlsx")
+    # video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\label-mix-small\train")
+
+    split_video_files_to_frame_files(video_dir=base_dir,
                                      excel_path=excel_path,
                                      new_dir=new_dir,
                                      label="rat")
