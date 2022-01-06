@@ -136,7 +136,7 @@ def split_video_files_to_frame_files(video_dir: Path,
 
     logging.info("Reading and formatting excel dataframe")
     excel_df_dict = read_excel.read_excel_to_dataframe(excel_file_path=excel_path)
-    excel_df = read_excel.append_rows_from_dataframe_dictionary(dataframe_dict=excel_df_dict)
+    excel_df = read_excel.stack_rows_from_dataframe_dictionary(dataframe_dict=excel_df_dict)
 
     logging.info("Filtering dataframe based on label %s", label)
     single_label_df = excel_df[excel_df["label"] == label]
