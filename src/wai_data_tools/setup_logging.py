@@ -11,6 +11,12 @@ def setup_logging():
 
     logging_dir.mkdir(exist_ok=True)
 
-    logging.basicConfig(filename=str(logging_dir / datetime.datetime.now().strftime('wildlife_log_%H_%M_%d_%m_%Y.log')),
-                        encoding='utf-8',
-                        level=logging.DEBUG)
+    logging_filename = str(logging_dir / datetime.datetime.now().strftime('wildlife_log_%H_%M_%d_%m_%Y.log'))
+
+    logging.basicConfig(encoding='utf-8',
+                        level=logging.DEBUG,
+                        handlers=[
+                            logging.FileHandler(logging_filename),
+                            logging.StreamHandler()
+                        ]
+                        )

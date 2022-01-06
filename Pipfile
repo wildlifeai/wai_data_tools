@@ -12,6 +12,7 @@ imageio = "*"
 imageio-ffmpeg = "*"
 scipy = "*"
 pyyaml = "*"
+tqdm = "*"
 
 [dev-packages]
 
