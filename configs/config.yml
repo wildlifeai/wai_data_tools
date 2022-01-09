@@ -1,0 +1,13 @@
+paths:
+  input_dir: ./path/to/input/data
+  output_dir: ./path/to/store/result
+labels:
+  - name: rat
+    is_target: True
+    sampling_frequency: 1
+  - name: weta
+    is_target: False
+    sampling_frequency: 2
+processing:
+  transformations:
+      img_size: (48, 48)
