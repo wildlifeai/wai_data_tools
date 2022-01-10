@@ -1,5 +1,6 @@
 """
-Script for splitting the raw .mjpg video files for the Weta Watcher project into .jpg frame images.
+Script for constructing a image dataset by splitting the raw .mjpg video files for the Weta Watcher project
+into .jpg frame images.
 """
 
 import pathlib
@@ -11,12 +12,17 @@ from wai_data_tools import movie_to_images
 from wai_data_tools import config
 
 
-def split_videos_to_frame_images(excel_filepath: pathlib.Path,
-                                 config_filepath: pathlib.Path,
-                                 src_video_dir: pathlib.Path,
-                                 dst_frame_dir: pathlib.Path) -> None:
+def create_frame_image_dataset(excel_filepath: pathlib.Path,
+                               config_filepath: pathlib.Path,
+                               src_video_dir: pathlib.Path,
+                               dst_frame_dir: pathlib.Path) -> None:
     """
     Copies all frames for all .mjpg video files in a directory to a new directory and stores them as .jpg files.
+    :param excel_filepath: Path to the excel file with label information
+    :param config_filepath: Path to configuration file
+    :param src_video_dir: Path to the source directory containing video file
+    :param dst_frame_dir: Path to the destination root directory to save frame images
+    :return:
     """
 
     dataset_config = config.load_config(config_filepath=config_filepath)
@@ -34,7 +40,7 @@ def split_videos_to_frame_images(excel_filepath: pathlib.Path,
 def main():
     setup_logging()
 
-    parser = argparse.ArgumentParser("Create label based file structure")
+    parser = argparse.ArgumentParser("Create image dataset from raw video files.")
 
     parser.add_argument('excel_file_path', type=str,
                         help='Path to the excel file with label information')
@@ -51,10 +57,10 @@ def main():
     config_file_path = pathlib.Path(args.config_file_path)
     src_video_dir = pathlib.Path(args.src_video_dir)
     dst_frame_dir = pathlib.Path(args.dst_frame_dir)
-    split_videos_to_frame_images(excel_filepath=excel_file_path,
-                                 config_filepath=config_file_path,
-                                 src_video_dir=src_video_dir,
-                                 dst_frame_dir=dst_frame_dir)
+    create_frame_image_dataset(excel_filepath=excel_file_path,
+                               config_filepath=config_file_path,
+                               src_video_dir=src_video_dir,
+                               dst_frame_dir=dst_frame_dir)
 
 
 if __name__ == "__main__":
