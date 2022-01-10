@@ -8,11 +8,10 @@ pandas = "*"
 openpyxl = "*"
 matplotlib = "*"
 pillow = "*"
-imageio = "*"
-imageio-ffmpeg = "*"
 scipy = "*"
 pyyaml = "*"
 tqdm = "*"
+imageio = {extras = ["ffmpeg"], version = "*"}
 
 [dev-packages]
 
