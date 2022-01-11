@@ -1,7 +1,7 @@
 
 
 import logging
-from pathlib import Path
+import pathlib
 from typing import Dict, Union
 
 import matplotlib.pyplot as plt
@@ -9,21 +9,19 @@ import matplotlib.widgets as pltwid
 import numpy as np
 import imageio
 
-import setup_logging
 
-
-def load_frames(frame_dir: Path) -> Dict[int, Dict[str, Union[bool, np.ndarray]]]:
+def load_frames(frame_dir: pathlib.Path) -> Dict[int, Dict[str, Union[str, np.ndarray]]]:
     """
     Loads frame files from a directory.
-    :param frame_dir: Path to directory where frames are stored in either a label or no_label folder
-    :return: Dictionary where key is frame index and value is a dictionary with the label class and frame image
+    :param frame_dir: Path to directory where frames are stored in a target class folder or background class folder
+    :return: Dictionary where key is frame index and value is a dictionary with the target class and frame image
     """
 
-    logging.info("Loading frames at %s", frame_dir)
+    logging.debug("Loading frames at %s", frame_dir)
 
     frame_filepaths = frame_dir.rglob("*.jpeg")
 
-    frame_dict = {}
+    frames_dict = {}
 
     for frame_filepath in frame_filepaths:
 
@@ -31,24 +29,17 @@ def load_frames(frame_dir: Path) -> Dict[int, Dict[str, Union[bool, np.ndarray]]
 
         frame_index = int(frame_filepath.stem.split("___")[-1])
 
-        if frame_filepath.parent.stem not in ["label", "no_label"]:
-            raise FileNotFoundError("File structure not recognized. frames should be "
-                                    "placed in 'label' and 'no_label' folders")
+        target = frame_filepath.parent.stem
 
-        if frame_filepath.parent.stem == "label":
-            label = True
-        else:
-            label = False
+        logging.debug("Frame %s target class is %s", frame_filepath.name, target)
 
-        logging.info("Frame label class is %s", label)
-
-        frame_dict[frame_index] = {"img": frame_img,
-                                   "label": label}
-    return frame_dict
+        frames_dict[frame_index] = {"img": frame_img,
+                                    "target": target}
+    return frames_dict
 
 
-def save_frames(frame_dir: Path,
-                new_dir: Path,
+def save_frames(frame_dir: pathlib.Path,
+                new_dir: pathlib.Path,
                 frames_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]]):
     """
     Saves frames to new file structure.
@@ -85,8 +76,8 @@ class Callbacks:
                  frame_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]],
                  ax_img,
                  ax_togg,
-                 frame_dir: Path,
-                 new_dir: Path):
+                 frame_dir: pathlib.Path,
+                 new_dir: pathlib.Path):
 
         self.frame_dict = frame_dict
         self.frame_dir = frame_dir
@@ -144,8 +135,8 @@ class Callbacks:
 
 
 def manual_annotation_plot(frame_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]],
-                           frame_dir: Path,
-                           new_dir: Path):
+                           frame_dir: pathlib.Path,
+                           dst_root_dir: pathlib.Path):
     fig, ax = plt.subplots()
 
     plt.subplots_adjust(bottom=0.2)
@@ -160,7 +151,7 @@ def manual_annotation_plot(frame_dict: Dict[int, Dict[str, Union[bool, np.ndarra
     bprev = pltwid.Button(axprev, "Previous")
     btogg = pltwid.Button(axtogg, "Toggle Class")
 
-    callbacks = Callbacks(frame_dict=frame_dict, ax_img=ax, ax_togg=axtogg, frame_dir=frame_dir, new_dir=new_dir)
+    callbacks = Callbacks(frame_dict=frame_dict, ax_img=ax, ax_togg=axtogg, frame_dir=frame_dir, new_dir=dst_root_dir)
     callbacks.draw_img()
 
     bnext.on_clicked(callbacks.next)
@@ -171,21 +162,3 @@ def manual_annotation_plot(frame_dict: Dict[int, Dict[str, Union[bool, np.ndarra
     fig.canvas.mpl_connect('key_press_event', callbacks.hotkey_press)
 
     plt.show()
-    
-
-def main():
-    setup_logging.setup_logging()
-    video_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\rat")
-    for frame_dir in video_dir.iterdir():
-
-        new_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\rat-cleaned")
-
-        frame_dict = load_frames(frame_dir=frame_dir)
-
-        manual_annotation_plot(frame_dict=frame_dict,
-                               frame_dir=frame_dir,
-                               new_dir=new_dir)
-
-
-if __name__ == "__main__":
-    main()
