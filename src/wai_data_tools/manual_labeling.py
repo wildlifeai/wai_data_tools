@@ -2,7 +2,7 @@
 
 import logging
 import pathlib
-from typing import Dict, Union
+from typing import Dict, Union, List
 
 import matplotlib.pyplot as plt
 import matplotlib.widgets as pltwid
@@ -73,11 +73,12 @@ class Callbacks:
     Class for handling callbacks for annotation GUI.
     """
     def __init__(self,
-                 frame_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]],
+                 frame_dict: Dict[int, Dict[str, Union[str, np.ndarray]]],
                  ax_img,
                  ax_togg,
                  frame_dir: pathlib.Path,
-                 new_dir: pathlib.Path):
+                 new_dir: pathlib.Path,
+                 classes: List[str]):
 
         self.frame_dict = frame_dict
         self.frame_dir = frame_dir
@@ -87,6 +88,8 @@ class Callbacks:
         self.plt_img = ax_img.imshow(self.frame_dict[0]["img"])
         self.index = 0
         self.max_index = max(self.frame_dict.keys())
+        self.classes = classes
+        self.class_ind = 0
 
     def next(self, event):
         if self.index < self.max_index:
@@ -107,17 +110,22 @@ class Callbacks:
     def draw_img(self):
         self.plt_img.set_array(self.frame_dict[self.index]["img"])
         self.ax_img.set_title(f"Frame {self.index}")
-        self.ax_togg.set_title(f"Class: {self.frame_dict[self.index]['label']}")
+        self.ax_togg.set_title(f"Class: {self.frame_dict[self.index]['target']}")
         plt.pause(0.001)
 
     def toggle_label(self, event):
+
+        self.class_ind = (self.class_ind + 1) % len(self.classes)
+
+        new_class = self.classes[self.class_ind]
+
         logging.info("Toggling Frame %s from %s to %s",
                      self.index,
-                     self.frame_dict[self.index]["label"],
-                     not self.frame_dict[self.index]["label"])
+                     self.frame_dict[self.index]["target"],
+                     new_class)
 
-        self.frame_dict[self.index]["label"] = not self.frame_dict[self.index]["label"]
-        self.ax_togg.set_title(f"Class: {self.frame_dict[self.index]['label']}")
+        self.frame_dict[self.index]["label"] = new_class
+        self.ax_togg.set_title(f"Class: {self.frame_dict[self.index]['target']}")
         plt.pause(0.001)
 
     def hotkey_press(self, event):
@@ -136,7 +144,8 @@ class Callbacks:
 
 def manual_annotation_plot(frame_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]],
                            frame_dir: pathlib.Path,
-                           dst_root_dir: pathlib.Path):
+                           dst_root_dir: pathlib.Path,
+                           classes: List[str]):
     fig, ax = plt.subplots()
 
     plt.subplots_adjust(bottom=0.2)
@@ -151,7 +160,12 @@ def manual_annotation_plot(frame_dict: Dict[int, Dict[str, Union[bool, np.ndarra
     bprev = pltwid.Button(axprev, "Previous")
     btogg = pltwid.Button(axtogg, "Toggle Class")
 
-    callbacks = Callbacks(frame_dict=frame_dict, ax_img=ax, ax_togg=axtogg, frame_dir=frame_dir, new_dir=dst_root_dir)
+    callbacks = Callbacks(frame_dict=frame_dict,
+                          ax_img=ax,
+                          ax_togg=axtogg,
+                          frame_dir=frame_dir,
+                          new_dir=dst_root_dir,
+                          classes=classes)
     callbacks.draw_img()
 
     bnext.on_clicked(callbacks.next)
