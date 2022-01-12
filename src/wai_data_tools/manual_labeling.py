@@ -50,20 +50,15 @@ def save_frames(frame_dir: pathlib.Path,
     """
     video_name = frame_dir.stem
     new_video_path = new_dir / video_name
-    label_dir = new_video_path / "label"
-    no_label_dir = new_video_path / "no_label"
 
     logging.info("Saving frames to %s", new_video_path)
 
-    label_dir.mkdir(exist_ok=True, parents=True)
-    no_label_dir.mkdir(exist_ok=True, parents=True)
-
     for frame_ind, f_dict in frames_dict.items():
         frame_filename = f"{video_name}___{frame_ind}.jpeg"
-        if f_dict["label"]:
-            total_path = label_dir / frame_filename
-        else:
-            total_path = no_label_dir / frame_filename
+
+        label_dir = new_video_path / f_dict["target"]
+        label_dir.mkdir(exist_ok=True, parents=True)
+        total_path = label_dir / frame_filename
         imageio.imwrite(total_path, f_dict["img"])
     print(f"Saved! {video_name}")
 
@@ -119,12 +114,12 @@ class Callbacks:
 
         new_class = self.classes[self.class_ind]
 
-        logging.info("Toggling Frame %s from %s to %s",
-                     self.index,
-                     self.frame_dict[self.index]["target"],
-                     new_class)
+        logging.debug("Toggling Frame %s from %s to %s",
+                      self.index,
+                      self.frame_dict[self.index]["target"],
+                      new_class)
 
-        self.frame_dict[self.index]["label"] = new_class
+        self.frame_dict[self.index]["target"] = new_class
         self.ax_togg.set_title(f"Class: {self.frame_dict[self.index]['target']}")
         plt.pause(0.001)
 
