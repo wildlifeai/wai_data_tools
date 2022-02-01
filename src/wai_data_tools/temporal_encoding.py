@@ -3,7 +3,7 @@ from typing import Dict, Union
 
 import numpy as np
 
-from manual_labeling import load_frames, save_frames
+from wai_data_tools.io import load_frames, save_frames
 import matplotlib.pyplot as plt
 
 
@@ -130,8 +130,8 @@ def main():
 
         new_frame_dicts = temporal_encoding(frame_dicts=frame_dicts, window_size=40, rgb=True)
 
-        save_frames(frame_dir=frame_dir,
-                    new_dir=Path(
+        save_frames(video_name=frame_dir,
+                    dst_root_dir=Path(
                         r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\temporal-encoding-trials\rat_rgb_40\background-test"),
                     frames_dict=new_frame_dicts)
 

@@ -7,60 +7,8 @@ from typing import Dict, Union, List
 import matplotlib.pyplot as plt
 import matplotlib.widgets as pltwid
 import numpy as np
-import imageio
 
-
-def load_frames(frame_dir: pathlib.Path) -> Dict[int, Dict[str, Union[str, np.ndarray]]]:
-    """
-    Loads frame files from a directory.
-    :param frame_dir: Path to directory where frames are stored in a target class folder or background class folder
-    :return: Dictionary where key is frame index and value is a dictionary with the target class and frame image
-    """
-
-    logging.debug("Loading frames at %s", frame_dir)
-
-    frame_filepaths = frame_dir.rglob("*.jpeg")
-
-    frames_dict = {}
-
-    for frame_filepath in frame_filepaths:
-
-        frame_img = imageio.imread(frame_filepath)
-
-        frame_index = int(frame_filepath.stem.split("___")[-1])
-
-        target = frame_filepath.parent.stem
-
-        logging.debug("Frame %s target class is %s", frame_filepath.name, target)
-
-        frames_dict[frame_index] = {"img": frame_img,
-                                    "target": target}
-    return frames_dict
-
-
-def save_frames(frame_dir: pathlib.Path,
-                new_dir: pathlib.Path,
-                frames_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]]):
-    """
-    Saves frames to new file structure.
-    :param frame_dir: Path to directory to frame images
-    :param new_dir: Path to new directory to save frame images in
-    :param frames_dict: Dictionary where key is frame index and value is a dictionary with the label class
-                        and frame image
-    """
-    video_name = frame_dir.stem
-    new_video_path = new_dir / video_name
-
-    logging.info("Saving frames to %s", new_video_path)
-
-    for frame_ind, f_dict in frames_dict.items():
-        frame_filename = f"{video_name}___{frame_ind}.jpeg"
-
-        label_dir = new_video_path / f_dict["target"]
-        label_dir.mkdir(exist_ok=True, parents=True)
-        total_path = label_dir / frame_filename
-        imageio.imwrite(total_path, f_dict["img"])
-    print(f"Saved! {video_name}")
+from wai_data_tools.io import save_frames
 
 
 class Callbacks:
@@ -132,8 +80,8 @@ class Callbacks:
             self.next(event=None)
 
     def save_frames(self, event):
-        save_frames(frame_dir=self.frame_dir,
-                    new_dir=self.new_dir,
+        save_frames(video_name=self.frame_dir.stem,
+                    dst_root_dir=self.new_dir,
                     frames_dict=self.frame_dict)
 
 

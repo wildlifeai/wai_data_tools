@@ -8,6 +8,8 @@ labels:
   - name: weta
     is_target: False
     sampling_frequency: 2
-processing:
+preprocessing:
   transformations:
-      img_size: (48, 48)
+      img_size:
+        - 48
+        - 48

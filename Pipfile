@@ -12,6 +12,7 @@ scipy = "*"
 pyyaml = "*"
 tqdm = "*"
 imageio = {extras = ["ffmpeg"], version = "*"}
+torchvision = "*"
 
 [dev-packages]
 

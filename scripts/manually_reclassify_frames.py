@@ -8,6 +8,7 @@ import argparse
 
 import tqdm
 
+import wai_data_tools.io
 from wai_data_tools import setup_logging
 from wai_data_tools import manual_labeling
 from wai_data_tools import config
@@ -33,7 +34,7 @@ def manually_reclassify_frames(src_root_dir: pathlib.Path,
     logging.info("Starting GUI for reclassification")
     frame_dirs = [dir_path for dir_path in src_root_dir.iterdir() if dir_path.is_dir()]
     for frame_dir in tqdm.tqdm(frame_dirs):
-        frames_dict = manual_labeling.load_frames(frame_dir=frame_dir)
+        frames_dict = wai_data_tools.io.load_frames(frame_dir=frame_dir)
 
         manual_labeling.manual_annotation_plot(frame_dict=frames_dict,
                                                frame_dir=frame_dir,
