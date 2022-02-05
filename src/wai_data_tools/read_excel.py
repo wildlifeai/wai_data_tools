@@ -31,7 +31,7 @@ def stack_rows_from_dataframe_dictionary(dataframe_dict: Dict[str, pd.DataFrame]
     for sheet_name, sheet_content in dataframe_dict.items():
         # Column for the sheet the data was in the file is added for traceability
         sheet_content["folder"] = sheet_name
-        merged_dataframe = merged_dataframe.append(sheet_content)
+        merged_dataframe = pd.concat([merged_dataframe, sheet_content])
     return merged_dataframe
 
 
