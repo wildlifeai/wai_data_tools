@@ -1,6 +1,3 @@
-paths:
-  input_dir: ./path/to/input/data
-  output_dir: ./path/to/store/result
 labels:
   - name: rat
     is_target: True
