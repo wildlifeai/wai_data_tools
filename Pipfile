@@ -15,6 +15,14 @@ imageio = {extras = ["ffmpeg"], version = "*"}
 torchvision = "*"
 
 [dev-packages]
-
-[requires]
-python_version = "3.9"
+tox = "*"
+pytest-randomly = "*"
+pytest-cov = "*"
+black = "*"
+isort = "*"
+pylint = "*"
+bandit = "*"
+pydocstyle = "*"
+darglint = "*"
+mypy = "*"
+safety = "*"
