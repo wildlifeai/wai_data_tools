@@ -1,6 +1,4 @@
-"""
-Module with IO functionality.
-"""
+"""Module with IO functionality."""
 
 import logging
 import pathlib
@@ -10,13 +8,19 @@ import imageio
 import numpy as np
 
 
-def load_frames(frame_dir: pathlib.Path) -> Dict[int, Dict[str, Union[str, np.ndarray]]]:
-    """
-    Loads frame files from a directory.
-    :param frame_dir: Path to directory where frames are stored in a target class folder or background class folder
-    :return: Dictionary where key is frame index and value is a dictionary with the target class and frame image
-    """
+def load_frames(
+    frame_dir: pathlib.Path,
+) -> Dict[int, Dict[str, Union[str, np.ndarray]]]:
+    """Load frame files from a directory.
 
+    Args:
+        frame_dir: Path to directory where frames are stored in a target
+            class folder or background class folder
+
+    Returns:
+        Dictionary where key is frame index and value is a dictionary
+        with the target class and frame image
+    """
     logging.debug("Loading frames at %s", frame_dir)
 
     frame_filepaths = frame_dir.rglob("*.jpeg")
@@ -33,20 +37,23 @@ def load_frames(frame_dir: pathlib.Path) -> Dict[int, Dict[str, Union[str, np.nd
 
         logging.debug("Frame %s target class is %s", frame_filepath.name, target)
 
-        frames_dict[frame_index] = {"img": frame_img,
-                                    "target": target}
+        frames_dict[frame_index] = {"img": frame_img, "target": target}
     return frames_dict
 
 
-def save_frames(video_name: str,
-                dst_root_dir: pathlib.Path,
-                frames_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]]):
-    """
-    Saves frames to new file structure.
-    :param video_name: Path to directory containing source frame images
-    :param dst_root_dir: Path to root destination directory to save frame images in
-    :param frames_dict: Dictionary where key is frame index and value is a dictionary with the label class
-                        and frame image
+def save_frames(
+    video_name: str,
+    dst_root_dir: pathlib.Path,
+    frames_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]],
+):
+    """Save frames to new file structure.
+
+    Args:
+        video_name: Path to directory containing source frame images
+        dst_root_dir: Path to root destination directory to save frame
+            images in
+        frames_dict: Dictionary where key is frame index and value is a
+            dictionary with the label class and frame image
     """
     dst_video_path = dst_root_dir / video_name
 
