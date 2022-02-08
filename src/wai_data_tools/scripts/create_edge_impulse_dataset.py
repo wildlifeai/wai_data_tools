@@ -7,14 +7,24 @@ import shutil
 import argparse
 import pathlib
 
+import click
+
 from wai_data_tools.setup_logging import setup_logging
+from wai_data_tools.scripts.create_label_based_data_structure import create_label_based_file_structure
+from wai_data_tools.scripts.create_frame_image_dataset import create_frame_image_dataset
+from wai_data_tools.scripts.preprocess_images import preprocess_images
+from wai_data_tools.scripts.convert_to_upload_format import convert_file_structure_to_upload_format
 
-from scripts.create_label_based_data_structure import create_label_based_file_structure
-from scripts.create_frame_image_dataset import create_frame_image_dataset
-from scripts.preprocess_images import preprocess_images
-from scripts.convert_to_upload_format import convert_file_structure_to_upload_format
 
-
+@click.command()
+@click.option("--excel_filepath", type=pathlib.Path, help="Path to the excel file with label information")
+@click.option("--config_filepath", type=pathlib.Path, help="Path to configuration file")
+@click.option("--src_video_dir",
+              type=pathlib.Path,
+              help="Path to the source directory containing video file")
+@click.option("--dst_root_dir",
+              type=pathlib.Path,
+              help="Path to the destination root directory to store dataset and intermediate data")
 def create_edge_impulse_dataset(excel_filepath: pathlib.Path,
                                 config_filepath: pathlib.Path,
                                 src_video_dir: pathlib.Path,
@@ -61,29 +71,7 @@ def create_edge_impulse_dataset(excel_filepath: pathlib.Path,
 def main():
     setup_logging()
 
-    parser = argparse.ArgumentParser("Create image dataset for image classification in edge impulse from raw "
-                                     "video files.")
-
-    parser.add_argument('excel_filepath', type=str,
-                        help='Path to the excel file with label information')
-    parser.add_argument('config_filepath', type=str,
-                        help='Path to the configuration file')
-    parser.add_argument('src_video_dir', type=str,
-                        help='Path to the source directory containing video files')
-    parser.add_argument('dst_root_dir', type=str,
-                        help='Path to the destination root directory to store dataset and intermediate data')
-
-    args = parser.parse_args()
-
-    excel_filepath = pathlib.Path(args.excel_filepath)
-    config_filepath = pathlib.Path(args.config_filepath)
-    src_video_dir = pathlib.Path(args.src_video_dir)
-    dst_root_dir = pathlib.Path(args.dst_root_dir)
-
-    create_edge_impulse_dataset(excel_filepath=excel_filepath,
-                                config_filepath=config_filepath,
-                                src_video_dir=src_video_dir,
-                                dst_root_dir=dst_root_dir)
+    create_edge_impulse_dataset()
 
 
 if __name__ == "__main__":

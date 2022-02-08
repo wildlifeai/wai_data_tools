@@ -4,13 +4,16 @@ Script for converting file structure to a format that is easier to upload to edg
 import logging
 import pathlib
 import shutil
-import argparse
 
 import tqdm
+import click
 
 from wai_data_tools.setup_logging import setup_logging
 
 
+@click.command()
+@click.option("--src_root_dir", type=pathlib.Path, help="Source root directory to read images from.")
+@click.option("--dst_root_dir", type=pathlib.Path, help="Destination root directory to store new file structure.")
 def convert_file_structure_to_upload_format(src_root_dir: pathlib.Path,
                                             dst_root_dir: pathlib.Path) -> None:
     """
@@ -38,21 +41,7 @@ def convert_file_structure_to_upload_format(src_root_dir: pathlib.Path,
 
 def main():
     setup_logging()
-
-    parser = argparse.ArgumentParser("Copies contents of a source file structure and stores it as a format that is "
-                                     "easier to upload to edge impulse in a destination directory.")
-
-    parser.add_argument('src_root_dir', type=str,
-                        help='Path to the root source directory containing image files')
-    parser.add_argument('dst_root_dir', type=str,
-                        help='Path to the root destination root directory to save images')
-
-    args = parser.parse_args()
-
-    src_root_dir = pathlib.Path(args.src_root_dir)
-    dst_root_dir = pathlib.Path(args.dst_root_dir)
-
-    convert_file_structure_to_upload_format(src_root_dir=src_root_dir, dst_root_dir=dst_root_dir)
+    convert_file_structure_to_upload_format()
 
 
 if __name__ == "__main__":

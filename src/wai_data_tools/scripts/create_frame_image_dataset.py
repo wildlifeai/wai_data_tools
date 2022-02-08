@@ -5,13 +5,19 @@ into .jpg frame images.
 
 import pathlib
 import logging
-import argparse
+
+import click
 
 from wai_data_tools.setup_logging import setup_logging
 from wai_data_tools import movie_to_images
 from wai_data_tools import config
 
 
+@click.command()
+@click.option("--excel_filepath", type=pathlib.Path, help="Path to the excel file with label information")
+@click.option("--config_filepath", type=pathlib.Path, help="Path to the configuration file")
+@click.option("--src_video_dir", type=pathlib.Path, help="Path to the source directory containing video files")
+@click.option("--dst_frame_dir", type=pathlib.Path, help="Path to the destination root directory to save frame images")
 def create_frame_image_dataset(excel_filepath: pathlib.Path,
                                config_filepath: pathlib.Path,
                                src_video_dir: pathlib.Path,
@@ -37,30 +43,9 @@ def create_frame_image_dataset(excel_filepath: pathlib.Path,
                                                          label_config=label_config)
 
 
-def main():
+def main() -> None:
     setup_logging()
-
-    parser = argparse.ArgumentParser("Create image dataset from raw video files.")
-
-    parser.add_argument('excel_file_path', type=str,
-                        help='Path to the excel file with label information')
-    parser.add_argument('config_file_path', type=str,
-                        help='Path to the configuration file')
-    parser.add_argument('src_video_dir', type=str,
-                        help='Path to the source directory containing video files')
-    parser.add_argument('dst_frame_dir', type=str,
-                        help='Path to the destination root directory to save frame images')
-
-    args = parser.parse_args()
-
-    excel_file_path = pathlib.Path(args.excel_file_path)
-    config_file_path = pathlib.Path(args.config_file_path)
-    src_video_dir = pathlib.Path(args.src_video_dir)
-    dst_frame_dir = pathlib.Path(args.dst_frame_dir)
-    create_frame_image_dataset(excel_filepath=excel_file_path,
-                               config_filepath=config_file_path,
-                               src_video_dir=src_video_dir,
-                               dst_frame_dir=dst_frame_dir)
+    create_frame_image_dataset()
 
 
 if __name__ == "__main__":

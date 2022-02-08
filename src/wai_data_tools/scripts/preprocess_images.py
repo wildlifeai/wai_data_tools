@@ -2,11 +2,11 @@
 Script for preprocessing images in dataset by applying transforms such as resizing, color scale conversions etc.
 """
 
-import argparse
 import pathlib
 import logging
 
 import tqdm
+import click
 
 from wai_data_tools.setup_logging import setup_logging
 from wai_data_tools import preprocessing
@@ -14,6 +14,10 @@ from wai_data_tools import config
 from wai_data_tools import io
 
 
+@click.command()
+@click.option("--config_filepath", type=pathlib.Path, help="Path to config file")
+@click.option("--src_root_dir", type=pathlib.Path, help="Source root directory to read images from.")
+@click.option("--dst_root_dir", type=pathlib.Path, help="Destination root directory to store images.")
 def preprocess_images(config_filepath: pathlib.Path,
                       src_root_dir: pathlib.Path,
                       dst_root_dir: pathlib.Path) -> None:
@@ -47,27 +51,7 @@ def preprocess_images(config_filepath: pathlib.Path,
 
 def main():
     setup_logging()
-
-    parser = argparse.ArgumentParser("Preprocess all images in given source directory and store results in "
-                                     "destination directory. If source and destination directory is the same, files"
-                                     "will be overwritten")
-
-    parser.add_argument('config_file_path', type=str,
-                        help='Path to the configuration file')
-    parser.add_argument('src_root_dir', type=str,
-                        help='Path to the root source directory containing image files')
-    parser.add_argument('dst_root_dir', type=str,
-                        help='Path to the root destination root directory to save images')
-
-    args = parser.parse_args()
-
-    config_file_path = pathlib.Path(args.config_file_path)
-    src_root_dir = pathlib.Path(args.src_root_dir)
-    dst_root_dir = pathlib.Path(args.dst_root_dir)
-
-    preprocess_images(config_filepath=config_file_path,
-                      src_root_dir=src_root_dir,
-                      dst_root_dir=dst_root_dir)
+    preprocess_images()
 
 
 if __name__ == "__main__":

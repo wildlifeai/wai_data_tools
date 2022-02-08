@@ -5,7 +5,8 @@ in the google sheet document.
 """
 
 import pathlib
-import argparse
+
+import click
 
 from wai_data_tools.setup_logging import setup_logging
 
@@ -16,6 +17,14 @@ from wai_data_tools.read_excel import (
 from wai_data_tools.label_based_file_structure import copy_files_to_label_based_file_structure
 
 
+@click.command()
+@click.option("--excel_filepath", type=pathlib.Path, help="Path to the excel file with label information")
+@click.option("--raw_data_root_dir",
+              type=pathlib.Path,
+              help="Path to the root directory containing the raw Weta Watcher file structure.")
+@click.option("--dst_root_dir",
+              type=pathlib.Path,
+              help="Path to the root directory destination to store the label based file structure.")
 def create_label_based_file_structure(excel_file_path: pathlib.Path,
                                       raw_data_root_dir: pathlib.Path,
                                       dst_root_dir: pathlib.Path) -> None:
@@ -37,25 +46,7 @@ def create_label_based_file_structure(excel_file_path: pathlib.Path,
 
 def main() -> None:
     setup_logging()
-
-    parser = argparse.ArgumentParser("Create label based file structure")
-
-    parser.add_argument('excel_file_path', type=str,
-                        help='Path to the excel file with label information')
-    parser.add_argument('raw_data_root_dir', type=str,
-                        help='Path to the root directory containing the raw Weta Watcher file structure')
-    parser.add_argument('new_root_dir', type=str,
-                        help='Path to the new root directory to store the label based file structure')
-
-    args = parser.parse_args()
-
-    excel_file_path = pathlib.Path(args.excel_file_path)
-    raw_data_root_dir = pathlib.Path(args.raw_data_root_dir)
-    dst_root_dir = pathlib.Path(args.new_root_dir)
-
-    create_label_based_file_structure(excel_file_path=excel_file_path,
-                                      raw_data_root_dir=raw_data_root_dir,
-                                      dst_root_dir=dst_root_dir)
+    create_label_based_file_structure()
 
 
 if __name__ == "__main__":
