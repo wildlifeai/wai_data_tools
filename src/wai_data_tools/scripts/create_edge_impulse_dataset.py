@@ -16,15 +16,6 @@ from wai_data_tools.scripts.preprocess_images import preprocess_images
 from wai_data_tools.scripts.convert_to_upload_format import convert_file_structure_to_upload_format
 
 
-@click.command()
-@click.option("--excel_filepath", type=pathlib.Path, help="Path to the excel file with label information")
-@click.option("--config_filepath", type=pathlib.Path, help="Path to configuration file")
-@click.option("--src_video_dir",
-              type=pathlib.Path,
-              help="Path to the source directory containing video file")
-@click.option("--dst_root_dir",
-              type=pathlib.Path,
-              help="Path to the destination root directory to store dataset and intermediate data")
 def create_edge_impulse_dataset(excel_filepath: pathlib.Path,
                                 config_filepath: pathlib.Path,
                                 src_video_dir: pathlib.Path,
@@ -41,7 +32,7 @@ def create_edge_impulse_dataset(excel_filepath: pathlib.Path,
 
     intermediate_video_dir.mkdir(exist_ok=True, parents=True)
 
-    create_label_based_file_structure(excel_file_path=excel_filepath,
+    create_label_based_file_structure(excel_filepath=excel_filepath,
                                       raw_data_root_dir=src_video_dir,
                                       dst_root_dir=intermediate_video_dir)
 
@@ -68,10 +59,24 @@ def create_edge_impulse_dataset(excel_filepath: pathlib.Path,
     shutil.rmtree(intermediate_frame_dir)
 
 
-def main():
+@click.command()
+@click.option("--excel_filepath", type=pathlib.Path, help="Path to the excel file with label information")
+@click.option("--config_filepath", type=pathlib.Path, help="Path to configuration file")
+@click.option("--src_video_dir",
+              type=pathlib.Path,
+              help="Path to the source directory containing video file")
+@click.option("--dst_root_dir",
+              type=pathlib.Path,
+              help="Path to the destination root directory to store dataset and intermediate data")
+def main(excel_filepath: pathlib.Path,
+         config_filepath: pathlib.Path,
+         src_video_dir: pathlib.Path,
+         dst_root_dir: pathlib.Path) -> None:
     setup_logging()
-
-    create_edge_impulse_dataset()
+    create_edge_impulse_dataset(excel_filepath=excel_filepath,
+                                config_filepath=config_filepath,
+                                src_video_dir=src_video_dir,
+                                dst_root_dir=dst_root_dir)
 
 
 if __name__ == "__main__":

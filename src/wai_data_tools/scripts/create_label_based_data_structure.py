@@ -17,6 +17,25 @@ from wai_data_tools.read_excel import (
 from wai_data_tools.label_based_file_structure import copy_files_to_label_based_file_structure
 
 
+def create_label_based_file_structure(excel_filepath: pathlib.Path,
+                                      raw_data_root_dir: pathlib.Path,
+                                      dst_root_dir: pathlib.Path) -> None:
+    """
+    Copies the raw data .mjpg files from the Weta Watcher raw data file structure
+    to a new file structure based on labels.
+    :param excel_filepath: Path to the excel file with label information
+    :param raw_data_root_dir: Path to the root directory containing the raw Weta Watcher file structure.
+    :param dst_root_dir: Path to the root directory destination to store the label based file structure.
+    """
+
+    content = read_excel_to_dataframe(excel_file_path=excel_filepath)
+    dataframe = stack_rows_from_dataframe_dictionary(dataframe_dict=content)
+
+    dst_root_dir.mkdir(exist_ok=True)
+
+    copy_files_to_label_based_file_structure(file_dataframe=dataframe, src_dir=raw_data_root_dir, dst_dir=dst_root_dir)
+
+
 @click.command()
 @click.option("--excel_filepath", type=pathlib.Path, help="Path to the excel file with label information")
 @click.option("--raw_data_root_dir",
@@ -25,28 +44,13 @@ from wai_data_tools.label_based_file_structure import copy_files_to_label_based_
 @click.option("--dst_root_dir",
               type=pathlib.Path,
               help="Path to the root directory destination to store the label based file structure.")
-def create_label_based_file_structure(excel_file_path: pathlib.Path,
-                                      raw_data_root_dir: pathlib.Path,
-                                      dst_root_dir: pathlib.Path) -> None:
-    """
-    Copies the raw data .mjpg files from the Weta Watcher raw data file structure
-    to a new file structure based on labels.
-    :param excel_file_path: Path to the excel file with label information
-    :param raw_data_root_dir: Path to the root directory containing the raw Weta Watcher file structure.
-    :param dst_root_dir: Path to the root directory destination to store the label based file structure.
-    """
-
-    content = read_excel_to_dataframe(excel_file_path=excel_file_path)
-    dataframe = stack_rows_from_dataframe_dictionary(dataframe_dict=content)
-
-    dst_root_dir.mkdir(exist_ok=True)
-
-    copy_files_to_label_based_file_structure(file_dataframe=dataframe, src_dir=raw_data_root_dir, dst_dir=dst_root_dir)
-
-
-def main() -> None:
+def main(excel_filepath: pathlib.Path,
+         raw_data_root_dir: pathlib.Path,
+         dst_root_dir: pathlib.Path) -> None:
     setup_logging()
-    create_label_based_file_structure()
+    create_label_based_file_structure(excel_filepath=excel_filepath,
+                                      raw_data_root_dir=raw_data_root_dir,
+                                      dst_root_dir=dst_root_dir)
 
 
 if __name__ == "__main__":

@@ -11,9 +11,6 @@ import click
 from wai_data_tools.setup_logging import setup_logging
 
 
-@click.command()
-@click.option("--src_root_dir", type=pathlib.Path, help="Source root directory to read images from.")
-@click.option("--dst_root_dir", type=pathlib.Path, help="Destination root directory to store new file structure.")
 def convert_file_structure_to_upload_format(src_root_dir: pathlib.Path,
                                             dst_root_dir: pathlib.Path) -> None:
     """
@@ -39,9 +36,14 @@ def convert_file_structure_to_upload_format(src_root_dir: pathlib.Path,
                 shutil.copy(str(frame_filepath), str(dst_target_dir / frame_filepath.name))
 
 
-def main():
+@click.command()
+@click.option("--src_root_dir", type=pathlib.Path, help="Source root directory to read images from.")
+@click.option("--dst_root_dir", type=pathlib.Path, help="Destination root directory to store new file structure.")
+def main(src_root_dir: pathlib.Path,
+         dst_root_dir: pathlib.Path) -> None:
     setup_logging()
-    convert_file_structure_to_upload_format()
+    convert_file_structure_to_upload_format(src_root_dir=src_root_dir,
+                                            dst_root_dir=dst_root_dir)
 
 
 if __name__ == "__main__":

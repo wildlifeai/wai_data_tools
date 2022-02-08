@@ -14,10 +14,6 @@ from wai_data_tools import config
 from wai_data_tools import io
 
 
-@click.command()
-@click.option("--config_filepath", type=pathlib.Path, help="Path to config file")
-@click.option("--src_root_dir", type=pathlib.Path, help="Source root directory to read images from.")
-@click.option("--dst_root_dir", type=pathlib.Path, help="Destination root directory to store images.")
 def preprocess_images(config_filepath: pathlib.Path,
                       src_root_dir: pathlib.Path,
                       dst_root_dir: pathlib.Path) -> None:
@@ -49,9 +45,17 @@ def preprocess_images(config_filepath: pathlib.Path,
                        frames_dict=frames_dict)
 
 
-def main():
+@click.command()
+@click.option("--config_filepath", type=pathlib.Path, help="Path to config file")
+@click.option("--src_root_dir", type=pathlib.Path, help="Source root directory to read images from.")
+@click.option("--dst_root_dir", type=pathlib.Path, help="Destination root directory to store images.")
+def main(config_filepath: pathlib.Path,
+         src_root_dir: pathlib.Path,
+         dst_root_dir: pathlib.Path) -> None:
     setup_logging()
-    preprocess_images()
+    preprocess_images(config_filepath=config_filepath,
+                      src_root_dir=src_root_dir,
+                      dst_root_dir=dst_root_dir)
 
 
 if __name__ == "__main__":

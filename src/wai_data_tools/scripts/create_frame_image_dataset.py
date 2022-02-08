@@ -13,11 +13,6 @@ from wai_data_tools import movie_to_images
 from wai_data_tools import config
 
 
-@click.command()
-@click.option("--excel_filepath", type=pathlib.Path, help="Path to the excel file with label information")
-@click.option("--config_filepath", type=pathlib.Path, help="Path to the configuration file")
-@click.option("--src_video_dir", type=pathlib.Path, help="Path to the source directory containing video files")
-@click.option("--dst_frame_dir", type=pathlib.Path, help="Path to the destination root directory to save frame images")
 def create_frame_image_dataset(excel_filepath: pathlib.Path,
                                config_filepath: pathlib.Path,
                                src_video_dir: pathlib.Path,
@@ -43,9 +38,20 @@ def create_frame_image_dataset(excel_filepath: pathlib.Path,
                                                          label_config=label_config)
 
 
-def main() -> None:
+@click.command()
+@click.option("--excel_filepath", type=pathlib.Path, help="Path to the excel file with label information")
+@click.option("--config_filepath", type=pathlib.Path, help="Path to the configuration file")
+@click.option("--src_video_dir", type=pathlib.Path, help="Path to the source directory containing video files")
+@click.option("--dst_frame_dir", type=pathlib.Path, help="Path to the destination root directory to save frame images")
+def main(excel_filepath: pathlib.Path,
+         config_filepath: pathlib.Path,
+         src_video_dir: pathlib.Path,
+         dst_frame_dir: pathlib.Path) -> None:
     setup_logging()
-    create_frame_image_dataset()
+    create_frame_image_dataset(excel_filepath=excel_filepath,
+                               config_filepath=config_filepath,
+                               src_video_dir=src_video_dir,
+                               dst_frame_dir=dst_frame_dir)
 
 
 if __name__ == "__main__":

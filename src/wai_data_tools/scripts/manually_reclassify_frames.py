@@ -14,12 +14,6 @@ from wai_data_tools import manual_labeling
 from wai_data_tools import config
 
 
-@click.command()
-@click.option("--src_root_dir", type=pathlib.Path, help="Path to the source root directory to read frame images")
-@click.option("--dst_root_dir",
-              type=pathlib.Path,
-              help="Path to the destination root directory to save reclassified frame images")
-@click.option("--config_filepath", type=pathlib.Path, help="Path to configuration file")
 def manually_reclassify_frames(src_root_dir: pathlib.Path,
                                dst_root_dir: pathlib.Path,
                                config_filepath: pathlib.Path) -> None:
@@ -48,10 +42,19 @@ def manually_reclassify_frames(src_root_dir: pathlib.Path,
                                                classes=classes)
 
 
-def main():
+@click.command()
+@click.option("--src_root_dir", type=pathlib.Path, help="Path to the source root directory to read frame images")
+@click.option("--dst_root_dir",
+              type=pathlib.Path,
+              help="Path to the destination root directory to save reclassified frame images")
+@click.option("--config_filepath", type=pathlib.Path, help="Path to configuration file")
+def main(src_root_dir: pathlib.Path,
+         dst_root_dir: pathlib.Path,
+         config_filepath: pathlib.Path) -> None:
     setup_logging.setup_logging()
-
-    manually_reclassify_frames()
+    manually_reclassify_frames(src_root_dir=src_root_dir,
+                               dst_root_dir=dst_root_dir,
+                               config_filepath=config_filepath)
 
 
 if __name__ == "__main__":
