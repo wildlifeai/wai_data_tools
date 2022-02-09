@@ -3,8 +3,8 @@ import logging
 import pathlib
 import shutil
 
-import tqdm
 import click
+import tqdm
 
 from wai_data_tools.setup_logging import setup_logging
 
@@ -15,9 +15,8 @@ def convert_file_structure_to_upload_format(
     """Copy contents of a source file structure and stores it as a format that is easier to upload to edge impulse in a destination directory.
 
     Args:
-        src_root_dir: Source root directory to read files from.
-        dst_root_dir: Destination root directory to store new file
-            structure.
+      src_root_dir: Source root directory to read files from.
+      dst_root_dir: Destination root directory to store new file structure.
     """
     frame_dirs = [content for content in src_root_dir.iterdir() if content.is_dir()]
 
@@ -37,16 +36,22 @@ def convert_file_structure_to_upload_format(
 
 
 @click.command()
-@click.option("--src_root_dir", type=pathlib.Path, help="Source root directory to read images from.")
-@click.option("--dst_root_dir", type=pathlib.Path, help="Destination root directory to store new file structure.")
-def main(src_root_dir: pathlib.Path,
-         dst_root_dir: pathlib.Path) -> None:
-    """
-    Entrypoint
-    """
+@click.option(
+    "--src_root_dir",
+    type=pathlib.Path,
+    help="Source root directory to read images from.",
+)
+@click.option(
+    "--dst_root_dir",
+    type=pathlib.Path,
+    help="Destination root directory to store new file structure.",
+)
+def main(src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path) -> None:
+    """Entrypoint."""
     setup_logging()
-    convert_file_structure_to_upload_format(src_root_dir=src_root_dir,
-                                            dst_root_dir=dst_root_dir)
+    convert_file_structure_to_upload_format(
+        src_root_dir=src_root_dir, dst_root_dir=dst_root_dir
+    )
 
 
 if __name__ == "__main__":
