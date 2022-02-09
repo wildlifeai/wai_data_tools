@@ -1,10 +1,10 @@
 """Script for manually reclassifying frames in a frame image dataset."""
 
-import argparse
-import logging
 import pathlib
+import logging
 
 import tqdm
+import click
 
 import wai_data_tools.io
 from wai_data_tools import config, manual_labeling, setup_logging
@@ -47,34 +47,20 @@ def manually_reclassify_frames(
         )
 
 
-def main():
+@click.command()
+@click.option("--src_root_dir", type=pathlib.Path, help="Path to the source root directory to read frame images")
+@click.option("--dst_root_dir",
+              type=pathlib.Path,
+              help="Path to the destination root directory to save reclassified frame images")
+@click.option("--config_filepath", type=pathlib.Path, help="Path to configuration file")
+def main(src_root_dir: pathlib.Path,
+         dst_root_dir: pathlib.Path,
+         config_filepath: pathlib.Path) -> None:
     """Entrypoint."""
     setup_logging.setup_logging()
-
-    parser = argparse.ArgumentParser("Create label based file structure")
-
-    parser.add_argument(
-        "src_root_dir",
-        type=str,
-        help="Path to the source root directory to read frame images",
-    )
-    parser.add_argument(
-        "dst_root_dir",
-        type=str,
-        help="Path to the destination root directory to save reclassified frame images",
-    )
-    parser.add_argument("config_filepath", type=str, help="Path to configuration file")
-    args = parser.parse_args()
-
-    src_root_dir = pathlib.Path(args.src_root_dir)
-    dst_root_dir = pathlib.Path(args.dst_root_dir)
-    config_filepath = pathlib.Path(args.config_filepath)
-
-    manually_reclassify_frames(
-        src_root_dir=src_root_dir,
-        dst_root_dir=dst_root_dir,
-        config_filepath=config_filepath,
-    )
+    manually_reclassify_frames(src_root_dir=src_root_dir,
+                               dst_root_dir=dst_root_dir,
+                               config_filepath=config_filepath)
 
 
 if __name__ == "__main__":
