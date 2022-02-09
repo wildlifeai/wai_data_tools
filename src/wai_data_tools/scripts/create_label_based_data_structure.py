@@ -30,8 +30,8 @@ def create_label_based_file_structure(
       excel_filepath: Path to the excel file with label information
       raw_data_root_dir: Path to the root directory containing the raw Weta Watcher file structure.
       dst_root_dir: Path to the root directory destination to store the label based file structure.
-      excel_filepath: pathlib.Path: 
-      raw_data_root_dir: pathlib.Path: 
+      excel_filepath: pathlib.Path:
+      raw_data_root_dir: pathlib.Path:
       dst_root_dir: pathlib.Path:
     """
     content = read_excel_to_dataframe(excel_file_path=excel_filepath)

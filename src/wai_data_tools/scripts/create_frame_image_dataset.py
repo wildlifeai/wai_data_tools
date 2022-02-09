@@ -62,7 +62,7 @@ def main(
     src_video_dir: pathlib.Path,
     dst_frame_dir: pathlib.Path,
 ) -> None:
-    """Entrypoint. """
+    """Entrypoint."""
     setup_logging()
     create_frame_image_dataset(
         excel_filepath=excel_filepath,
