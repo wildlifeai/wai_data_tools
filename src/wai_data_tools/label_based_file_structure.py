@@ -24,7 +24,7 @@ def copy_files_to_label_based_file_structure(
     labels = file_dataframe["label"].unique()
     for label in labels:
         label_dir = dst_dir / label
-        label_dir.mkdir(exist_ok=True)
+        label_dir.mkdir(exist_ok=True, parents=True)
 
     logging.info("Copying data files to new file structure...")
 

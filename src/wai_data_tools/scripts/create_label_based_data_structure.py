@@ -37,8 +37,6 @@ def create_label_based_file_structure(
     content = read_excel_to_dataframe(excel_file_path=excel_filepath)
     dataframe = stack_rows_from_dataframe_dictionary(dataframe_dict=content)
 
-    dst_root_dir.mkdir(exist_ok=True)
-
     copy_files_to_label_based_file_structure(
         file_dataframe=dataframe, src_dir=raw_data_root_dir, dst_dir=dst_root_dir
     )
