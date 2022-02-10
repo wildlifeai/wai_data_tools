@@ -47,17 +47,17 @@ def create_label_based_file_structure(
 @click.command()
 @click.option(
     "--excel_filepath",
-    type=pathlib.Path,
+    type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the excel file with label information",
 )
 @click.option(
     "--raw_data_root_dir",
-    type=pathlib.Path,
+    type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the root directory containing the raw Weta Watcher file structure.",
 )
 @click.option(
     "--dst_root_dir",
-    type=pathlib.Path,
+    type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the root directory destination to store the label based file structure.",
 )
 def main(

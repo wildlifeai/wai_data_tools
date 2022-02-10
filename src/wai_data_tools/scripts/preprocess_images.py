@@ -51,15 +51,15 @@ def preprocess_images(
 
 
 @click.command()
-@click.option("--config_filepath", type=pathlib.Path, help="Path to config file")
+@click.option("--config_filepath", type=click.Path(exists=True, path_type=pathlib.Path), help="Path to config file")
 @click.option(
     "--src_root_dir",
-    type=pathlib.Path,
+    type=click.Path(exists=True, path_type=pathlib.Path),
     help="Source root directory to read images from.",
 )
 @click.option(
     "--dst_root_dir",
-    type=pathlib.Path,
+    type=click.Path(exists=True, path_type=pathlib.Path),
     help="Destination root directory to store images.",
 )
 def main(

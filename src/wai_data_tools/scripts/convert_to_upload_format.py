@@ -38,12 +38,12 @@ def convert_file_structure_to_upload_format(
 @click.command()
 @click.option(
     "--src_root_dir",
-    type=pathlib.Path,
+    type=click.Path(exists=True, path_type=pathlib.Path),
     help="Source root directory to read images from.",
 )
 @click.option(
     "--dst_root_dir",
-    type=pathlib.Path,
+    type=click.Path(exists=True, path_type=pathlib.Path),
     help="Destination root directory to store new file structure.",
 )
 def main(src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path) -> None:

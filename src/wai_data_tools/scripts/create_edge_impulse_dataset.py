@@ -73,18 +73,18 @@ def create_edge_impulse_dataset(
 @click.command()
 @click.option(
     "--excel_filepath",
-    type=pathlib.Path,
+    type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the excel file with label information",
 )
-@click.option("--config_filepath", type=pathlib.Path, help="Path to configuration file")
+@click.option("--config_filepath", type=click.Path(exists=True, path_type=pathlib.Path), help="Path to configuration file")
 @click.option(
     "--src_video_dir",
-    type=pathlib.Path,
+    type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the source directory containing video file",
 )
 @click.option(
     "--dst_root_dir",
-    type=pathlib.Path,
+    type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the destination root directory to store dataset and intermediate data",
 )
 def main(
