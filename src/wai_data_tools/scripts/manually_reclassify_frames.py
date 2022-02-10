@@ -58,7 +58,11 @@ def manually_reclassify_frames(
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the destination root directory to save reclassified frame images",
 )
-@click.option("--config_filepath", type=click.Path(exists=True, path_type=pathlib.Path), help="Path to configuration file")
+@click.option(
+    "--config_filepath",
+    type=click.Path(exists=True, path_type=pathlib.Path),
+    help="Path to configuration file",
+)
 def main(
     src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,

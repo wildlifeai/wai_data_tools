@@ -51,7 +51,11 @@ def preprocess_images(
 
 
 @click.command()
-@click.option("--config_filepath", type=click.Path(exists=True, path_type=pathlib.Path), help="Path to config file")
+@click.option(
+    "--config_filepath",
+    type=click.Path(exists=True, path_type=pathlib.Path),
+    help="Path to config file",
+)
 @click.option(
     "--src_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
