@@ -17,7 +17,7 @@ from wai_data_tools.scripts import (
 
 @click.group()
 def cli() -> None:
-    """CLI Tool for creating and transforming Wildlife AI datasets."""
+    """CLI Tool for creating and transforming datasets."""
     setup_logging.setup_logging()
 
 
@@ -37,7 +37,7 @@ def cli() -> None:
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the root directory destination to store the label based file structure.",
 )
-def create_label_based_data_structure(
+def create_data_structure(
     excel_filepath: pathlib.Path,
     raw_data_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
@@ -77,7 +77,7 @@ def create_label_based_data_structure(
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the destination root directory to save frame images",
 )
-def create_frame_image_dataset(
+def create_frame_dataset(
     excel_filepath: pathlib.Path,
     config_filepath: pathlib.Path,
     src_video_dir: pathlib.Path,
@@ -115,7 +115,7 @@ def create_frame_image_dataset(
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
 )
-def manually_reclassify_frames(
+def reclassify_frames(
     src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
     config_filepath: pathlib.Path,
@@ -150,7 +150,7 @@ def manually_reclassify_frames(
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Destination root directory to store images.",
 )
-def preprocess_images(
+def preprocess(
     config_filepath: pathlib.Path,
     src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
@@ -180,9 +180,7 @@ def preprocess_images(
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Destination root directory to store new file structure.",
 )
-def convert_file_structure_to_upload_format(
-    src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path
-) -> None:
+def to_upload_format(src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path) -> None:
     """Copy contents of a source file structure and stores it as a format that is easier to upload to edge impulse in a destination directory.
 
     Args:
@@ -215,7 +213,7 @@ def convert_file_structure_to_upload_format(
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the destination root directory to store dataset and intermediate data",
 )
-def create_edge_impulse_dataset(
+def create_ei_dataset(
     excel_filepath: pathlib.Path,
     config_filepath: pathlib.Path,
     src_video_dir: pathlib.Path,
