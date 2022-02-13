@@ -1,11 +1,9 @@
 """Script for creating an image classification dataset for Edge Impulse from raw video dataset."""
 
-import argparse
+
 import logging
 import pathlib
 import shutil
-
-import click
 
 from wai_data_tools.scripts.convert_to_upload_format import (
     convert_file_structure_to_upload_format,
@@ -15,7 +13,6 @@ from wai_data_tools.scripts.create_label_based_data_structure import (
     create_label_based_file_structure,
 )
 from wai_data_tools.scripts.preprocess_images import preprocess_images
-from wai_data_tools.setup_logging import setup_logging
 
 
 def create_edge_impulse_dataset(
@@ -27,10 +24,10 @@ def create_edge_impulse_dataset(
     """Create image dataset for image classification in edge impulse from raw video files.
 
     Args:
-      excel_filepath: Path to the excel file with label information
-      config_filepath: Path to configuration file
-      src_video_dir: Path to the source directory containing video files
-      dst_root_dir: Path to the destination root directory to store dataset and intermediate data
+        excel_filepath: Path to the excel file with label information
+        config_filepath: Path to configuration file
+        src_video_dir: Path to the source directory containing video files
+        dst_root_dir: Path to the destination root directory to store dataset and intermediate data
     """
     intermediate_video_dir = dst_root_dir / "inter-video"
 
@@ -68,44 +65,3 @@ def create_edge_impulse_dataset(
 
     logging.info("Removing intermediate frame data")
     shutil.rmtree(intermediate_frame_dir)
-
-
-@click.command()
-@click.option(
-    "--excel_filepath",
-    type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to the excel file with label information",
-)
-@click.option(
-    "--config_filepath",
-    type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to configuration file",
-)
-@click.option(
-    "--src_video_dir",
-    type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to the source directory containing video file",
-)
-@click.option(
-    "--dst_root_dir",
-    type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to the destination root directory to store dataset and intermediate data",
-)
-def main(
-    excel_filepath: pathlib.Path,
-    config_filepath: pathlib.Path,
-    src_video_dir: pathlib.Path,
-    dst_root_dir: pathlib.Path,
-) -> None:
-    """Entrypoint."""
-    setup_logging()
-    create_edge_impulse_dataset(
-        excel_filepath=excel_filepath,
-        config_filepath=config_filepath,
-        src_video_dir=src_video_dir,
-        dst_root_dir=dst_root_dir,
-    )
-
-
-if __name__ == "__main__":
-    main()

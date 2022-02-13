@@ -3,11 +3,9 @@
 import logging
 import pathlib
 
-import click
 import tqdm
 
 from wai_data_tools import config, io, preprocessing
-from wai_data_tools.setup_logging import setup_logging
 
 
 def preprocess_images(
@@ -18,9 +16,9 @@ def preprocess_images(
     """Preprocess by applying transformations given in config to images in source directory and store results in destination directory.
 
     Args:
-      config_filepath: Path to config file
-      src_root_dir: Source root directory to read images from.
-      dst_root_dir: Destination root directory to store images.
+        config_filepath: Path to config file
+        src_root_dir: Source root directory to read images from.
+        dst_root_dir: Destination root directory to store images.
     """
     config_dict = config.load_config(config_filepath=config_filepath)
     preprocess_config = config_dict["preprocessing"]
@@ -48,37 +46,3 @@ def preprocess_images(
             dst_root_dir=dst_root_dir,
             frames_dict=frames_dict,
         )
-
-
-@click.command()
-@click.option(
-    "--config_filepath",
-    type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to config file",
-)
-@click.option(
-    "--src_root_dir",
-    type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Source root directory to read images from.",
-)
-@click.option(
-    "--dst_root_dir",
-    type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Destination root directory to store images.",
-)
-def main(
-    config_filepath: pathlib.Path,
-    src_root_dir: pathlib.Path,
-    dst_root_dir: pathlib.Path,
-) -> None:
-    """Entrypoint."""
-    setup_logging()
-    preprocess_images(
-        config_filepath=config_filepath,
-        src_root_dir=src_root_dir,
-        dst_root_dir=dst_root_dir,
-    )
-
-
-if __name__ == "__main__":
-    main()
