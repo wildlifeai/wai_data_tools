@@ -26,16 +26,19 @@ def cli() -> None:
     "--excel_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the excel file with label information",
+    required=True,
 )
 @click.option(
     "--raw_data_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the root directory containing the raw Weta Watcher file structure.",
+    required=True,
 )
 @click.option(
     "--dst_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the root directory destination to store the label based file structure.",
+    required=True,
 )
 def create_data_structure(
     excel_filepath: pathlib.Path,
@@ -61,21 +64,25 @@ def create_data_structure(
     "--excel_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the excel file with label information",
+    required=True,
 )
 @click.option(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the configuration file",
+    required=True,
 )
 @click.option(
     "--src_video_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the source directory containing video files",
+    required=True,
 )
 @click.option(
     "--dst_frame_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the destination root directory to save frame images",
+    required=True,
 )
 def create_frame_dataset(
     excel_filepath: pathlib.Path,
@@ -104,16 +111,19 @@ def create_frame_dataset(
     "--src_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the source root directory to read frame images",
+    required=True,
 )
 @click.option(
     "--dst_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the destination root directory to save reclassified frame images",
+    required=True,
 )
 @click.option(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
+    required=True,
 )
 def reclassify_frames(
     src_root_dir: pathlib.Path,
@@ -139,16 +149,19 @@ def reclassify_frames(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to config file",
+    required=True,
 )
 @click.option(
     "--src_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Source root directory to read images from.",
+    required=True,
 )
 @click.option(
     "--dst_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Destination root directory to store images.",
+    required=True,
 )
 def preprocess(
     config_filepath: pathlib.Path,
@@ -174,11 +187,13 @@ def preprocess(
     "--src_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Source root directory to read images from.",
+    required=True,
 )
 @click.option(
     "--dst_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Destination root directory to store new file structure.",
+    required=True,
 )
 def to_upload_format(src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path) -> None:
     """Copy contents of a source file structure and stores it as a format that is easier to upload to edge impulse in a destination directory.
@@ -197,21 +212,25 @@ def to_upload_format(src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path) -> 
     "--excel_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the excel file with label information",
+    required=True,
 )
 @click.option(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
+    required=True,
 )
 @click.option(
     "--src_video_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the source directory containing video file",
+    required=True,
 )
 @click.option(
     "--dst_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the destination root directory to store dataset and intermediate data",
+    required=True,
 )
 def create_ei_dataset(
     excel_filepath: pathlib.Path,
