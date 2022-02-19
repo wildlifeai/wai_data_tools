@@ -21,7 +21,7 @@ def create_label_based_file_structure(
     raw_data_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
-    """Copies the raw data .mjpg files from the Weta Watcher raw data file structure to a new file structure based on labels.
+    """Copy the raw data .mjpg files from the Weta Watcher raw data file structure to a new file structure based on labels.
 
     Args:
         excel_filepath: Path to the excel file with label information
