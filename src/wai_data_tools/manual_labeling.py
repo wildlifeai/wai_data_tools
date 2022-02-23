@@ -1,4 +1,4 @@
-"""This modulle allows manual labeling by users."""
+"""This module allows manual labeling by users."""
 import logging
 import pathlib
 from typing import Dict, List, Union
@@ -8,6 +8,8 @@ import matplotlib.widgets as pltwid
 import numpy as np
 
 from wai_data_tools.io import save_frames
+
+logger = logging.getLogger(__name__)
 
 
 class Callbacks:
@@ -76,7 +78,7 @@ class Callbacks:
 
         new_class = self.classes[self.class_ind]
 
-        logging.debug(
+        logger.debug(
             "Toggling Frame %s from %s to %s",
             self.index,
             self.frame_dict[self.index]["target"],

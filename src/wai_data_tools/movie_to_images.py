@@ -2,7 +2,7 @@
 import logging
 import pathlib
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, Union
 
 import imageio
 import numpy as np
@@ -15,6 +15,8 @@ from imageio.plugins.ffmpeg import FfmpegFormat
 FfmpegFormat.can_read = lambda x, y: True
 
 from wai_data_tools import read_excel
+
+logger = logging.getLogger(__name__)
 
 
 def get_video_reader(video_filepath: Path) -> Any:
@@ -42,14 +44,14 @@ def calculate_frames_in_timespan(
     Returns:
         array with frame indices
     """
-    logging.debug("Calculating start and end frame.")
+    logger.debug("Calculating start and end frame.")
 
     t_frame = 1 / fps
 
     frame_start = t_start / t_frame
 
     if frame_start % 1 > 0:
-        logging.debug(
+        logger.debug(
             "Remainder when calculating the index for start frame is not zero. Performing floor operation."
         )
         frame_start = np.floor(frame_start)
@@ -57,12 +59,12 @@ def calculate_frames_in_timespan(
     frame_end = t_end / t_frame
 
     if frame_end % 1 > 0:
-        logging.debug(
+        logger.debug(
             "Remainder when calculating the index for end frame is not zero. Performing ceiling operation."
         )
         frame_end = np.ceil(frame_end)
 
-    logging.debug(
+    logger.debug(
         "Frames with label start at frame %s and ends at %s", frame_start, frame_end
     )
 
@@ -89,7 +91,7 @@ def read_frames_in_video(
         image,
          "contains_target": boolean if label is present in image}
     """
-    logging.debug("Filtering frames in video to label and non label frames")
+    logger.debug("Filtering frames in video to label and non label frames")
     frames_dict = {}
     for frame_ind, frame_img in enumerate(video_reader):
         if frame_ind % sampling_frequency != 0:
@@ -126,12 +128,12 @@ def split_video_file_to_frame_files(
     is_target = label_config["is_target"]
     sampling_frequency = label_config["sampling_frequency"]
 
-    logging.debug("Splitting video file to frame files...")
+    logger.debug("Splitting video file to frame files...")
 
     reader = get_video_reader(video_filepath=video_filepath)
     meta = reader.get_meta_data()
 
-    logging.debug("Filtering dataframe based on label %s", label_name)
+    logger.debug("Filtering dataframe based on label %s", label_name)
     excel_dataframe = excel_dataframe[excel_dataframe["label"] == label_name]
     video_row = excel_dataframe[excel_dataframe["filename"] == video_filepath.name]
     if video_row.shape[0] > 1:
@@ -171,7 +173,7 @@ def save_frames(
         label_name: Target class label name
         dst_frame_dir: destination root directory to save frames
     """
-    logging.debug("Saving frames")
+    logger.debug("Saving frames")
 
     for frame_ind, frame_dict in frames_dict.items():
         frame_img = frame_dict["image"]
@@ -200,14 +202,14 @@ def split_video_files_to_frame_files(
         dst_frame_dir: Path to directory to store new data
         label_config: Label configuration
     """
-    logging.info("Reading and formatting excel dataframe")
+    logger.info("Reading and formatting excel dataframe")
     excel_df_dict = read_excel.read_excel_to_dataframe(excel_file_path=excel_path)
     excel_df = read_excel.stack_rows_from_dataframe_dictionary(
         dataframe_dict=excel_df_dict
     )
     label_name = label_config["name"]
 
-    logging.info(
+    logger.info(
         "Reading video files and saving frames to destination for label %s", label_name
     )
     video_filepaths = src_video_dir.glob("*.mjpg")

@@ -7,6 +7,8 @@ import tqdm
 
 from wai_data_tools import config, io, preprocessing
 
+logger = logging.getLogger(__name__)
+
 
 def preprocess_images(
     config_filepath: pathlib.Path,
@@ -23,12 +25,12 @@ def preprocess_images(
     config_dict = config.load_config(config_filepath=config_filepath)
     preprocess_config = config_dict["preprocessing"]
 
-    logging.info("Composing transforms")
+    logger.info("Composing transforms")
     composed_transforms = preprocessing.compose_transforms(
         transforms_config=preprocess_config["transformations"]
     )
 
-    logging.info("Preprocessing images")
+    logger.info("Preprocessing images")
     frame_dirs = [dir_path for dir_path in src_root_dir.iterdir() if dir_path.is_dir()]
     for frame_dir in tqdm.tqdm(frame_dirs):
         frames_dict = io.load_frames(frame_dir)

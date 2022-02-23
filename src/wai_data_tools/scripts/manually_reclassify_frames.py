@@ -8,6 +8,8 @@ import tqdm
 import wai_data_tools.io
 from wai_data_tools import config, manual_labeling
 
+logger = logging.getLogger(__name__)
+
 
 def manually_reclassify_frames(
     src_root_dir: pathlib.Path,
@@ -21,7 +23,7 @@ def manually_reclassify_frames(
         dst_root_dir: Path to the destination root directory to save reclassified frame images
         config_filepath: Path to configuration file
     """
-    logging.info("Reading config file")
+    logger.info("Reading config file")
     dataset_config = config.load_config(config_filepath=config_filepath)
 
     classes = [
@@ -31,9 +33,9 @@ def manually_reclassify_frames(
     ]
     classes.append("background")
 
-    logging.info("Found classes %s", classes)
+    logger.info("Found classes %s", classes)
 
-    logging.info("Starting GUI for reclassification")
+    logger.info("Starting GUI for reclassification")
     frame_dirs = [dir_path for dir_path in src_root_dir.iterdir() if dir_path.is_dir()]
     for frame_dir in tqdm.tqdm(frame_dirs):
         frames_dict = wai_data_tools.io.load_frames(frame_dir=frame_dir)

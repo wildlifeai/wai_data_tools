@@ -5,6 +5,8 @@ from typing import Dict, Union
 
 import pandas as pd
 
+logger = logging.getLogger(__name__)
+
 
 def read_excel_to_dataframe(
     excel_file_path: Path,
@@ -17,7 +19,7 @@ def read_excel_to_dataframe(
     Returns:
         content of excel file stored in pandas DataFrame
     """
-    logging.info("Reading excel datafile %s to dataframe", excel_file_path.name)
+    logger.info("Reading excel datafile %s to dataframe", excel_file_path.name)
     return pd.read_excel(excel_file_path, sheet_name=None)
 
 
@@ -35,7 +37,7 @@ def stack_rows_from_dataframe_dictionary(
     Returns:
         Dataframe with rows stacked from all dataframes in dictionary
     """
-    logging.info("Merging all rows from dataframes in dictionary to one dataframe")
+    logger.info("Merging all rows from dataframes in dictionary to one dataframe")
     merged_dataframe = pd.DataFrame()
     for sheet_name, sheet_content in dataframe_dict.items():
         # Column for the sheet the data was in the file is added for traceability

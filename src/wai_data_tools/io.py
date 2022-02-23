@@ -7,6 +7,8 @@ from typing import Dict, Union
 import imageio
 import numpy as np
 
+logger = logging.getLogger(__name__)
+
 
 def load_frames(
     frame_dir: pathlib.Path,
@@ -57,7 +59,7 @@ def save_frames(
     """
     dst_video_path = dst_root_dir / video_name
 
-    logging.debug("Saving frames to %s", dst_video_path)
+    logger.debug("Saving frames to %s", dst_video_path)
 
     for frame_ind, f_dict in frames_dict.items():
         frame_filename = f"{video_name}___{frame_ind}.jpeg"

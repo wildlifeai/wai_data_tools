@@ -14,6 +14,8 @@ from wai_data_tools.scripts.create_label_based_data_structure import (
 )
 from wai_data_tools.scripts.preprocess_images import preprocess_images
 
+logger = logging.getLogger(__name__)
+
 
 def create_edge_impulse_dataset(
     excel_filepath: pathlib.Path,
@@ -50,7 +52,7 @@ def create_edge_impulse_dataset(
         dst_frame_dir=intermediate_frame_dir,
     )
 
-    logging.info("Removing intermediate video data")
+    logger.info("Removing intermediate video data")
     shutil.rmtree(intermediate_video_dir)
 
     preprocess_images(
@@ -63,5 +65,5 @@ def create_edge_impulse_dataset(
         src_root_dir=intermediate_frame_dir, dst_root_dir=dst_root_dir
     )
 
-    logging.info("Removing intermediate frame data")
+    logger.info("Removing intermediate frame data")
     shutil.rmtree(intermediate_frame_dir)
