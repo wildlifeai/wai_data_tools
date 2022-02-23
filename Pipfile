@@ -13,6 +13,7 @@ pyyaml = "*"
 tqdm = "*"
 imageio = {extras = ["ffmpeg"], version = "*"}
 torchvision = "*"
+click = "*"
 
 [dev-packages]
 tox = "*"

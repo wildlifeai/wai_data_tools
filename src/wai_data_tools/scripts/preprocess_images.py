@@ -1,12 +1,11 @@
 """Script for preprocessing images in dataset by applying transforms such as resizing, color scale conversions etc."""
-import argparse
+
 import logging
 import pathlib
 
 import tqdm
 
 from wai_data_tools import config, io, preprocessing
-from wai_data_tools.setup_logging import setup_logging
 
 
 def preprocess_images(
@@ -47,44 +46,3 @@ def preprocess_images(
             dst_root_dir=dst_root_dir,
             frames_dict=frames_dict,
         )
-
-
-def main():
-    """Entrypoint."""
-    setup_logging()
-
-    parser = argparse.ArgumentParser(
-        "Preprocess all images in given source directory and store results in "
-        "destination directory. If source and destination directory is the same, files"
-        "will be overwritten"
-    )
-
-    parser.add_argument(
-        "config_file_path", type=str, help="Path to the configuration file"
-    )
-    parser.add_argument(
-        "src_root_dir",
-        type=str,
-        help="Path to the root source directory containing image files",
-    )
-    parser.add_argument(
-        "dst_root_dir",
-        type=str,
-        help="Path to the root destination root directory to save images",
-    )
-
-    args = parser.parse_args()
-
-    config_file_path = pathlib.Path(args.config_file_path)
-    src_root_dir = pathlib.Path(args.src_root_dir)
-    dst_root_dir = pathlib.Path(args.dst_root_dir)
-
-    preprocess_images(
-        config_filepath=config_file_path,
-        src_root_dir=src_root_dir,
-        dst_root_dir=dst_root_dir,
-    )
-
-
-if __name__ == "__main__":
-    main()

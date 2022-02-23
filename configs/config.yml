@@ -3,6 +3,9 @@ labels:
     is_target: True
     sampling_frequency: 1
   - name: weta
+    is_target: True
+    sampling_frequency: 1
+  - name: millipede
     is_target: False
     sampling_frequency: 2
 preprocessing:
