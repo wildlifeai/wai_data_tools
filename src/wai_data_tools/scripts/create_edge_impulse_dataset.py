@@ -31,6 +31,8 @@ def create_edge_impulse_dataset(
         src_video_dir: Path to the source directory containing video files
         dst_root_dir: Path to the destination root directory to store dataset and intermediate data
     """
+    logger.info("Creating Edge Impulse dataset")
+
     intermediate_video_dir = dst_root_dir / "inter-video"
 
     intermediate_video_dir.mkdir(exist_ok=True, parents=True)
