@@ -23,7 +23,6 @@ def create_frame_image_dataset(
         dst_frame_dir: Path to the destination root directory to save frame images
     """
     dataset_config = config.load_config(config_filepath=config_filepath)
-
     label_config_list = dataset_config["labels"]
     for label_config in label_config_list:
         label_name = label_config["name"]
