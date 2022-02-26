@@ -28,7 +28,7 @@ def copy_files_to_label_based_file_structure(
         label_dir = dst_dir / label
         label_dir.mkdir(exist_ok=True, parents=True)
 
-    logging.info("Copying data files to new file structure...")
+    logger.info("Copying data files to new file structure...")
 
     for ind, df_row in tqdm.tqdm(list(file_dataframe.iterrows())):
         filename = df_row["filename"]

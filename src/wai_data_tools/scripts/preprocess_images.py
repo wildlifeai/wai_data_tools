@@ -36,7 +36,7 @@ def preprocess_images(
         frames_dict = io.load_frames(frame_dir)
 
         for frame_index, frame_dict in frames_dict.items():
-            logging.debug(
+            logger.debug(
                 "Applying transforms to frame %s for video %s",
                 frame_index,
                 frame_dir.name,

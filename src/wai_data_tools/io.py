@@ -23,7 +23,7 @@ def load_frames(
         Dictionary where key is frame index and value is a dictionary
         with the target class and frame image
     """
-    logging.debug("Loading frames at %s", frame_dir)
+    logger.debug("Loading frames at %s", frame_dir)
 
     frame_filepaths = frame_dir.rglob("*.jpeg")
 
@@ -37,7 +37,7 @@ def load_frames(
 
         target = frame_filepath.parent.stem
 
-        logging.debug("Frame %s target class is %s", frame_filepath.name, target)
+        logger.debug("Frame %s target class is %s", frame_filepath.name, target)
 
         frames_dict[frame_index] = {"img": frame_img, "target": target}
     return frames_dict
