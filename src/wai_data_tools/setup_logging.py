@@ -10,10 +10,7 @@ def setup_logging():
 
     logging_dir.mkdir(exist_ok=True)
 
-    logging_filename = str(
-        logging_dir
-        / datetime.datetime.now().strftime("wildlife_log_%H_%M_%d_%m_%Y.log")
-    )
+    logging_filename = str(logging_dir / datetime.datetime.now().strftime("wildlife_log_%H_%M_%d_%m_%Y.log"))
 
     logging.basicConfig(
         encoding="utf-8",

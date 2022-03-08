@@ -8,9 +8,7 @@ import numpy as np
 from wai_data_tools.io import load_frames, save_frames
 
 
-def temporal_encoding(
-    frame_dicts: Dict[int, Dict[str, Union[bool, np.ndarray]]], window_size, rgb=False
-):
+def temporal_encoding(frame_dicts: Dict[int, Dict[str, Union[bool, np.ndarray]]], window_size, rgb=False):
     """Perform temporal normalizations and encodings for frames dictionary.
 
     Args:
@@ -32,9 +30,7 @@ def temporal_encoding(
     return frame_dicts
 
 
-def remove_mean_from_frames(
-    frame_dicts: Dict[int, Dict[str, Union[bool, np.ndarray]]], window_size: int
-):
+def remove_mean_from_frames(frame_dicts: Dict[int, Dict[str, Union[bool, np.ndarray]]], window_size: int):
     """Normalize each frame by subtracting the mean from a sliding window of specified size.
 
     Args:
@@ -44,9 +40,7 @@ def remove_mean_from_frames(
     Returns:
         Modified frames dictionary where mean has been subtracted
     """
-    window_inds_dict = calculate_window_inds(
-        window_size=window_size, n_frames=len(frame_dicts)
-    )
+    window_inds_dict = calculate_window_inds(window_size=window_size, n_frames=len(frame_dicts))
 
     for frame_ind, frame_dict in frame_dicts.items():
         window_dict = {ind: frame_dicts[ind] for ind in window_inds_dict[frame_ind]}
@@ -100,9 +94,7 @@ def calculate_window_inds(window_size: int, n_frames: int) -> Dict[int, np.ndarr
     return window_ind_dict
 
 
-def calculate_voxelwise_mean_for_frames(
-    frame_dicts: Dict[int, Dict[str, Union[bool, np.ndarray]]]
-) -> np.ndarray:
+def calculate_voxelwise_mean_for_frames(frame_dicts: Dict[int, Dict[str, Union[bool, np.ndarray]]]) -> np.ndarray:
     """Calculate the voxelwise mean for the supplied frames.
 
     Args:
@@ -112,9 +104,7 @@ def calculate_voxelwise_mean_for_frames(
     Returns:
         array with voxelwise means for frames
     """
-    frame_imgs = [
-        frame_dict["img"][:, :, 0].astype(float) for frame_dict in frame_dicts.values()
-    ]
+    frame_imgs = [frame_dict["img"][:, :, 0].astype(float) for frame_dict in frame_dicts.values()]
     frames_array = np.stack(frame_imgs, axis=0)
     mean_image = np.mean(frames_array, axis=0)
     return mean_image
@@ -145,9 +135,7 @@ def create_3_frame_rgb(frame_dicts: Dict[int, Dict[str, Union[bool, np.ndarray]]
     for curr_frame_ind in range(2, len(frame_dicts)):
         transformed_im = np.zeros_like(frame_dicts[curr_frame_ind]["img"]).astype(float)
         for frame_increment in range(0, 3):
-            transformed_im[:, :, frame_increment] = frame_dicts[
-                curr_frame_ind - frame_increment
-            ]["img"][:, :, 0]
+            transformed_im[:, :, frame_increment] = frame_dicts[curr_frame_ind - frame_increment]["img"][:, :, 0]
         new_frame_dict = {
             "img": transformed_im.astype(np.uint8),
             "label": frame_dicts[curr_frame_ind]["label"],
@@ -158,18 +146,14 @@ def create_3_frame_rgb(frame_dicts: Dict[int, Dict[str, Union[bool, np.ndarray]]
 
 def main():
     """Entrypoint."""
-    data_dir = Path(
-        r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\rat-cleaned\background-test"
-    )
+    data_dir = Path(r"C:\Users\david\Desktop\wildlife.ai\curated-datasets\rat-cleaned\background-test")
 
     frame_dirs = list(data_dir.glob("*"))
     for frame_dir in frame_dirs:
         print(frame_dir.name)
         frame_dicts = load_frames(frame_dir=frame_dir)
 
-        new_frame_dicts = temporal_encoding(
-            frame_dicts=frame_dicts, window_size=40, rgb=True
-        )
+        new_frame_dicts = temporal_encoding(frame_dicts=frame_dicts, window_size=40, rgb=True)
 
         save_frames(
             video_name=frame_dir,

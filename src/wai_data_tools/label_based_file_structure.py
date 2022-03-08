@@ -7,9 +7,7 @@ import pandas as pd
 import tqdm
 
 
-def copy_files_to_label_based_file_structure(
-    file_dataframe: pd.DataFrame, src_dir: Path, dst_dir: Path
-) -> None:
+def copy_files_to_label_based_file_structure(file_dataframe: pd.DataFrame, src_dir: Path, dst_dir: Path) -> None:
     """Copy files to label based file structure.
 
     Args:
@@ -28,7 +26,7 @@ def copy_files_to_label_based_file_structure(
 
     logging.info("Copying data files to new file structure...")
 
-    for ind, df_row in tqdm.tqdm(list(file_dataframe.iterrows())):
+    for _, df_row in tqdm.tqdm(list(file_dataframe.iterrows())):
         filename = df_row["filename"]
         folder = df_row["folder"]
         label = df_row["label"]

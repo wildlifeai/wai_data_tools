@@ -49,13 +49,7 @@ def main(argv):
     with ImageImpulseRunner(modelfile) as runner:
         try:
             model_info = runner.init()
-            print(
-                'Loaded runner for "'
-                + model_info["project"]["owner"]
-                + " / "
-                + model_info["project"]["name"]
-                + '"'
-            )
+            print('Loaded runner for "' + model_info["project"]["owner"] + " / " + model_info["project"]["name"] + '"')
             labels = model_info["model_parameters"]["labels"]
 
             img = cv2.imread(args[1])
@@ -77,8 +71,7 @@ def main(argv):
 
             if "classification" in res["result"].keys():
                 print(
-                    "Result (%d ms.) "
-                    % (res["timing"]["dsp"] + res["timing"]["classification"]),
+                    "Result (%d ms.) " % (res["timing"]["dsp"] + res["timing"]["classification"]),
                     end="",
                 )
                 for label in labels:

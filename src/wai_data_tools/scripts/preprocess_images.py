@@ -13,7 +13,8 @@ def preprocess_images(
     src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
-    """Preprocess by applying transformations given in config to images in source directory and store results in destination directory.
+    """Preprocess by applying transformations given in config to images in source directory and store results
+    in destination directory.
 
     Args:
         config_filepath: Path to config file
@@ -24,9 +25,7 @@ def preprocess_images(
     preprocess_config = config_dict["preprocessing"]
 
     logging.info("Composing transforms")
-    composed_transforms = preprocessing.compose_transforms(
-        transforms_config=preprocess_config["transformations"]
-    )
+    composed_transforms = preprocessing.compose_transforms(transforms_config=preprocess_config["transformations"])
 
     logging.info("Preprocessing images")
     frame_dirs = [dir_path for dir_path in src_root_dir.iterdir() if dir_path.is_dir()]

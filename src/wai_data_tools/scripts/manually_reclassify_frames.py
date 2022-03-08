@@ -24,11 +24,7 @@ def manually_reclassify_frames(
     logging.info("Reading config file")
     dataset_config = config.load_config(config_filepath=config_filepath)
 
-    classes = [
-        label_config["name"]
-        for label_config in dataset_config["labels"]
-        if label_config["is_target"]
-    ]
+    classes = [label_config["name"] for label_config in dataset_config["labels"] if label_config["is_target"]]
     classes.append("background")
 
     logging.info("Found classes %s", classes)

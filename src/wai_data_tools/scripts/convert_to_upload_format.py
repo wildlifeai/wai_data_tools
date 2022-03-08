@@ -6,10 +6,9 @@ import shutil
 import tqdm
 
 
-def convert_file_structure_to_upload_format(
-    src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path
-) -> None:
-    """Copy contents of a source file structure and stores it as a format that is easier to upload to edge impulse in a destination directory.
+def convert_file_structure_to_upload_format(src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path) -> None:
+    """Copy contents of a source file structure and stores it as a format that is easier to
+    upload to edge impulse in a destination directory.
 
     Args:
         src_root_dir: Source root directory to read files from.
@@ -27,6 +26,4 @@ def convert_file_structure_to_upload_format(
             dst_target_dir.mkdir(exist_ok=True, parents=True)
 
             for frame_filepath in target_dir.glob("*.jpeg"):
-                shutil.copy(
-                    str(frame_filepath), str(dst_target_dir / frame_filepath.name)
-                )
+                shutil.copy(str(frame_filepath), str(dst_target_dir / frame_filepath.name))

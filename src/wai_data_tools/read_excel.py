@@ -21,9 +21,7 @@ def read_excel_to_dataframe(
     return pd.read_excel(excel_file_path, sheet_name=None)
 
 
-def stack_rows_from_dataframe_dictionary(
-    dataframe_dict: Dict[str, pd.DataFrame]
-) -> pd.DataFrame:
+def stack_rows_from_dataframe_dictionary(dataframe_dict: Dict[str, pd.DataFrame]) -> pd.DataFrame:
     """Stacks the rows from dataframes in a dictionary to one single dataframe.
 
     The dictionary key will be added as an extra row to the dataframe.

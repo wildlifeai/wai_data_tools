@@ -33,11 +33,11 @@ class Callbacks:
         self.classes = classes
         self.class_ind = 0
 
-    def next(self, event):
+    def next(self, _=None):
         """Move to next one.
 
         Args:
-            event: ignored
+            _: ignored
         """
         if self.index < self.max_index:
             self.index += 1
@@ -46,11 +46,11 @@ class Callbacks:
 
         self.draw_img()
 
-    def prev(self, event):
+    def prev(self, _=None):
         """Move to previous one.
 
         Args:
-            event: ignored
+            _: ignored
         """
         if self.index > 0:
             self.index -= 1
@@ -66,11 +66,11 @@ class Callbacks:
         self.ax_togg.set_title(f"Class: {self.frame_dict[self.index]['target']}")
         plt.pause(0.001)
 
-    def toggle_label(self, event):
+    def toggle_label(self, _=None):
         """Handle label change.
 
         Args:
-            event: ignored
+            _: ignored
         """
         self.class_ind = (self.class_ind + 1) % len(self.classes)
 
@@ -91,20 +91,20 @@ class Callbacks:
         """Handle key press.
 
         Args:
-            event: ignored
+            event: event object
         """
         if event.key == "t":
-            self.toggle_label(event=None)
+            self.toggle_label()
         elif event.key == "left":
-            self.prev(event=None)
+            self.prev()
         elif event.key == "right":
-            self.next(event=None)
+            self.next()
 
-    def save_frames(self, event):
+    def save_frames(self, _):
         """Save frames.
 
         Args:
-            event: ignored
+            _: ignored
         """
         save_frames(
             video_name=self.frame_dir.stem,
@@ -127,7 +127,7 @@ def manual_annotation_plot(
         dst_root_dir: directory where to copy
         classes: different labels
     """
-    fig, ax = plt.subplots()
+    fig, ax_img = plt.subplots()
 
     plt.subplots_adjust(bottom=0.2)
 
@@ -143,7 +143,7 @@ def manual_annotation_plot(
 
     callbacks = Callbacks(
         frame_dict=frame_dict,
-        ax_img=ax,
+        ax_img=ax_img,
         ax_togg=axtogg,
         frame_dir=frame_dir,
         new_dir=dst_root_dir,

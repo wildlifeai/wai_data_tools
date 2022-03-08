@@ -5,13 +5,12 @@ import logging
 import pathlib
 import shutil
 
-from wai_data_tools.scripts.convert_to_upload_format import (
-    convert_file_structure_to_upload_format,
-)
-from wai_data_tools.scripts.create_frame_image_dataset import create_frame_image_dataset
-from wai_data_tools.scripts.create_label_based_data_structure import (
-    create_label_based_file_structure,
-)
+from wai_data_tools.scripts.convert_to_upload_format import \
+    convert_file_structure_to_upload_format
+from wai_data_tools.scripts.create_frame_image_dataset import \
+    create_frame_image_dataset
+from wai_data_tools.scripts.create_label_based_data_structure import \
+    create_label_based_file_structure
 from wai_data_tools.scripts.preprocess_images import preprocess_images
 
 
@@ -59,9 +58,7 @@ def create_edge_impulse_dataset(
         dst_root_dir=intermediate_frame_dir,
     )
 
-    convert_file_structure_to_upload_format(
-        src_root_dir=intermediate_frame_dir, dst_root_dir=dst_root_dir
-    )
+    convert_file_structure_to_upload_format(src_root_dir=intermediate_frame_dir, dst_root_dir=dst_root_dir)
 
     logging.info("Removing intermediate frame data")
     shutil.rmtree(intermediate_frame_dir)

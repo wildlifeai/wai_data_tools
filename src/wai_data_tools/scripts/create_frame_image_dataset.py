@@ -1,4 +1,5 @@
-"""Script for constructing a image dataset by splitting the raw .mjpg video files for the Weta Watcher project into .jpg frame images."""
+"""Script for constructing a image dataset by splitting the raw .mjpg video files for the Weta Watcher
+project into .jpg frame images."""
 
 import logging
 import pathlib
