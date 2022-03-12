@@ -5,12 +5,14 @@ import pathlib
 import click
 
 from wai_data_tools import setup_logging
-from wai_data_tools.scripts import (convert_to_upload_format,
-                                    create_edge_impulse_dataset,
-                                    create_frame_image_dataset,
-                                    create_label_based_data_structure,
-                                    manually_reclassify_frames,
-                                    preprocess_images)
+from wai_data_tools.scripts import (
+    convert_to_upload_format,
+    create_edge_impulse_dataset,
+    create_frame_image_dataset,
+    create_label_based_data_structure,
+    manually_reclassify_frames,
+    preprocess_images,
+)
 
 
 @click.group()
@@ -43,8 +45,7 @@ def create_data_structure(
     raw_data_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
-    """Copies the raw data .mjpg files from the Weta Watcher raw data file structure to a new file
-    structure based on labels.
+    """Copies raw data .mjpg files from the Weta Watcher data file structure to a new file structure based on labels.
 
     Args:
         excel_filepath: Path to the excel file with label information
@@ -167,8 +168,7 @@ def preprocess(
     src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
-    """Preprocess by applying transformations given in config to images in source directory and
-    store results in destination directory.
+    """Preprocess images in source directory and store results in destination directory.
 
     Args:
         config_filepath: Path to config file
@@ -196,8 +196,7 @@ def preprocess(
     required=True,
 )
 def to_upload_format(src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path) -> None:
-    """Copy contents of a source file structure and stores it as a format that is easier to
-    upload to edge impulse in a destination directory.
+    """Copy contents of a source file structure and stores it in upload friendly format in destination directory.
 
     Args:
         src_root_dir: Source root directory to read files from.

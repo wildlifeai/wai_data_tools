@@ -5,12 +5,13 @@ import logging
 import pathlib
 import shutil
 
-from wai_data_tools.scripts.convert_to_upload_format import \
-    convert_file_structure_to_upload_format
-from wai_data_tools.scripts.create_frame_image_dataset import \
-    create_frame_image_dataset
-from wai_data_tools.scripts.create_label_based_data_structure import \
-    create_label_based_file_structure
+from wai_data_tools.scripts.convert_to_upload_format import (
+    convert_file_structure_to_upload_format,
+)
+from wai_data_tools.scripts.create_frame_image_dataset import create_frame_image_dataset
+from wai_data_tools.scripts.create_label_based_data_structure import (
+    create_label_based_file_structure,
+)
 from wai_data_tools.scripts.preprocess_images import preprocess_images
 
 

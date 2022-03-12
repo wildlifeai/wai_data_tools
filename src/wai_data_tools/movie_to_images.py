@@ -8,6 +8,7 @@ import imageio
 import numpy as np
 import pandas as pd
 import tqdm
+
 # This hotfix is added since imageio checks compability by file extension name instead of probing.
 from imageio.plugins.ffmpeg import FfmpegFormat
 
