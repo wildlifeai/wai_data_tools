@@ -1,8 +1,7 @@
 """This module is responsible for conversion of the videos to frame by frame format."""
 import logging
-import pathlib
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any, Dict, List, Union
 
 import imageio
 import numpy as np
@@ -12,7 +11,7 @@ import tqdm
 # This hotfix is added since imageio checks compability by file extension name instead of probing.
 from imageio.plugins.ffmpeg import FfmpegFormat
 
-from wai_data_tools import read_excel
+from wai_data_tools import io
 
 FfmpegFormat.can_read = lambda x, y: True
 
@@ -96,23 +95,19 @@ def read_frames_in_video(
 
 def split_video_file_to_frame_files(
     video_filepath: Path,
-    excel_dataframe: pd.DataFrame,
+    video_row: pd.Series,
     label_config: Dict[str, Union[int, bool, str]],
 ) -> Dict[int, Dict[str, Union[np.ndarray, bool]]]:
     """Split a video file into separate frames in the form of .jpeg files.
 
     Args:
         video_filepath: Path to .mjpg video file
-        excel_dataframe: Dataframe with file information
+        video_row: Series with video information
         label_config: Label configuration
 
     Returns:
-        Dictionary
-
-    Raises:
-        ValueError: Multiple entries in dataframe
+        Dictionary where key is frame index and value is dict with frame array and target flag.
     """
-    label_name = label_config["name"]
     is_target = label_config["is_target"]
     sampling_frequency = label_config["sampling_frequency"]
 
@@ -121,16 +116,10 @@ def split_video_file_to_frame_files(
     reader = get_video_reader(video_filepath=video_filepath)
     meta = reader.get_meta_data()
 
-    logging.debug("Filtering dataframe based on label %s", label_name)
-    excel_dataframe = excel_dataframe[excel_dataframe["label"] == label_name]
-    video_row = excel_dataframe[excel_dataframe["filename"] == video_filepath.name]
-    if video_row.shape[0] > 1:
-        raise ValueError("More than 1 entry found that matches the query in the dataframe")
-
     if is_target:
         target_frames = calculate_frames_in_timespan(
-            t_start=video_row["start"].values,
-            t_end=video_row["end"].values,
+            t_start=video_row["start"],
+            t_end=video_row["end"],
             fps=meta["fps"],
         )
     else:
@@ -144,67 +133,70 @@ def split_video_file_to_frame_files(
     return frames_dict
 
 
-def save_frames(
-    frames_dict: Dict[int, Dict[str, Union[np.ndarray, bool]]],
-    src_video_filestem: str,
-    label_name: str,
-    dst_frame_dir: pathlib.Path,
-) -> None:
-    """Save frames in a frame list to a destination root directory. folder location will depend on label presence.
-
-    Args:
-        frames_dict: List of dict containing where each dict contains
-            frame array and target presence information.
-        src_video_filestem: filename stem of source video
-        label_name: Target class label name
-        dst_frame_dir: destination root directory to save frames
-    """
-    logging.debug("Saving frames")
-
-    for frame_ind, frame_dict in frames_dict.items():
-        frame_img = frame_dict["image"]
-        if frame_dict["contains_target"]:
-            label_folder_name = label_name
-        else:
-            label_folder_name = "background"
-
-        output_filename = f"{src_video_filestem}___{frame_ind}.jpeg"
-        output_label_dir = dst_frame_dir / src_video_filestem / label_folder_name
-        output_label_dir.mkdir(parents=True, exist_ok=True)
-        imageio.imwrite(output_label_dir / output_filename, frame_img)
-
-
 def split_video_files_to_frame_files(
     src_video_dir: Path,
-    excel_path: Path,
     dst_frame_dir: Path,
+    video_dataframe: pd.DataFrame,
     label_config: Dict[str, Union[int, bool, str]],
-) -> None:
-    """Copy frames in all .mjpg video files in a source directory into a new directory as .jpg files.
+) -> pd.DataFrame:
+    """Splits video files in source directory, calculates frame information and stores result in destination directory.
 
     Args:
         src_video_dir: Path to directory where video files is stored
-        excel_path: Path to excel file where file information is stored
         dst_frame_dir: Path to directory to store new data
+        video_dataframe: Dataframe with video information
         label_config: Label configuration
+
+    Returns:
+        Dataframe with frame information
     """
-    logging.info("Reading and formatting excel dataframe")
-    excel_df_dict = read_excel.read_excel_to_dataframe(excel_file_path=excel_path)
-    excel_df = read_excel.stack_rows_from_dataframe_dictionary(dataframe_dict=excel_df_dict)
     label_name = label_config["name"]
+    logging.info("Filtering dataframe based on label %s", label_name)
+    label_dataframe = video_dataframe[video_dataframe["label"] == label_name]
 
-    logging.info("Reading video files and saving frames to destination for label %s", label_name)
-    video_filepaths = src_video_dir.glob("*.mjpg")
-    for video_filepath in tqdm.tqdm(list(video_filepaths)):
-        frames_dict = split_video_file_to_frame_files(
-            video_filepath=video_filepath,
-            excel_dataframe=excel_df,
-            label_config=label_config,
-        )
+    frame_rows = []
 
-        save_frames(
-            frames_dict=frames_dict,
-            src_video_filestem=video_filepath.stem,
-            label_name=label_name,
-            dst_frame_dir=dst_frame_dir,
-        )
+    for _, video_row in tqdm.tqdm(list(label_dataframe.iterrows())):
+
+        video_filename = video_row["filename"]
+        folder = video_row["folder"]
+
+        video_filepath = src_video_dir / folder / video_filename
+
+        try:
+            frames_dict = split_video_file_to_frame_files(
+                video_filepath=video_filepath,
+                video_row=video_row,
+                label_config=label_config,
+            )
+        except FileNotFoundError:
+            logging.debug("Could not find file: %s", video_filepath.name)
+            continue
+
+        frame_rows.extend(create_frame_information_rows(video_row=video_row, frames_dict=frames_dict))
+
+        io.save_frames(video_name=video_filepath.stem, dst_root_dir=dst_frame_dir, frames_dict=frames_dict)
+
+    label_frame_df = pd.DataFrame(data=frame_rows)
+    return label_frame_df
+
+
+def create_frame_information_rows(
+    video_row: pd.Series, frames_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]]
+) -> List[pd.Series]:
+    """Creates frame information rows from video row.
+
+    Args:
+        video_row: Series with video information
+        frames_dict: Dictionary with frame information
+
+    Returns:
+        List with rows describing frame information
+    """
+    frame_rows = []
+    for frame_ind, frame_dict in frames_dict.items():
+        new_row = video_row.copy()
+        new_row["frame_ind"] = frame_ind
+        new_row["contains_target"] = video_row["label"] if frame_dict["contains_target"] else "background"
+        frame_rows.append(new_row)
+    return frame_rows
