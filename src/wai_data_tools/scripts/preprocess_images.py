@@ -48,3 +48,5 @@ def preprocess_images(
             dst_root_dir=dst_root_dir,
             frames_dict=frames_dict,
         )
+
+    df_frames.to_csv(dst_root_dir / "frame_information.csv")

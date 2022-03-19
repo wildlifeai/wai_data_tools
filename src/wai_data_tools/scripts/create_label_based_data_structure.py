@@ -6,30 +6,41 @@ structure based on sheet name in the google sheet document.
 """
 
 
+import logging
 import pathlib
+import shutil
 
-from wai_data_tools.label_based_file_structure import (
-    copy_files_to_label_based_file_structure,
-)
-from wai_data_tools.read_excel import (
-    read_excel_to_dataframe,
-    stack_rows_from_dataframe_dictionary,
-)
+import pandas as pd
+import tqdm
 
 
 def create_label_based_file_structure(
-    excel_filepath: pathlib.Path,
-    raw_data_root_dir: pathlib.Path,
+    src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
     """Copy the raw data .mjpg files from raw data file structure to a new file structure based on labels.
 
     Args:
-        excel_filepath: Path to the excel file with label information
-        raw_data_root_dir: Path to the root directory containing the raw Weta Watcher file structure.
+        src_root_dir: Path to the root directory for frame dataset.
         dst_root_dir: Path to the root directory destination to store the label based file structure.
     """
-    content = read_excel_to_dataframe(excel_file_path=excel_filepath)
-    dataframe = stack_rows_from_dataframe_dictionary(dataframe_dict=content)
+    df_frames = pd.read_csv(src_root_dir / "frame_information.csv")
+    dataset_dir = src_root_dir / "dataset"
 
-    copy_files_to_label_based_file_structure(file_dataframe=dataframe, src_dir=raw_data_root_dir, dst_dir=dst_root_dir)
+    logging.info("Setting up label based folder structure at %s...", dst_root_dir)
+
+    labels = df_frames["label"].unique()
+    for label in labels:
+        label_dir = dst_root_dir / label
+        label_dir.mkdir(exist_ok=True, parents=True)
+
+    logging.info("Copying data files to new file structure...")
+
+    for _, df_row in tqdm.tqdm(list(df_frames.iterrows())):
+        video_name = df_row["video_name"]
+        file_name = df_row["file_name"]
+        label = df_row["label"]
+
+        src = dataset_dir / video_name / file_name
+        dst = dst_root_dir / label / file_name
+        shutil.copy(str(src), str(dst))

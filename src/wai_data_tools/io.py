@@ -30,7 +30,7 @@ def load_frames(
 
     frames_dict = {}
 
-    df_video_frames = df_frames[frame_dir.name + ".mjpg" == df_frames["filename"]]
+    df_video_frames = df_frames[frame_dir.name == df_frames["video_name"]]
 
     for frame_filepath in frame_filepaths:
 
@@ -40,7 +40,7 @@ def load_frames(
 
         frame_index = int(frame_index)
 
-        target = df_video_frames[df_video_frames["frame_ind"] == frame_index]
+        target = df_video_frames.loc[df_video_frames["frame_ind"] == frame_index, "contains_target"].item()
 
         logging.debug("Frame %s target class is %s", frame_filepath.name, target)
 

@@ -197,6 +197,11 @@ def create_frame_information_rows(
     for frame_ind, frame_dict in frames_dict.items():
         new_row = video_row.copy()
         new_row["frame_ind"] = frame_ind
-        new_row["contains_target"] = video_row["label"] if frame_dict["contains_target"] else "background"
+        new_row["target"] = video_row["label"] if frame_dict["contains_target"] else "background"
+        new_row["video_name"] = new_row["filename"].replace(".mjpg", "")
+        new_row["file_name"] = f"{new_row['video_name']}___{new_row['frame_ind']}.jpeg"
+
+        new_row = new_row[["video_name", "frame_ind", "file_name", "target", "label"]]
+
         frame_rows.append(new_row)
     return frame_rows

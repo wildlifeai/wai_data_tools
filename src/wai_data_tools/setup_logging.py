@@ -1,13 +1,15 @@
 """This module is responsible for configuration of the logging."""
 import datetime
 import logging
-from pathlib import Path
+import pathlib
 
 
-def setup_logging():
-    """Configure the logging."""
-    logging_dir = Path(r".")
+def setup_logging(logging_dir: pathlib.Path) -> None:
+    """Sets up logging.
 
+    Args:
+        logging_dir: Path to directory to store log files
+    """
     logging_dir.mkdir(exist_ok=True)
 
     logging_filename = str(logging_dir / datetime.datetime.now().strftime("wildlife_log_%H_%M_%d_%m_%Y.log"))

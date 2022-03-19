@@ -4,7 +4,6 @@ import pathlib
 
 import click
 
-from wai_data_tools import setup_logging
 from wai_data_tools.scripts import (
     convert_to_upload_format,
     create_edge_impulse_dataset,
@@ -18,18 +17,11 @@ from wai_data_tools.scripts import (
 @click.group()
 def cli() -> None:
     """CLI Tool for creating and transforming datasets."""
-    setup_logging.setup_logging()
 
 
 @cli.command()
 @click.option(
-    "--excel_filepath",
-    type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to the excel file with label information",
-    required=True,
-)
-@click.option(
-    "--raw_data_root_dir",
+    "--src_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the root directory containing the raw Weta Watcher file structure.",
     required=True,
@@ -41,20 +33,17 @@ def cli() -> None:
     required=True,
 )
 def create_data_structure(
-    excel_filepath: pathlib.Path,
-    raw_data_root_dir: pathlib.Path,
+    src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
     """Copies raw data .mjpg files from the Weta Watcher data file structure to a new file structure based on labels.
 
     Args:
-        excel_filepath: Path to the excel file with label information
-        raw_data_root_dir: Path to the root directory containing the raw Weta Watcher file structure.
+        src_root_dir: Path to the root directory containing the raw Weta Watcher file structure.
         dst_root_dir: Path to the root directory destination to store the label based file structure.
     """
     create_label_based_data_structure.create_label_based_file_structure(
-        excel_filepath=excel_filepath,
-        raw_data_root_dir=raw_data_root_dir,
+        src_root_dir=src_root_dir,
         dst_root_dir=dst_root_dir,
     )
 

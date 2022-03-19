@@ -3,27 +3,35 @@ import logging
 import pathlib
 import shutil
 
+import pandas as pd
 import tqdm
 
 
 def convert_file_structure_to_upload_format(src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path) -> None:
-    """Copy contents of a source file structure and stores it as a format that is easier to
-    upload to edge impulse in a destination directory.
+    """Copy contents of a source file structure and stores it in a destination directoryin upload friendly format.
 
     Args:
         src_root_dir: Source root directory to read files from.
         dst_root_dir: Destination root directory to store new file structure.
     """
-    frame_dirs = [content for content in src_root_dir.iterdir() if content.is_dir()]
+    df_frames = pd.read_csv(src_root_dir / "frame_information.csv")
+    src_dataset_dir = src_root_dir / "dataset"
 
     logging.info("Creating new file structure for uploading to Edge Impulse")
-    for frame_dir in tqdm.tqdm(frame_dirs):
-        target_dirs = [content for content in frame_dir.iterdir() if content.is_dir()]
-        for target_dir in target_dirs:
-            target_name = target_dir.stem
-            dst_target_dir = dst_root_dir / target_name
 
-            dst_target_dir.mkdir(exist_ok=True, parents=True)
+    for _, frame_row in tqdm.tqdm(list(df_frames.iterrows())):
 
-            for frame_filepath in target_dir.glob("*.jpeg"):
-                shutil.copy(str(frame_filepath), str(dst_target_dir / frame_filepath.name))
+        target_name = frame_row["contains_target"]
+
+        dst_target_dir = dst_root_dir / target_name
+        dst_target_dir.mkdir(exist_ok=True, parents=True)
+
+        video_name = frame_row["filename"].split(".")[0]
+
+        frame_filename = f"{video_name}___{frame_row['frame_ind']}.jpeg"
+
+        src_frame_filepath = src_dataset_dir / video_name / frame_filename
+
+        dst_frame_filepath = dst_target_dir / frame_filename
+
+        shutil.copy(str(src_frame_filepath), str(dst_frame_filepath))
