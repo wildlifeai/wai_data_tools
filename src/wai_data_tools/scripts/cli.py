@@ -103,12 +103,6 @@ def create_frame_dataset(
     required=True,
 )
 @click.option(
-    "--dst_root_dir",
-    type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to the destination root directory to save reclassified frame images",
-    required=True,
-)
-@click.option(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
@@ -116,19 +110,16 @@ def create_frame_dataset(
 )
 def reclassify_frames(
     src_root_dir: pathlib.Path,
-    dst_root_dir: pathlib.Path,
     config_filepath: pathlib.Path,
 ) -> None:
     """Manually reclassify assigned classes to frame images using a Tkinter GUI.
 
     Args:
         src_root_dir: Path to the source root directory to read frame images
-        dst_root_dir: Path to the destination root directory to save reclassified frame images
         config_filepath: Path to configuration file
     """
     manually_reclassify_frames.manually_reclassify_frames(
         src_root_dir=src_root_dir,
-        dst_root_dir=dst_root_dir,
         config_filepath=config_filepath,
     )
 

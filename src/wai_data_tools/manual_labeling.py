@@ -1,4 +1,4 @@
-"""This modulle allows manual labeling by users."""
+"""Module for manually relabeling frames using GUI."""
 import logging
 import pathlib
 from typing import Dict, List, Union
@@ -6,8 +6,7 @@ from typing import Dict, List, Union
 import matplotlib.pyplot as plt
 import matplotlib.widgets as pltwid
 import numpy as np
-
-from wai_data_tools.io import save_frames
+import pandas as pd
 
 
 class Callbacks:
@@ -16,18 +15,20 @@ class Callbacks:
     def __init__(
         self,
         frame_dict: Dict[int, Dict[str, Union[str, np.ndarray]]],
-        ax_img,
-        ax_togg,
-        frame_dir: pathlib.Path,
-        new_dir: pathlib.Path,
+        df_frames: pd.DataFrame,
+        video_name: str,
+        ax_img: plt.Axes,
+        ax_togg: plt.Axes,
+        src_dir: pathlib.Path,
         classes: List[str],
     ):
         self.frame_dict = frame_dict
-        self.frame_dir = frame_dir
-        self.new_dir = new_dir
+        self.df_frames = df_frames
+        self.video_name = video_name
+        self.src_dir = src_dir
         self.ax_togg = ax_togg
         self.ax_img = ax_img
-        self.plt_img = ax_img.imshow(self.frame_dict[0]["img"])
+        self.plt_img = ax_img.imshow(self.frame_dict[0]["image"])
         self.index = 0
         self.max_index = max(self.frame_dict.keys())
         self.classes = classes
@@ -61,7 +62,7 @@ class Callbacks:
 
     def draw_img(self):
         """Handle showing images."""
-        self.plt_img.set_array(self.frame_dict[self.index]["img"])
+        self.plt_img.set_array(self.frame_dict[self.index]["image"])
         self.ax_img.set_title(f"Frame {self.index}")
         self.ax_togg.set_title(f"Class: {self.frame_dict[self.index]['target']}")
         plt.pause(0.001)
@@ -100,31 +101,38 @@ class Callbacks:
         elif event.key == "right":
             self.next()
 
-    def save_frames(self, _):
-        """Save frames.
+    def save_frame_information(self, _):
+        """Save frame information.
 
         Args:
             _: ignored
         """
-        save_frames(
-            video_name=self.frame_dir.stem,
-            dst_root_dir=self.new_dir,
-            frames_dict=self.frame_dict,
-        )
+        df_to_update = self.df_frames.loc[self.df_frames["video_name"] == self.video_name, :]
+
+        for frame_ind, f_dict in self.frame_dict.items():
+            df_to_update.loc[df_to_update["frame_ind"] == frame_ind, "target"] = f_dict["target"]
+
+        self.df_frames.loc[self.df_frames["video_name"] == self.video_name] = df_to_update
+        self.df_frames.to_csv(self.src_dir / "frame_information.csv")
+        self.ax_img.set_title("Saved!")
+        plt.pause(0.001)
 
 
 def manual_annotation_plot(
     frame_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]],
-    frame_dir: pathlib.Path,
-    dst_root_dir: pathlib.Path,
+    df_frames: pd.DataFrame,
+    video_name: str,
+    src_dir: pathlib.Path,
     classes: List[str],
 ):
-    """Manually annotate the speficied plot.
+    """Manually annotate the specified plot.
 
     Args:
-        frame_dict: dataframe describing the directory
-        frame_dir: directory where all frames exists
-        dst_root_dir: directory where to copy
+        frame_dict: Dictionary with frame image arrays. Key is frame index and value is dict with
+                    image array and target information.
+        df_frames: Dataframe with frame information
+        video_name: Name of source video file that frames belong to
+        src_dir: Source directory to store updated frame information dataframe
         classes: different labels
     """
     fig, ax_img = plt.subplots()
@@ -143,10 +151,11 @@ def manual_annotation_plot(
 
     callbacks = Callbacks(
         frame_dict=frame_dict,
+        df_frames=df_frames,
+        video_name=video_name,
         ax_img=ax_img,
         ax_togg=axtogg,
-        frame_dir=frame_dir,
-        new_dir=dst_root_dir,
+        src_dir=src_dir,
         classes=classes,
     )
     callbacks.draw_img()
@@ -154,7 +163,7 @@ def manual_annotation_plot(
     bnext.on_clicked(callbacks.next)
     bprev.on_clicked(callbacks.prev)
     btogg.on_clicked(callbacks.toggle_label)
-    bsave.on_clicked(callbacks.save_frames)
+    bsave.on_clicked(callbacks.save_frame_information)
 
     fig.canvas.mpl_connect("key_press_event", callbacks.hotkey_press)
 

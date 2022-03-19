@@ -3,6 +3,7 @@
 import logging
 import pathlib
 
+import pandas as pd
 import tqdm
 
 import wai_data_tools.io
@@ -11,14 +12,12 @@ from wai_data_tools import config, manual_labeling
 
 def manually_reclassify_frames(
     src_root_dir: pathlib.Path,
-    dst_root_dir: pathlib.Path,
     config_filepath: pathlib.Path,
 ) -> None:
     """Manually reclassify assigned classes to frame images using a Tkinter GUI.
 
     Args:
         src_root_dir: Path to the source root directory to read frame images
-        dst_root_dir: Path to the destination root directory to save reclassified frame images
         config_filepath: Path to configuration file
     """
     logging.info("Reading config file")
@@ -29,14 +28,17 @@ def manually_reclassify_frames(
 
     logging.info("Found classes %s", classes)
 
-    logging.info("Starting GUI for reclassification")
-    frame_dirs = [dir_path for dir_path in src_root_dir.iterdir() if dir_path.is_dir()]
-    for frame_dir in tqdm.tqdm(frame_dirs):
-        frames_dict = wai_data_tools.io.load_frames(frame_dir=frame_dir)
+    df_frames = pd.read_csv(src_root_dir / "frame_information.csv")
+    dataset_dir = src_root_dir / "dataset"
 
+    logging.info("Starting GUI for reclassification")
+    video_dirs = [dir_path for dir_path in dataset_dir.iterdir() if dir_path.is_dir()]
+    for video_dir in tqdm.tqdm(video_dirs):
+        frames_dict = wai_data_tools.io.load_frames(frame_dir=video_dir, df_frames=df_frames)
         manual_labeling.manual_annotation_plot(
             frame_dict=frames_dict,
-            frame_dir=frame_dir,
-            dst_root_dir=dst_root_dir,
+            df_frames=df_frames,
+            video_name=video_dir.name,
+            src_dir=src_root_dir,
             classes=classes,
         )

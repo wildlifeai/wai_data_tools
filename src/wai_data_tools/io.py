@@ -40,7 +40,7 @@ def load_frames(
 
         frame_index = int(frame_index)
 
-        target = df_video_frames.loc[df_video_frames["frame_ind"] == frame_index, "contains_target"].item()
+        target = df_video_frames.loc[df_video_frames["frame_ind"] == frame_index, "target"].item()
 
         logging.debug("Frame %s target class is %s", frame_filepath.name, target)
 
