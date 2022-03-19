@@ -13,3 +13,5 @@ preprocessing:
       img_size:
         - 48
         - 48
+data_split:
+  test_size: 0.25
