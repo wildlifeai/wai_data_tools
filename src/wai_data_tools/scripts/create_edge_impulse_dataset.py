@@ -43,7 +43,9 @@ def create_edge_impulse_dataset(
         dst_root_dir=intermediate_frame_dir,
     )
 
-    convert_file_structure_to_upload_format(src_root_dir=intermediate_frame_dir, dst_root_dir=dst_root_dir)
+    convert_file_structure_to_upload_format(
+        src_root_dir=intermediate_frame_dir, dst_root_dir=dst_root_dir, config_filepath=config_filepath
+    )
 
     logging.info("Removing intermediate frame data")
     shutil.rmtree(intermediate_frame_dir)
