@@ -9,4 +9,8 @@ version_scheme = "no-guess-dev"
 
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 120
-disable = " R0801, R0902, R0913, R0914"
+disable = " R0801, R0902, R0913, R0914, E0401"
+
+[tool.bandit]
+targets = ["src"]
+skips = ["B101"]
