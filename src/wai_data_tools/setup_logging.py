@@ -18,20 +18,19 @@ def setup_logging(
     """
     if logging_dir == "default":
         logging_dir = Path(os.getcwd())
-        print(logging_dir)
     logging_dir = Path(logging_dir)
 
     logging_dir.mkdir(exist_ok=True)
 
-    if logging_config_file == "default":
-        logging_filename = str(
-            logging_dir
-            / datetime.datetime.now().strftime("wildlife_log_%H_%M_%d_%m_%Y.log")
-        )
+    log_filename = datetime.datetime.now().strftime("wildlife_log_%H_%M_%d_%m_%Y.log")
+    log_filepath = str(logging_dir / log_filename)
 
+    if logging_config_file == "default":
         logging.basicConfig(
             level=logging.INFO,
-            handlers=[logging.FileHandler(logging_filename), logging.StreamHandler()],
+            handlers=[logging.FileHandler(log_filepath), logging.StreamHandler()],
         )
     else:
-        logging.config.fileConfig(logging_config_file)
+        logging.config.fileConfig(
+            logging_config_file, defaults={"logfilename": log_filepath}
+        )
