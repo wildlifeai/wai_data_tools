@@ -61,7 +61,7 @@ def create_data_structure(
         dst_root_dir: Path to the root directory destination to store the label based file structure.
     """
     config_dict = load_config(config_filepath=config_filepath)
-    setup_logging.setup_logging(**config_dict)
+    setup_logging.setup_logging(**config_dict["logging"])
 
     create_label_based_data_structure.create_label_based_file_structure(
         excel_filepath=excel_filepath,
@@ -110,7 +110,7 @@ def create_frame_dataset(
         dst_frame_dir: Path to the destination root directory to save frame images
     """
     config_dict = load_config(config_filepath=config_filepath)
-    setup_logging.setup_logging(**config_dict)
+    setup_logging.setup_logging(**config_dict["logging"])
 
     create_frame_image_dataset.create_frame_image_dataset(
         excel_filepath=excel_filepath,
@@ -152,7 +152,7 @@ def reclassify_frames(
         config_filepath: Path to configuration file
     """
     config_dict = load_config(config_filepath=config_filepath)
-    setup_logging.setup_logging(**config_dict)
+    setup_logging.setup_logging(**config_dict["logging"])
 
     manually_reclassify_frames.manually_reclassify_frames(
         src_root_dir=src_root_dir,
@@ -193,7 +193,7 @@ def preprocess(
         dst_root_dir: Destination root directory to store images.
     """
     config_dict = load_config(config_filepath=config_filepath)
-    setup_logging.setup_logging(**config_dict)
+    setup_logging.setup_logging(**config_dict["logging"])
 
     preprocess_images.preprocess_images(
         config_filepath=config_filepath,
@@ -234,7 +234,7 @@ def to_upload_format(
         config_filepath: Path to config file
     """
     config_dict = load_config(config_filepath=config_filepath)
-    setup_logging.setup_logging(**config_dict)
+    setup_logging.setup_logging(**config_dict["logging"])
 
     convert_to_upload_format.convert_file_structure_to_upload_format(
         src_root_dir=src_root_dir, dst_root_dir=dst_root_dir
@@ -281,7 +281,7 @@ def create_ei_dataset(
         dst_root_dir: Path to the destination root directory to store dataset and intermediate data
     """
     config_dict = load_config(config_filepath=config_filepath)
-    setup_logging.setup_logging(**config_dict)
+    setup_logging.setup_logging(**config_dict["logging"])
 
     create_edge_impulse_dataset.create_edge_impulse_dataset(
         excel_filepath=excel_filepath,

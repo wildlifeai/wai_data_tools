@@ -37,4 +37,7 @@ def copy_files_to_label_based_file_structure(
 
         src = src_dir / folder / filename
         dst = dst_dir / label / filename
-        shutil.copy(str(src), str(dst))
+        if src.is_file():
+            shutil.copy(str(src), str(dst))
+        else:
+            logger.debug("Source file %s not found", src.name)
