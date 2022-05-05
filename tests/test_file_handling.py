@@ -1,6 +1,7 @@
 """Tests for file_handling module."""
 import pathlib
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import imageio
 import numpy as np
@@ -23,17 +24,11 @@ def test_load_frames(monkeypatch):
 
     expected = {1: {"image": np.array([0]), "target": "class"}, 2: {"image": np.array([0]), "target": "background"}}
 
-    def mock_imread(*_, **__):
-        return np.zeros(1)
+    mock_imread = MagicMock(return_value=np.zeros(1))
 
     monkeypatch.setattr(target=imageio, name="imread", value=mock_imread)
 
-    def mock_rglob(*_, **__):
-        files = [
-            pathlib.Path("file___1.jpeg"),
-            pathlib.Path("file___2.jpeg"),
-        ]
-        return files
+    mock_rglob = MagicMock(return_value=[pathlib.Path("file___1.jpeg"), pathlib.Path("file___2.jpeg")])
 
     monkeypatch.setattr(target=pathlib.Path, name="rglob", value=mock_rglob)
 
@@ -56,14 +51,15 @@ def test_save_frames(monkeypatch):
     dst_root_dir = pathlib.Path("dst_dir")
     frames_dict = {1: {"image": np.array([0]), "target": "class"}, 2: {"image": np.array([0]), "target": "background"}}
 
-    def mock_mkdir(*_, **__):
-        pass
+    mock_mkdir = MagicMock()
 
     monkeypatch.setattr(target=pathlib.Path, name="mkdir", value=mock_mkdir)
 
-    def mock_imwrite(*_, **__):
-        pass
+    mock_imwrite = MagicMock()
 
     monkeypatch.setattr(target=imageio, name="imwrite", value=mock_imwrite)
 
     file_handling.save_frames(video_name=video_name, dst_root_dir=dst_root_dir, frames_dict=frames_dict)
+
+    assert mock_mkdir.call_count == 1
+    assert mock_imwrite.call_count == len(frames_dict)
