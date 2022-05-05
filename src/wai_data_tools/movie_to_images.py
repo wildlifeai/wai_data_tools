@@ -11,7 +11,7 @@ import tqdm
 # This hotfix is added since imageio checks compability by file extension name instead of probing.
 from imageio.plugins.ffmpeg import FfmpegFormat
 
-from wai_data_tools import io
+from wai_data_tools import file_handling
 
 FfmpegFormat.can_read = lambda x, y: True
 
@@ -175,7 +175,7 @@ def split_video_files_to_frame_files(
 
         frame_rows.extend(create_frame_information_rows(video_row=video_row, frames_dict=frames_dict))
 
-        io.save_frames(video_name=video_filepath.stem, dst_root_dir=dst_frame_dir, frames_dict=frames_dict)
+        file_handling.save_frames(video_name=video_filepath.stem, dst_root_dir=dst_frame_dir, frames_dict=frames_dict)
 
     label_frame_df = pd.DataFrame(data=frame_rows)
     return label_frame_df

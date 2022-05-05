@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from wai_data_tools import io
+from wai_data_tools import file_handling
 
 
 @pytest.mark.parametrize(
@@ -41,7 +41,7 @@ def test_load_frames(frame_dir, df_frames, expected):
 
     with patch.object(pathlib.Path, "rglob", mocked_rglob):
         with patch("imageio.imread", mocked_imread):
-            result = io.load_frames(frame_dir=frame_dir, df_frames=df_frames)
+            result = file_handling.load_frames(frame_dir=frame_dir, df_frames=df_frames)
 
     assert len(result) == len(expected)
     for frame_ind, result_frame_dict in result.items():
@@ -70,6 +70,6 @@ def test_save_frames(video_name, dst_root_dir, frames_dict):
     """
     with patch.object(pathlib.Path, "mkdir") as mkdir_mock:
         with patch("imageio.imwrite") as imwrite_mock:
-            io.save_frames(video_name=video_name, dst_root_dir=dst_root_dir, frames_dict=frames_dict)
+            file_handling.save_frames(video_name=video_name, dst_root_dir=dst_root_dir, frames_dict=frames_dict)
             assert imwrite_mock.call_count == len(frames_dict)
             assert mkdir_mock.call_count == 1

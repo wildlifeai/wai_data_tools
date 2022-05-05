@@ -6,7 +6,7 @@ import pathlib
 import pandas as pd
 import tqdm
 
-from wai_data_tools import config, io, preprocessing
+from wai_data_tools import config, file_handling, preprocessing
 
 
 def preprocess_images(
@@ -33,7 +33,7 @@ def preprocess_images(
 
     frame_dirs = [dir_path for dir_path in dataset_dir.iterdir() if dir_path.is_dir()]
     for frame_dir in tqdm.tqdm(frame_dirs):
-        frames_dict = io.load_frames(frame_dir=frame_dir, df_frames=df_frames)
+        frames_dict = file_handling.load_frames(frame_dir=frame_dir, df_frames=df_frames)
 
         for frame_index, frame_dict in frames_dict.items():
             logging.debug(
@@ -43,7 +43,7 @@ def preprocess_images(
             )
             frame_dict["image"] = composed_transforms(frame_dict["image"])
 
-        io.save_frames(
+        file_handling.save_frames(
             video_name=frame_dir.stem,
             dst_root_dir=dst_root_dir,
             frames_dict=frames_dict,
