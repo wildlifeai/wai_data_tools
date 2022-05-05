@@ -63,3 +63,22 @@ def test_save_frames(monkeypatch):
 
     assert mock_mkdir.call_count == 1
     assert mock_imwrite.call_count == len(frames_dict)
+
+
+def test_get_video_reader(monkeypatch):
+    """Test case for get_video_reader function.
+
+    Args:
+        monkeypatch: Pytest monkeypatch fixture.
+    """
+    video_filepath = pathlib.Path("videofile.mjpg")
+    expected = "reader"
+
+    mock_get_reader = MagicMock(return_value=expected)
+
+    monkeypatch.setattr(target=imageio, name="get_reader", value=mock_get_reader)
+
+    result = file_handling.get_video_reader(video_filepath=video_filepath)
+
+    assert mock_get_reader.call_count == 1
+    assert result == expected

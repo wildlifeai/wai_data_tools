@@ -3,29 +3,12 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Union
 
-import imageio
 import numpy as np
 import pandas as pd
 import tqdm
 
-# This hotfix is added since imageio checks compability by file extension name instead of probing.
-from imageio.plugins.ffmpeg import FfmpegFormat
-
 from wai_data_tools import file_handling
-
-FfmpegFormat.can_read = lambda x, y: True
-
-
-def get_video_reader(video_filepath: Path) -> Any:
-    """Get a imageio reader object for the provided video file. Assumes ffmpeg encoding.
-
-    Args:
-        video_filepath: Path to ffmpeg compatible video file
-
-    Returns:
-        reader object for parsing video
-    """
-    return imageio.get_reader(video_filepath, "FFMPEG")
+from wai_data_tools.file_handling import get_video_reader
 
 
 def calculate_frames_in_timespan(t_start: np.ndarray, t_end: np.ndarray, fps: float) -> np.ndarray:

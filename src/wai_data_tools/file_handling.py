@@ -2,11 +2,17 @@
 
 import logging
 import pathlib
-from typing import Dict, Union
+from pathlib import Path
+from typing import Any, Dict, Union
 
 import imageio
 import numpy as np
 import pandas as pd
+
+# This hotfix is added since imageio checks compability by file extension name instead of probing.
+from imageio.plugins.ffmpeg import FfmpegFormat
+
+FfmpegFormat.can_read = lambda x, y: True
 
 
 def load_frames(
@@ -71,3 +77,15 @@ def save_frames(
         frame_filename = f"{video_name}___{frame_ind}.jpeg"
         total_path = dst_video_path / frame_filename
         imageio.imwrite(total_path, f_dict["image"])
+
+
+def get_video_reader(video_filepath: Path) -> Any:
+    """Get a imageio reader object for the provided video file. Assumes ffmpeg encoding.
+
+    Args:
+        video_filepath: Path to ffmpeg compatible video file
+
+    Returns:
+        reader object for parsing video
+    """
+    return imageio.get_reader(video_filepath, "FFMPEG")
