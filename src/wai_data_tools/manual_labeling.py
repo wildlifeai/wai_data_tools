@@ -9,8 +9,6 @@ import numpy as np
 
 from wai_data_tools.io import save_frames
 
-logger = logging.getLogger(__name__)
-
 
 class Callbacks:
     """Class for handling callbacks for annotation GUI."""
@@ -74,6 +72,8 @@ class Callbacks:
         Args:
             event: ignored
         """
+        logger = logging.getLogger(__name__)
+
         self.class_ind = (self.class_ind + 1) % len(self.classes)
 
         new_class = self.classes[self.class_ind]

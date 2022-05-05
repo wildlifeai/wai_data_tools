@@ -14,8 +14,6 @@ from wai_data_tools.scripts.create_label_based_data_structure import (
 )
 from wai_data_tools.scripts.preprocess_images import preprocess_images
 
-logger = logging.getLogger(__name__)
-
 
 def create_edge_impulse_dataset(
     excel_filepath: pathlib.Path,
@@ -31,6 +29,8 @@ def create_edge_impulse_dataset(
         src_video_dir: Path to the source directory containing video files
         dst_root_dir: Path to the destination root directory to store dataset and intermediate data
     """
+    logger = logging.getLogger(__name__)
+
     logger.info("Creating Edge Impulse dataset")
 
     intermediate_video_dir = dst_root_dir / "inter-video"

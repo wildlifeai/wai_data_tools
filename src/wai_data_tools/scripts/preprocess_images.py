@@ -7,8 +7,6 @@ import tqdm
 
 from wai_data_tools import config, io, preprocessing
 
-logger = logging.getLogger(__name__)
-
 
 def preprocess_images(
     config_filepath: pathlib.Path,
@@ -22,6 +20,8 @@ def preprocess_images(
         src_root_dir: Source root directory to read images from.
         dst_root_dir: Destination root directory to store images.
     """
+    logger = logging.getLogger(__name__)
+
     config_dict = config.load_config(config_filepath=config_filepath)
     preprocess_config = config_dict["preprocessing"]
 

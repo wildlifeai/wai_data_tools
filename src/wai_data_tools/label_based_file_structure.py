@@ -6,8 +6,6 @@ from pathlib import Path
 import pandas as pd
 import tqdm
 
-logger = logging.getLogger(__name__)
-
 
 def copy_files_to_label_based_file_structure(
     file_dataframe: pd.DataFrame, src_dir: Path, dst_dir: Path
@@ -21,6 +19,8 @@ def copy_files_to_label_based_file_structure(
             the WW01, WW02, ... folders.
         dst_dir: Root directory for label based file structure
     """
+    logger = logging.getLogger(__name__)
+
     logger.info("Setting up label based folder structure at %s...", dst_dir)
 
     labels = file_dataframe["label"].unique()

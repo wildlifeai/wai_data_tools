@@ -5,8 +5,6 @@ import pathlib
 
 from wai_data_tools import config, movie_to_images
 
-logger = logging.getLogger(__name__)
-
 
 def create_frame_image_dataset(
     excel_filepath: pathlib.Path,
@@ -22,6 +20,8 @@ def create_frame_image_dataset(
         src_video_dir: Path to the source directory containing video files
         dst_frame_dir: Path to the destination root directory to save frame images
     """
+    logger = logging.getLogger(__name__)
+
     dataset_config = config.load_config(config_filepath=config_filepath)
     label_config_list = dataset_config["labels"]
     for label_config in label_config_list:

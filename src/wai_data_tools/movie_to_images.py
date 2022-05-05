@@ -16,8 +16,6 @@ FfmpegFormat.can_read = lambda x, y: True
 
 from wai_data_tools import read_excel
 
-logger = logging.getLogger(__name__)
-
 
 def get_video_reader(video_filepath: Path) -> Any:
     """Get a imageio reader object for the provided video file. Assumes ffmpeg encoding.
@@ -44,6 +42,8 @@ def calculate_frames_in_timespan(
     Returns:
         array with frame indices
     """
+    logger = logging.getLogger(__name__)
+
     logger.debug("Calculating start and end frame.")
 
     t_frame = 1 / fps
@@ -91,6 +91,8 @@ def read_frames_in_video(
         image,
          "contains_target": boolean if label is present in image}
     """
+    logger = logging.getLogger(__name__)
+
     logger.debug("Filtering frames in video to label and non label frames")
     frames_dict = {}
     for frame_ind, frame_img in enumerate(video_reader):
@@ -124,6 +126,8 @@ def split_video_file_to_frame_files(
     Raises:
         ValueError: Multiple entries in dataframe
     """
+    logger = logging.getLogger(__name__)
+
     label_name = label_config["name"]
     is_target = label_config["is_target"]
     sampling_frequency = label_config["sampling_frequency"]
@@ -173,6 +177,8 @@ def save_frames(
         label_name: Target class label name
         dst_frame_dir: destination root directory to save frames
     """
+    logger = logging.getLogger(__name__)
+
     logger.debug("Saving frames")
 
     for frame_ind, frame_dict in frames_dict.items():
@@ -202,6 +208,8 @@ def split_video_files_to_frame_files(
         dst_frame_dir: Path to directory to store new data
         label_config: Label configuration
     """
+    logger = logging.getLogger(__name__)
+
     logger.info("Reading and formatting excel dataframe")
     excel_df_dict = read_excel.read_excel_to_dataframe(excel_file_path=excel_path)
     excel_df = read_excel.stack_rows_from_dataframe_dictionary(

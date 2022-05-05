@@ -5,8 +5,6 @@ import shutil
 
 import tqdm
 
-logger = logging.getLogger(__name__)
-
 
 def convert_file_structure_to_upload_format(
     src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path
@@ -17,6 +15,8 @@ def convert_file_structure_to_upload_format(
         src_root_dir: Source root directory to read files from.
         dst_root_dir: Destination root directory to store new file structure.
     """
+    logger = logging.getLogger(__name__)
+
     frame_dirs = [content for content in src_root_dir.iterdir() if content.is_dir()]
 
     logger.info("Creating new file structure for uploading to Edge Impulse")
