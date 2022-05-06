@@ -14,5 +14,5 @@ preprocessing:
         - 48
         - 48
 logging:
-  logging_dir: /Users/dvand/garbage/logs
-  logging_config_file: /Users/dvand/git/wai_data_tools/configs/default_logging_config.conf
+  logging_dir: default
+  logging_config_file: default
