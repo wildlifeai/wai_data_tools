@@ -216,17 +216,16 @@ def preprocess(
     required=True,
 )
 @click.option(
-    "--config_filepath",
+    "--dst_root_dir",
     type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to configuration file",
-    default=DEFAULT_CONFIG_PATH,
-    required=False,
+    help="Destination root directory to store new file structure.",
+    required=True,
 )
 @click.option(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to config file",
-    required=True,
+    required=False,
 )
 def to_upload_format(
     src_root_dir: pathlib.Path,
