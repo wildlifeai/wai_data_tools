@@ -15,6 +15,8 @@ from wai_data_tools.scripts import (
     preprocess_images,
 )
 
+DEFAULT_CONFIG_PATH = pathlib.Path(__file__).parents[1] / "configs/default_config.yml"
+
 
 @click.group()
 def cli() -> None:
@@ -31,8 +33,9 @@ def cli() -> None:
 @click.option(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to the configuration file",
-    required=True,
+    help="Path to configuration file",
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 @click.option(
     "--raw_data_root_dir",
@@ -80,8 +83,9 @@ def create_data_structure(
 @click.option(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to the configuration file",
-    required=True,
+    help="Path to configuration file",
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 @click.option(
     "--src_video_dir",
@@ -137,7 +141,8 @@ def create_frame_dataset(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
-    required=True,
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 def reclassify_frames(
     src_root_dir: pathlib.Path,
@@ -165,8 +170,9 @@ def reclassify_frames(
 @click.option(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to config file",
-    required=True,
+    help="Path to configuration file",
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 @click.option(
     "--src_root_dir",
@@ -210,10 +216,11 @@ def preprocess(
     required=True,
 )
 @click.option(
-    "--dst_root_dir",
+    "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Destination root directory to store new file structure.",
-    required=True,
+    help="Path to configuration file",
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 @click.option(
     "--config_filepath",
@@ -252,7 +259,8 @@ def to_upload_format(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
-    required=True,
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 @click.option(
     "--src_video_dir",
