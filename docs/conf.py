@@ -6,7 +6,8 @@
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
-"""configuration for sphinx."""
+"""Configuration file for sphinx."""
+
 import os
 import shutil
 import sys
@@ -282,7 +283,7 @@ intersphinx_mapping = {
     "sklearn": ("https://scikit-learn.org/stable", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
-    "setuptools": ("https://setuptools.readthedocs.io/en/stable/", None),
+    "setuptools": ("https://setuptools.pypa.io/en/stable/", None),
     "pyscaffold": ("https://pyscaffold.org/en/stable", None),
 }
 
