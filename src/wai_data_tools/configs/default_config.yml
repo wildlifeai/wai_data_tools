@@ -13,3 +13,6 @@ preprocessing:
       img_size:
         - 48
         - 48
+logging:
+  logging_dir: default
+  logging_config_file: default

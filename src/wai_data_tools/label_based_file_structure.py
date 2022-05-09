@@ -19,14 +19,16 @@ def copy_files_to_label_based_file_structure(
             the WW01, WW02, ... folders.
         dst_dir: Root directory for label based file structure
     """
-    logging.info("Setting up label based folder structure at %s...", dst_dir)
+    logger = logging.getLogger(__name__)
+
+    logger.info("Setting up label based folder structure at %s...", dst_dir)
 
     labels = file_dataframe["label"].unique()
     for label in labels:
         label_dir = dst_dir / label
         label_dir.mkdir(exist_ok=True, parents=True)
 
-    logging.info("Copying data files to new file structure...")
+    logger.info("Copying data files to new file structure...")
 
     for ind, df_row in tqdm.tqdm(list(file_dataframe.iterrows())):
         filename = df_row["filename"]
@@ -35,4 +37,7 @@ def copy_files_to_label_based_file_structure(
 
         src = src_dir / folder / filename
         dst = dst_dir / label / filename
-        shutil.copy(str(src), str(dst))
+        if src.is_file():
+            shutil.copy(str(src), str(dst))
+        else:
+            logger.debug("Source file %s not found", src.name)

@@ -5,6 +5,7 @@ import pathlib
 import click
 
 from wai_data_tools import setup_logging
+from wai_data_tools.config import load_config
 from wai_data_tools.scripts import (
     convert_to_upload_format,
     create_edge_impulse_dataset,
@@ -14,11 +15,12 @@ from wai_data_tools.scripts import (
     preprocess_images,
 )
 
+DEFAULT_CONFIG_PATH = pathlib.Path(__file__).parents[1] / "configs/default_config.yml"
+
 
 @click.group()
 def cli() -> None:
     """CLI Tool for creating and transforming datasets."""
-    setup_logging.setup_logging()
 
 
 @cli.command()
@@ -27,6 +29,13 @@ def cli() -> None:
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the excel file with label information",
     required=True,
+)
+@click.option(
+    "--config_filepath",
+    type=click.Path(exists=True, path_type=pathlib.Path),
+    help="Path to configuration file",
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 @click.option(
     "--raw_data_root_dir",
@@ -42,6 +51,7 @@ def cli() -> None:
 )
 def create_data_structure(
     excel_filepath: pathlib.Path,
+    config_filepath: pathlib.Path,
     raw_data_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
@@ -49,9 +59,13 @@ def create_data_structure(
 
     Args:
         excel_filepath: Path to the excel file with label information
+        config_filepath: Path to configuration file
         raw_data_root_dir: Path to the root directory containing the raw Weta Watcher file structure.
         dst_root_dir: Path to the root directory destination to store the label based file structure.
     """
+    config_dict = load_config(config_filepath=config_filepath)
+    setup_logging.setup_logging(**config_dict["logging"])
+
     create_label_based_data_structure.create_label_based_file_structure(
         excel_filepath=excel_filepath,
         raw_data_root_dir=raw_data_root_dir,
@@ -69,8 +83,9 @@ def create_data_structure(
 @click.option(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to the configuration file",
-    required=True,
+    help="Path to configuration file",
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 @click.option(
     "--src_video_dir",
@@ -98,6 +113,9 @@ def create_frame_dataset(
         src_video_dir: Path to the source directory containing video files
         dst_frame_dir: Path to the destination root directory to save frame images
     """
+    config_dict = load_config(config_filepath=config_filepath)
+    setup_logging.setup_logging(**config_dict["logging"])
+
     create_frame_image_dataset.create_frame_image_dataset(
         excel_filepath=excel_filepath,
         config_filepath=config_filepath,
@@ -123,7 +141,8 @@ def create_frame_dataset(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
-    required=True,
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 def reclassify_frames(
     src_root_dir: pathlib.Path,
@@ -137,6 +156,9 @@ def reclassify_frames(
         dst_root_dir: Path to the destination root directory to save reclassified frame images
         config_filepath: Path to configuration file
     """
+    config_dict = load_config(config_filepath=config_filepath)
+    setup_logging.setup_logging(**config_dict["logging"])
+
     manually_reclassify_frames.manually_reclassify_frames(
         src_root_dir=src_root_dir,
         dst_root_dir=dst_root_dir,
@@ -148,8 +170,9 @@ def reclassify_frames(
 @click.option(
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
-    help="Path to config file",
-    required=True,
+    help="Path to configuration file",
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 @click.option(
     "--src_root_dir",
@@ -175,6 +198,9 @@ def preprocess(
         src_root_dir: Source root directory to read images from.
         dst_root_dir: Destination root directory to store images.
     """
+    config_dict = load_config(config_filepath=config_filepath)
+    setup_logging.setup_logging(**config_dict["logging"])
+
     preprocess_images.preprocess_images(
         config_filepath=config_filepath,
         src_root_dir=src_root_dir,
@@ -195,13 +221,27 @@ def preprocess(
     help="Destination root directory to store new file structure.",
     required=True,
 )
-def to_upload_format(src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path) -> None:
+@click.option(
+    "--config_filepath",
+    type=click.Path(exists=True, path_type=pathlib.Path),
+    help="Path to config file",
+    required=False,
+)
+def to_upload_format(
+    src_root_dir: pathlib.Path,
+    dst_root_dir: pathlib.Path,
+    config_filepath: pathlib.Path,
+) -> None:
     """Copy contents of a source file structure and stores it as a format that is easier to upload to edge impulse in a destination directory.
 
     Args:
         src_root_dir: Source root directory to read files from.
         dst_root_dir: Destination root directory to store new file structure.
+        config_filepath: Path to config file
     """
+    config_dict = load_config(config_filepath=config_filepath)
+    setup_logging.setup_logging(**config_dict["logging"])
+
     convert_to_upload_format.convert_file_structure_to_upload_format(
         src_root_dir=src_root_dir, dst_root_dir=dst_root_dir
     )
@@ -218,7 +258,8 @@ def to_upload_format(src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path) -> 
     "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
-    required=True,
+    default=DEFAULT_CONFIG_PATH,
+    required=False,
 )
 @click.option(
     "--src_video_dir",
@@ -246,6 +287,9 @@ def create_ei_dataset(
         src_video_dir: Path to the source directory containing video files
         dst_root_dir: Path to the destination root directory to store dataset and intermediate data
     """
+    config_dict = load_config(config_filepath=config_filepath)
+    setup_logging.setup_logging(**config_dict["logging"])
+
     create_edge_impulse_dataset.create_edge_impulse_dataset(
         excel_filepath=excel_filepath,
         config_filepath=config_filepath,

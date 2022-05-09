@@ -29,6 +29,10 @@ def create_edge_impulse_dataset(
         src_video_dir: Path to the source directory containing video files
         dst_root_dir: Path to the destination root directory to store dataset and intermediate data
     """
+    logger = logging.getLogger(__name__)
+
+    logger.info("Creating Edge Impulse dataset")
+
     intermediate_video_dir = dst_root_dir / "inter-video"
 
     intermediate_video_dir.mkdir(exist_ok=True, parents=True)
@@ -50,7 +54,7 @@ def create_edge_impulse_dataset(
         dst_frame_dir=intermediate_frame_dir,
     )
 
-    logging.info("Removing intermediate video data")
+    logger.info("Removing intermediate video data")
     shutil.rmtree(intermediate_video_dir)
 
     preprocess_images(
@@ -63,5 +67,5 @@ def create_edge_impulse_dataset(
         src_root_dir=intermediate_frame_dir, dst_root_dir=dst_root_dir
     )
 
-    logging.info("Removing intermediate frame data")
+    logger.info("Removing intermediate frame data")
     shutil.rmtree(intermediate_frame_dir)
