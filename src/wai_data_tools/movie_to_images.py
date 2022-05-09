@@ -39,23 +39,25 @@ def calculate_frames_in_timespan(t_start: np.ndarray, t_end: np.ndarray, fps: fl
     Returns:
         array with frame indices
     """
-    logging.debug("Calculating start and end frame.")
+    logger = logging.getLogger(__name__)
+
+    logger.debug("Calculating start and end frame.")
 
     t_frame = 1 / fps
 
     frame_start = t_start / t_frame
 
     if frame_start % 1 > 0:
-        logging.debug("Remainder when calculating the index for start frame is not zero. Performing floor operation.")
+        logger.debug("Remainder when calculating the index for start frame is not zero. Performing floor operation.")
         frame_start = np.floor(frame_start)
 
     frame_end = t_end / t_frame
 
     if frame_end % 1 > 0:
-        logging.debug("Remainder when calculating the index for end frame is not zero. Performing ceiling operation.")
+        logger.debug("Remainder when calculating the index for end frame is not zero. Performing ceiling operation.")
         frame_end = np.ceil(frame_end)
 
-    logging.debug("Frames with label start at frame %s and ends at %s", frame_start, frame_end)
+    logger.debug("Frames with label start at frame %s and ends at %s", frame_start, frame_end)
 
     return np.arange(frame_start, frame_end)
 
@@ -80,7 +82,9 @@ def read_frames_in_video(
         image,
          "contains_target": boolean if label is present in image}
     """
-    logging.debug("Filtering frames in video to label and non label frames")
+    logger = logging.getLogger(__name__)
+
+    logger.debug("Filtering frames in video to label and non label frames")
     frames_dict = {}
     for frame_ind, frame_img in enumerate(video_reader):
         if frame_ind % sampling_frequency != 0:
@@ -108,10 +112,12 @@ def split_video_file_to_frame_files(
     Returns:
         Dictionary where key is frame index and value is dict with frame array and target flag.
     """
+    logger = logging.getLogger(__name__)
+
     is_target = label_config["is_target"]
     sampling_frequency = label_config["sampling_frequency"]
 
-    logging.debug("Splitting video file to frame files...")
+    logger.debug("Splitting video file to frame files...")
 
     reader = get_video_reader(video_filepath=video_filepath)
     meta = reader.get_meta_data()
@@ -150,8 +156,12 @@ def split_video_files_to_frame_files(
     Returns:
         Dataframe with frame information
     """
+    logger = logging.getLogger(__name__)
+
+    logger.info("Reading and formatting excel dataframe")
+
     label_name = label_config["name"]
-    logging.info("Filtering dataframe based on label %s", label_name)
+    logger.info("Filtering dataframe based on label %s", label_name)
     label_dataframe = video_dataframe[video_dataframe["label"] == label_name]
 
     frame_rows = []

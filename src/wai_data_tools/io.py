@@ -24,7 +24,9 @@ def load_frames(
         Dictionary where key is frame index and value is a dictionary
         with the target class and frame image
     """
-    logging.debug("Loading frames at %s", frame_dir)
+    logger = logging.getLogger(__name__)
+
+    logger.debug("Loading frames at %s", frame_dir)
 
     frame_filepaths = frame_dir.rglob("*.jpeg")
 
@@ -42,7 +44,7 @@ def load_frames(
 
         target = df_video_frames.loc[df_video_frames["frame_ind"] == frame_index, "target"].item()
 
-        logging.debug("Frame %s target class is %s", frame_filepath.name, target)
+        logger.debug("Frame %s target class is %s", frame_filepath.name, target)
 
         frames_dict[frame_index] = {"image": frame_img, "target": target}
     return frames_dict
@@ -62,10 +64,12 @@ def save_frames(
         frames_dict: Dictionary where key is frame index and value is a
             dictionary with the label class and frame image
     """
+    logger = logging.getLogger(__name__)
+
     dst_video_path = dst_root_dir / video_name
     dst_video_path.mkdir(exist_ok=True, parents=True)
 
-    logging.debug("Saving frames to %s", dst_video_path)
+    logger.debug("Saving frames to %s", dst_video_path)
 
     for frame_ind, f_dict in frames_dict.items():
         frame_filename = f"{video_name}___{frame_ind}.jpeg"
