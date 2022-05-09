@@ -180,7 +180,7 @@ def split_video_files_to_frame_files(
                 label_config=label_config,
             )
         except FileNotFoundError:
-            logging.debug("Could not find file: %s", video_filepath.name)
+            logger.debug("Could not find file: %s", video_filepath.name)
             continue
 
         frame_rows.extend(create_frame_information_rows(video_row=video_row, frames_dict=frames_dict))
