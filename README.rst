@@ -30,9 +30,7 @@
 wai_data_tools
 ==============
 
-
-    Tools and scripts for manipulating the wildlife AI camera data for working with Edge Impulse.
-
+Tools and scripts for manipulating the wildlife AI camera data for working with Edge Impulse.
 
 This repository contains good tools for formatting data for the Weta Watcher project.
 Typically you would want to use this package if you:
@@ -43,37 +41,36 @@ Typically you would want to use this package if you:
  - Apply preprocessing transformations(TODO)
  - Convert structure to a format which is easier to upload to Edge Impulse
 
-
 ==========
 Installing
 ==========
 
-```pip install wai_data_tools```
+`pip install wai_data_tools`
 
 =====
 Usage
 =====
 
 Generating a dataset from .mjpg to a new file structure based on labels
-```wildlifeai-cli dataset labels create --excel_filepath EXCEL_PATH --raw_data_root_dir YOUR_PATH --dst_root_dir SECOND_PATH```
+`wildlifeai-cli dataset labels create --excel_filepath EXCEL_PATH --raw_data_root_dir YOUR_PATH --dst_root_dir SECOND_PATH`
 
 Generating a dataset of all the frames in the .mjpg and store them as .jpg
-```wildlifeai-cli dataset frame create --config_filepath CONFIG_PATH --excel_filepath EXCEL_PATH --src_video_dir YOUR_PATH --dst_frame_dir SECOND_PATH```
+`wildlifeai-cli dataset frame create --config_filepath CONFIG_PATH --excel_filepath EXCEL_PATH --src_video_dir YOUR_PATH --dst_frame_dir SECOND_PATH`
 
 Generate a dataset for image classification in edge impulse
-```wildlifeai-cli dataset ei create --config-filepath CONFIG_PATH --excel_filepath EXCEL_PATH --src_video_dir YOUR_PATH --dst_root_dir SECOND_PATH```
+`wildlifeai-cli dataset ei create --config-filepath CONFIG_PATH --excel_filepath EXCEL_PATH --src_video_dir YOUR_PATH --dst_root_dir SECOND_PATH`
 
 Converts a dataset to Edge impulse friendly format, from labels structure
-```wildlifeai-cli dataset ei import labels --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH```
+`wildlifeai-cli dataset ei import labels --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH`
 
 Preprocessing via a configfile
-```wildlifeai-cli dataset preprocess --config_filepath CONFIG_PATH --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH```
+`wildlifeai-cli dataset preprocess --config_filepath CONFIG_PATH --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH`
 
 Filter empty videos from source directory and output in the destination directory
-```wildlifeai-cli dataset filter_empty --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH```
+`wildlifeai-cli dataset filter_empty --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH`
 
 Manually reclassify
-```wildlifeai-cli annotate classify --config_filepath CONFIG_PATH --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH```
+`wildlifeai-cli annotate classify --config_filepath CONFIG_PATH --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH`
 
 .. _pyscaffold-notes:
 
