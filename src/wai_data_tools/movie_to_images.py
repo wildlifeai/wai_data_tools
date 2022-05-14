@@ -11,12 +11,12 @@ from wai_data_tools import file_handling
 from wai_data_tools.file_handling import get_video_reader
 
 
-def calculate_frames_in_timespan(t_start: np.ndarray, t_end: np.ndarray, fps: float) -> np.ndarray:
+def calculate_frames_in_timespan(t_start: float, t_end: float, fps: float) -> np.ndarray:
     """Calculate the frames in the given timespan. Will include one more frame at each end if possible.
 
     Args:
-        t_start: start of time interval
-        t_end: end of time interval
+        t_start: start of time interval in seconds
+        t_end: end of time interval in seconds
         fps: frames per second
 
     Returns:
