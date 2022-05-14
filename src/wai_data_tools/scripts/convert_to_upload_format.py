@@ -20,16 +20,18 @@ def convert_file_structure_to_upload_format(
         dst_root_dir: Destination root directory to store new file structure.
         config_filepath: Path to config file.
     """
-    logging.info("Reading frame information")
+    logger = logging.getLogger(__name__)
+
+    logger.info("Reading frame information")
     df_frames = pd.read_csv(src_root_dir / "frame_information.csv")
     src_dataset_dir = src_root_dir / "dataset"
 
-    logging.info("Reading config")
+    logger.info("Reading config")
     config_dict = config.load_config(config_filepath=config_filepath)
 
     test_split_size = config_dict["data_split"]["test_size"]
 
-    logging.info("Creating new file structure for uploading to Edge Impulse")
+    logger.info("Creating new file structure for uploading to Edge Impulse")
 
     video_names = df_frames["video_name"].unique()
 

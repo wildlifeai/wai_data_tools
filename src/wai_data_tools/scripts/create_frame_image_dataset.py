@@ -22,7 +22,9 @@ def create_frame_image_dataset(
         src_video_dir: Path to the source directory containing video files
         dst_frame_dir: Path to the destination root directory to save frame images
     """
-    logging.info("Reading and formatting excel dataframe")
+    logger = logging.getLogger(__name__)
+
+    logger.info("Reading and formatting excel dataframe")
     content = read_excel.read_excel_to_dataframe(excel_file_path=excel_filepath)
     dataframe = read_excel.stack_rows_from_dataframe_dictionary(dataframe_dict=content)
 
@@ -31,7 +33,7 @@ def create_frame_image_dataset(
     frame_df = None
     for label_config in label_config_list:
         label_name = label_config["name"]
-        logging.info("Processing video files for label %s", label_name)
+        logger.info("Processing video files for label %s", label_name)
 
         label_frame_df = movie_to_images.split_video_files_to_frame_files(
             src_video_dir=src_video_dir,

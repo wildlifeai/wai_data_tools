@@ -1,16 +1,15 @@
 """Module for loading config file."""
-
-from pathlib import Path
+import pathlib
 from typing import Any, Dict
 
 import yaml
 
 
-def load_config(config_filepath: Path) -> Dict[str, Any]:
+def load_config(config_filepath: pathlib.Path) -> Dict[str, Any]:
     """Load a config YAML file and returns content.
 
     Args:
-        config_filepath: path to config file.
+        config_filepath: Path to config file
 
     Returns:
         Content of config file

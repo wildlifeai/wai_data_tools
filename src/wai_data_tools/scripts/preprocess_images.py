@@ -21,22 +21,25 @@ def preprocess_images(
         src_root_dir: Source root directory for dataset.
         dst_root_dir: Destination root directory to store processed dataset.
     """
+    logger = logging.getLogger(__name__)
+
     config_dict = config.load_config(config_filepath=config_filepath)
     preprocess_config = config_dict["preprocessing"]
 
-    logging.info("Composing transforms")
+    logger.info("Composing transforms")
     composed_transforms = preprocessing.compose_transforms(transforms_config=preprocess_config["transformations"])
 
-    logging.info("Preprocessing images")
+    logger.info("Preprocessing images")
     df_frames = pd.read_csv(src_root_dir / "frame_information.csv")
     dataset_dir = src_root_dir / "dataset"
 
     frame_dirs = [dir_path for dir_path in dataset_dir.iterdir() if dir_path.is_dir()]
+
     for frame_dir in tqdm.tqdm(frame_dirs):
         frames_dict = file_handling.load_frames(frame_dir=frame_dir, df_frames=df_frames)
 
         for frame_index, frame_dict in frames_dict.items():
-            logging.debug(
+            logger.debug(
                 "Applying transforms to frame %s for video %s",
                 frame_index,
                 frame_dir.name,

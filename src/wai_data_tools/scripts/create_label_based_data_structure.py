@@ -24,17 +24,19 @@ def create_label_based_file_structure(
         src_root_dir: Path to the root directory for frame dataset.
         dst_root_dir: Path to the root directory destination to store the label based file structure.
     """
+    logger = logging.getLogger(__name__)
+
     df_frames = pd.read_csv(src_root_dir / "frame_information.csv")
     dataset_dir = src_root_dir / "dataset"
 
-    logging.info("Setting up label based folder structure at %s...", dst_root_dir)
+    logger.info("Setting up label based folder structure at %s...", dst_root_dir)
 
     labels = df_frames["label"].unique()
     for label in labels:
         label_dir = dst_root_dir / label
         label_dir.mkdir(exist_ok=True, parents=True)
 
-    logging.info("Copying data files to new file structure...")
+    logger.info("Copying data files to new file structure...")
 
     for _, df_row in tqdm.tqdm(list(df_frames.iterrows())):
         video_name = df_row["video_name"]

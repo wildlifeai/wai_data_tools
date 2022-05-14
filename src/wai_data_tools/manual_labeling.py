@@ -73,11 +73,13 @@ class Callbacks:
         Args:
             _: ignored
         """
+        logger = logging.getLogger(__name__)
+
         self.class_ind = (self.class_ind + 1) % len(self.classes)
 
         new_class = self.classes[self.class_ind]
 
-        logging.debug(
+        logger.debug(
             "Toggling Frame %s from %s to %s",
             self.index,
             self.frame_dict[self.index]["target"],

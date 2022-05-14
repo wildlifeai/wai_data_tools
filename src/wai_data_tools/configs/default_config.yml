@@ -15,3 +15,6 @@ preprocessing:
         - 48
 data_split:
   test_size: 0.25
+logging:
+  logging_dir: default
+  logging_config_file: default
