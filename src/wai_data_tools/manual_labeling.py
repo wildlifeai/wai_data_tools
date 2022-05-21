@@ -3,6 +3,7 @@ import logging
 import pathlib
 from typing import Dict, List, Union
 
+import matplotlib.backend_bases
 import matplotlib.pyplot as plt
 import matplotlib.widgets as pltwid
 import numpy as np
@@ -34,11 +35,11 @@ class Callbacks:
         self.classes = classes
         self.class_ind = 0
 
-    def next(self, _=None):
+    def next(self, _mouse_event: matplotlib.backend_bases.MouseEvent = None):
         """Move to next one.
 
         Args:
-            _: ignored
+            _mouse_event: ignored
         """
         if self.index < self.max_index:
             self.index += 1
@@ -47,11 +48,11 @@ class Callbacks:
 
         self.draw_img()
 
-    def prev(self, _=None):
+    def prev(self, _mouse_event: matplotlib.backend_bases.MouseEvent = None):
         """Move to previous one.
 
         Args:
-            _: ignored
+            _mouse_event: ignored
         """
         if self.index > 0:
             self.index -= 1
@@ -67,11 +68,11 @@ class Callbacks:
         self.ax_togg.set_title(f"Class: {self.frame_dict[self.index]['target']}")
         plt.pause(0.001)
 
-    def toggle_label(self, _=None):
+    def toggle_label(self, _mouse_event: matplotlib.backend_bases.MouseEvent = None):
         """Handle label change.
 
         Args:
-            _: ignored
+            _mouse_event: ignored
         """
         logger = logging.getLogger(__name__)
 
@@ -90,24 +91,24 @@ class Callbacks:
         self.ax_togg.set_title(f"Class: {self.frame_dict[self.index]['target']}")
         plt.pause(0.001)
 
-    def hotkey_press(self, event):
+    def hotkey_press(self, key_event: matplotlib.backend_bases.KeyEvent):
         """Handle key press.
 
         Args:
-            event: event object
+            key_event: key event object
         """
-        if event.key == "t":
+        if key_event.key == "t":
             self.toggle_label()
-        elif event.key == "left":
+        elif key_event.key == "left":
             self.prev()
-        elif event.key == "right":
+        elif key_event.key == "right":
             self.next()
 
-    def save_frame_information(self, _):
+    def save_frame_information(self, _mouse_event: matplotlib.backend_bases.MouseEvent = None):
         """Save frame information.
 
         Args:
-            _: ignored
+            _mouse_event: ignored
         """
         df_to_update = self.df_frames.loc[self.df_frames["video_name"] == self.video_name, :]
 
