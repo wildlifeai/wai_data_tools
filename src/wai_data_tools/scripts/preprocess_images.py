@@ -10,20 +10,20 @@ from wai_data_tools import config, io, preprocessing
 
 
 def preprocess_images(
-    config_filepath: pathlib.Path,
+    config_file: pathlib.Path,
     src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
     """Preprocess by applying transformations to images in source directory and store results in destination directory.
 
     Args:
-        config_filepath: Path to config file
+        config_file: Path to config file
         src_root_dir: Source root directory for dataset.
         dst_root_dir: Destination root directory to store processed dataset.
     """
     logger = logging.getLogger(__name__)
 
-    config_dict = config.load_config(config_filepath=config_filepath)
+    config_dict = config.load_config(config_file=config_file)
     preprocess_config = config_dict["preprocessing"]
 
     logger.info("Composing transforms")

@@ -11,14 +11,14 @@ from wai_data_tools.data import calc_test_split_indices
 
 
 def convert_file_structure_to_upload_format(
-    src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path, config_filepath: pathlib.Path
+    src_root_dir: pathlib.Path, dst_root_dir: pathlib.Path, config_file: pathlib.Path
 ) -> None:
     """Copy contents of a source file structure and stores it in a destination directoryin upload friendly format.
 
     Args:
         src_root_dir: Source root directory to read files from.
         dst_root_dir: Destination root directory to store new file structure.
-        config_filepath: Path to config file.
+        config_file: Path to config file.
     """
     logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ def convert_file_structure_to_upload_format(
     src_dataset_dir = src_root_dir / "dataset"
 
     logger.info("Reading config")
-    config_dict = config.load_config(config_filepath=config_filepath)
+    config_dict = config.load_config(config_file=config_file)
 
     test_split_size = config_dict["data_split"]["test_size"]
 
