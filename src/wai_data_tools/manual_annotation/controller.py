@@ -17,7 +17,7 @@ class ManualAnnotationController:
         """
         self.model = model
         self.view = view
-        self.frame_indices = self.model.get_frame_indices()
+        self.frame_indices = sorted(self.model.get_frame_indices())
         self.display_index = 0
 
     def get_current_frame_index(self) -> int:

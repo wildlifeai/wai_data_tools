@@ -63,7 +63,7 @@ class ManualAnnotationModel:
         Returns:
             Frame class name
         """
-        return self.frame_dict[frame_index]["class"]
+        return self.frame_dict[frame_index]["target"]
 
     def toggle_class(self, frame_index: int) -> None:
         """Toggles class for specified frame.
