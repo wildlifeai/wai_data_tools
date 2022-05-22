@@ -1,6 +1,7 @@
-"""Setup file for wai_data_tools.  Use setup.cfg to configure your project.
+"""Setup file for wai_data_tools.
 
-This file was generated with PyScaffold 4.1.1.
+Use setup.cfg to configure your project.
+This file was generated with PyScaffold 4.2.1.
 PyScaffold helps you to put up the scaffold of your new Python project.
 Learn more under: https://pyscaffold.org/
 """
