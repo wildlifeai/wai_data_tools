@@ -12,18 +12,18 @@ from wai_data_tools.manual_annotation import controller, model, view
 
 def manually_reclassify_frames(
     src_root_dir: pathlib.Path,
-    config_file: pathlib.Path,
+    config_filepath: pathlib.Path,
 ) -> None:
     """Manually reclassify assigned classes to frame images using a Tkinter GUI.
 
     Args:
         src_root_dir: Path to the source root directory to read frame images
-        config_file: Path to configuration file
+        config_filepath: Path to configuration file
     """
     logger = logging.getLogger(__name__)
 
     logger.info("Reading config file")
-    dataset_config = config.load_config(config_file=config_file)
+    dataset_config = config.load_config(config_filepath=config_filepath)
 
     classes = [label_config["name"] for label_config in dataset_config["labels"] if label_config["is_target"]]
     classes.append("background")

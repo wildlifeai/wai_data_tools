@@ -26,7 +26,7 @@ def cli() -> None:
 
 @cli.command()
 @click.option(
-    "--config_file",
+    "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
     default=DEFAULT_CONFIG_PATH,
@@ -45,18 +45,18 @@ def cli() -> None:
     required=True,
 )
 def create_data_structure(
-    config_file: pathlib.Path,
+    config_filepath: pathlib.Path,
     src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
     """Copies raw data .mjpg files from the Weta Watcher data file structure to a new file structure based on labels.
 
     Args:
-        config_file: Path to configuration file
+        config_filepath: Path to configuration file
         src_root_dir: Path to the root directory containing the raw Weta Watcher file structure.
         dst_root_dir: Path to the root directory destination to store the label based file structure.
     """
-    config_dict = config.load_config(config_file=config_file)
+    config_dict = config.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
     create_label_based_data_structure.create_label_based_file_structure(
         src_root_dir=src_root_dir,
@@ -66,13 +66,13 @@ def create_data_structure(
 
 @cli.command()
 @click.option(
-    "--excel_file",
+    "--excel_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the excel file with label information",
     required=True,
 )
 @click.option(
-    "--config_file",
+    "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
     default=DEFAULT_CONFIG_PATH,
@@ -91,25 +91,25 @@ def create_data_structure(
     required=True,
 )
 def create_frame_dataset(
-    excel_file: pathlib.Path,
-    config_file: pathlib.Path,
+    excel_filepath: pathlib.Path,
+    config_filepath: pathlib.Path,
     src_video_dir: pathlib.Path,
     dst_frame_dir: pathlib.Path,
 ) -> None:
     """Copy all frames for all .mjpg video files in a directory to a new directory and stores them as .jpg files.
 
     Args:
-        excel_file: Path to the excel file with label information
-        config_file: Path to configuration file
+        excel_filepath: Path to the excel file with label information
+        config_filepath: Path to configuration file
         src_video_dir: Path to the source directory containing video files
         dst_frame_dir: Path to the destination root directory to save frame images
     """
-    config_dict = config.load_config(config_file=config_file)
+    config_dict = config.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
 
     create_frame_image_dataset.create_frame_image_dataset(
-        excel_file=excel_file,
-        config_file=config_file,
+        excel_filepath=excel_filepath,
+        config_filepath=config_filepath,
         src_video_dir=src_video_dir,
         dst_frame_dir=dst_frame_dir,
     )
@@ -123,7 +123,7 @@ def create_frame_dataset(
     required=True,
 )
 @click.option(
-    "--config_file",
+    "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
     default=DEFAULT_CONFIG_PATH,
@@ -131,26 +131,26 @@ def create_frame_dataset(
 )
 def reclassify_frames(
     src_root_dir: pathlib.Path,
-    config_file: pathlib.Path,
+    config_filepath: pathlib.Path,
 ) -> None:
     """Manually reclassify assigned classes to frame images using a Tkinter GUI.
 
     Args:
         src_root_dir: Path to the source root directory to read frame images
-        config_file: Path to configuration file
+        config_filepath: Path to configuration file
     """
-    config_dict = config.load_config(config_file=config_file)
+    config_dict = config.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
 
     manually_reclassify_frames.manually_reclassify_frames(
         src_root_dir=src_root_dir,
-        config_file=config_file,
+        config_filepath=config_filepath,
     )
 
 
 @cli.command()
 @click.option(
-    "--config_file",
+    "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
     default=DEFAULT_CONFIG_PATH,
@@ -169,22 +169,22 @@ def reclassify_frames(
     required=True,
 )
 def preprocess(
-    config_file: pathlib.Path,
+    config_filepath: pathlib.Path,
     src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
     """Preprocess images in source directory and store results in destination directory.
 
     Args:
-        config_file: Path to config file
+        config_filepath: Path to config file
         src_root_dir: Source root directory to read images from.
         dst_root_dir: Destination root directory to store images.
     """
-    config_dict = config.load_config(config_file=config_file)
+    config_dict = config.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
 
     preprocess_images.preprocess_images(
-        config_file=config_file,
+        config_filepath=config_filepath,
         src_root_dir=src_root_dir,
         dst_root_dir=dst_root_dir,
     )
@@ -204,7 +204,7 @@ def preprocess(
     required=True,
 )
 @click.option(
-    "--config_file",
+    "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to config file",
     required=False,
@@ -213,7 +213,7 @@ def preprocess(
 def to_upload_format(
     src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
-    config_file: pathlib.Path,
+    config_filepath: pathlib.Path,
 ) -> None:
     """Copy contents of dataset to upload friendly structure.
 
@@ -223,24 +223,24 @@ def to_upload_format(
     Args:
         src_root_dir: Source root directory to read files from.
         dst_root_dir: Destination root directory to store new file structure.
-        config_file: Path to configuration file
+        config_filepath: Path to configuration file
     """
-    config_dict = config.load_config(config_file=config_file)
+    config_dict = config.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
     convert_to_upload_format.convert_file_structure_to_upload_format(
-        src_root_dir=src_root_dir, dst_root_dir=dst_root_dir, config_file=config_file
+        src_root_dir=src_root_dir, dst_root_dir=dst_root_dir, config_filepath=config_filepath
     )
 
 
 @cli.command()
 @click.option(
-    "--excel_file",
+    "--excel_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to the excel file with label information",
     required=True,
 )
 @click.option(
-    "--config_file",
+    "--config_filepath",
     type=click.Path(exists=True, path_type=pathlib.Path),
     help="Path to configuration file",
     default=DEFAULT_CONFIG_PATH,
@@ -259,25 +259,25 @@ def to_upload_format(
     required=True,
 )
 def create_ei_dataset(
-    excel_file: pathlib.Path,
-    config_file: pathlib.Path,
+    excel_filepath: pathlib.Path,
+    config_filepath: pathlib.Path,
     src_video_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
     """Create image dataset for image classification in edge impulse from raw video files.
 
     Args:
-        excel_file: Path to the excel file with label information
-        config_file: Path to configuration file
+        excel_filepath: Path to the excel file with label information
+        config_filepath: Path to configuration file
         src_video_dir: Path to the source directory containing video files
         dst_root_dir: Path to the destination root directory to store dataset and intermediate data
     """
-    config_dict = config.load_config(config_file=config_file)
+    config_dict = config.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
 
     create_edge_impulse_dataset.create_edge_impulse_dataset(
-        excel_file=excel_file,
-        config_file=config_file,
+        excel_filepath=excel_filepath,
+        config_filepath=config_filepath,
         src_video_dir=src_video_dir,
         dst_root_dir=dst_root_dir,
     )

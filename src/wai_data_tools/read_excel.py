@@ -7,20 +7,20 @@ import pandas as pd
 
 
 def read_excel_to_dataframe(
-    excel_file: Path,
+    excel_filepath: Path,
 ) -> Union[pd.DataFrame, Dict[str, pd.DataFrame]]:
     """Read an excel file to a pandas dataframe.
 
     Args:
-        excel_file: Path to excel file path
+        excel_filepath: Path to excel file path
 
     Returns:
         content of excel file stored in pandas DataFrame
     """
     logger = logging.getLogger(__name__)
 
-    logger.info("Reading excel datafile %s to dataframe", excel_file.name)
-    return pd.read_excel(excel_file, sheet_name=None)
+    logger.info("Reading excel datafile %s to dataframe", excel_filepath.name)
+    return pd.read_excel(excel_filepath, sheet_name=None)
 
 
 def stack_rows_from_dataframe_dictionary(dataframe_dict: Dict[str, pd.DataFrame]) -> pd.DataFrame:
