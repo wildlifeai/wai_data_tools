@@ -1,5 +1,8 @@
 """Tests for movie_to_images.py module."""
+from typing import Dict, List, Union
+
 import numpy as np
+import pandas as pd
 import pytest
 
 from wai_data_tools import movie_to_images
@@ -69,3 +72,77 @@ def test_read_frames_in_video(n_frames: int, frames_with_target: np.ndarray, sam
 
         assert np.allclose(result_frame_dict["image"], expected_frame_dict["image"])
         assert result_frame_dict["contains_target"] == expected_frame_dict["contains_target"]
+
+
+@pytest.mark.parametrize(
+    argnames="video_row_dict, frames_dict, expected_frame_rows",
+    argvalues=[
+        (
+            {"filename": "video.mjpg", "label": "rat"},
+            {
+                1: {"image": np.zeros(1), "contains_target": False},
+                2: {"image": np.zeros(1), "contains_target": True},
+                3: {"image": np.zeros(1), "contains_target": False},
+                4: {"image": np.zeros(1), "contains_target": True},
+            },
+            [
+                pd.Series(
+                    {
+                        "video_name": "video",
+                        "frame_ind": 1,
+                        "file_name": "video___1.jpeg",
+                        "target": "background",
+                        "label": "rat",
+                    }
+                ),
+                pd.Series(
+                    {
+                        "video_name": "video",
+                        "frame_ind": 2,
+                        "file_name": "video___2.jpeg",
+                        "target": "rat",
+                        "label": "rat",
+                    }
+                ),
+                pd.Series(
+                    {
+                        "video_name": "video",
+                        "frame_ind": 3,
+                        "file_name": "video___3.jpeg",
+                        "target": "background",
+                        "label": "rat",
+                    }
+                ),
+                pd.Series(
+                    {
+                        "video_name": "video",
+                        "frame_ind": 4,
+                        "file_name": "video___4.jpeg",
+                        "target": "rat",
+                        "label": "rat",
+                    }
+                ),
+            ],
+        ),
+    ],
+)
+def test_create_frame_information_rows(
+    video_row_dict: Dict[str, Union[str, int]],
+    frames_dict: Dict[int, Dict[str, Union[bool, np.ndarray]]],
+    expected_frame_rows: List[pd.Series],
+) -> None:
+    """Test case for create_frame_information_rows function.
+
+    Args:
+        video_row_dict: Dict with video information.
+        frames_dict: Dictionary with frame information
+        expected_frame_rows: Expected frame rows to be returned from function call
+    """
+    video_row = pd.Series(video_row_dict)
+
+    result_frame_rows = movie_to_images.create_frame_information_rows(
+        video_row=video_row,
+        frames_dict=frames_dict,
+    )
+
+    pd.testing.assert_frame_equal(left=pd.DataFrame(result_frame_rows), right=pd.DataFrame(expected_frame_rows))
