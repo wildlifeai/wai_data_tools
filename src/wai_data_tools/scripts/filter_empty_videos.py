@@ -1,11 +1,10 @@
 """This module allows naive processing of videos."""
-import itertools
-import os
-import shutil
 
-import click
-import cv2
+import itertools
+import pathlib
+
 import numpy as np
+from cv2 import cv2
 
 
 # taken from itertools recipes(exists in 3.10+)
@@ -25,7 +24,7 @@ def pairwise(iterable):
     return zip(op1, op2)
 
 
-def convert_video_to_frames(src_file):
+def convert_video_to_frames(src_file: pathlib.Path):
     """Get a video and returns frames.
 
     Args:
@@ -34,7 +33,7 @@ def convert_video_to_frames(src_file):
     Returns:
         list of all frames from the video
     """
-    reader = cv2.VideoCapture(src_file)
+    reader = cv2.VideoCapture(str(src_file))
     frames = []
     success = True
     while success:
@@ -58,14 +57,12 @@ def check_frames_differences(frames):
         if frame2 is None:
             diff = 0
         else:
-            diff = np.sum(
-                cv2.absdiff(frame1, frame2) >= 50
-            )  # this gave me surprisingly good results so far
+            diff = np.sum(cv2.absdiff(frame1, frame2) >= 50)  # this gave me surprisingly good results so far
         diffs.append(diff)
     return diffs
 
 
-def video_process_content(src_file):
+def video_process_content(src_file: pathlib.Path) -> bool:
     """Check content of the video and returns if the video is empty.
 
     Args:
@@ -78,5 +75,4 @@ def video_process_content(src_file):
     frame_diff = check_frames_differences(frames)
     if any(x > 0 for x in frame_diff):
         return False
-
     return True

@@ -3,6 +3,7 @@
 import logging
 import pathlib
 
+import pandas as pd
 import tqdm
 
 from wai_data_tools import config, io, preprocessing
@@ -13,12 +14,12 @@ def preprocess_images(
     src_root_dir: pathlib.Path,
     dst_root_dir: pathlib.Path,
 ) -> None:
-    """Preprocess by applying transformations given in config to images in source directory and store results in destination directory.
+    """Preprocess by applying transformations to images in source directory and store results in destination directory.
 
     Args:
         config_filepath: Path to config file
-        src_root_dir: Source root directory to read images from.
-        dst_root_dir: Destination root directory to store images.
+        src_root_dir: Source root directory for dataset.
+        dst_root_dir: Destination root directory to store processed dataset.
     """
     logger = logging.getLogger(__name__)
 
@@ -26,14 +27,16 @@ def preprocess_images(
     preprocess_config = config_dict["preprocessing"]
 
     logger.info("Composing transforms")
-    composed_transforms = preprocessing.compose_transforms(
-        transforms_config=preprocess_config["transformations"]
-    )
+    composed_transforms = preprocessing.compose_transforms(transforms_config=preprocess_config["transformations"])
 
     logger.info("Preprocessing images")
-    frame_dirs = [dir_path for dir_path in src_root_dir.iterdir() if dir_path.is_dir()]
+    df_frames = pd.read_csv(src_root_dir / "frame_information.csv")
+    dataset_dir = src_root_dir / "dataset"
+
+    frame_dirs = [dir_path for dir_path in dataset_dir.iterdir() if dir_path.is_dir()]
+
     for frame_dir in tqdm.tqdm(frame_dirs):
-        frames_dict = io.load_frames(frame_dir)
+        frames_dict = io.load_frames(frame_dir=frame_dir, df_frames=df_frames)
 
         for frame_index, frame_dict in frames_dict.items():
             logger.debug(
@@ -41,10 +44,12 @@ def preprocess_images(
                 frame_index,
                 frame_dir.name,
             )
-            frame_dict["img"] = composed_transforms(frame_dict["img"])
+            frame_dict["image"] = composed_transforms(frame_dict["image"])
 
         io.save_frames(
             video_name=frame_dir.stem,
             dst_root_dir=dst_root_dir,
             frames_dict=frames_dict,
         )
+
+    df_frames.to_csv(dst_root_dir / "frame_information.csv")

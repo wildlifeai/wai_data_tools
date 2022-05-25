@@ -6,3 +6,7 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools_scm]
 # See configuration details in https://github.com/pypa/setuptools_scm
 version_scheme = "no-guess-dev"
+
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 120
+disable = "duplicate-code, too-many-instance-attributes, too-many-arguments, too-many-locals"

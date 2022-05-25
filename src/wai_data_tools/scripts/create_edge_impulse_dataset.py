@@ -9,9 +9,6 @@ from wai_data_tools.scripts.convert_to_upload_format import (
     convert_file_structure_to_upload_format,
 )
 from wai_data_tools.scripts.create_frame_image_dataset import create_frame_image_dataset
-from wai_data_tools.scripts.create_label_based_data_structure import (
-    create_label_based_file_structure,
-)
 from wai_data_tools.scripts.preprocess_images import preprocess_images
 
 
@@ -33,16 +30,6 @@ def create_edge_impulse_dataset(
 
     logger.info("Creating Edge Impulse dataset")
 
-    intermediate_video_dir = dst_root_dir / "inter-video"
-
-    intermediate_video_dir.mkdir(exist_ok=True, parents=True)
-
-    create_label_based_file_structure(
-        excel_filepath=excel_filepath,
-        raw_data_root_dir=src_video_dir,
-        dst_root_dir=intermediate_video_dir,
-    )
-
     intermediate_frame_dir = dst_root_dir / "inter-frame"
 
     intermediate_frame_dir.mkdir(exist_ok=True, parents=True)
@@ -50,12 +37,9 @@ def create_edge_impulse_dataset(
     create_frame_image_dataset(
         excel_filepath=excel_filepath,
         config_filepath=config_filepath,
-        src_video_dir=intermediate_video_dir,
+        src_video_dir=src_video_dir,
         dst_frame_dir=intermediate_frame_dir,
     )
-
-    logger.info("Removing intermediate video data")
-    shutil.rmtree(intermediate_video_dir)
 
     preprocess_images(
         config_filepath=config_filepath,
@@ -64,7 +48,7 @@ def create_edge_impulse_dataset(
     )
 
     convert_file_structure_to_upload_format(
-        src_root_dir=intermediate_frame_dir, dst_root_dir=dst_root_dir
+        src_root_dir=intermediate_frame_dir, dst_root_dir=dst_root_dir, config_filepath=config_filepath
     )
 
     logger.info("Removing intermediate frame data")

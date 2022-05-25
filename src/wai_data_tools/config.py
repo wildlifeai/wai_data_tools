@@ -14,6 +14,6 @@ def load_config(config_filepath: pathlib.Path) -> Dict[str, Any]:
     Returns:
         Content of config file
     """
-    with config_filepath.open(mode="r") as f:
-        content = yaml.safe_load(f)
+    with config_filepath.open(mode="r") as config_file:
+        content = yaml.safe_load(config_file)
         return content

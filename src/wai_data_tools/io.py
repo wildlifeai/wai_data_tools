@@ -6,16 +6,19 @@ from typing import Dict, Union
 
 import imageio
 import numpy as np
+import pandas as pd
 
 
 def load_frames(
     frame_dir: pathlib.Path,
+    df_frames: pd.DataFrame,
 ) -> Dict[int, Dict[str, Union[str, np.ndarray]]]:
     """Load frame files from a directory.
 
     Args:
         frame_dir: Path to directory where frames are stored in a target
             class folder or background class folder
+        df_frames: Dataframe with frame information.
 
     Returns:
         Dictionary where key is frame index and value is a dictionary
@@ -29,17 +32,21 @@ def load_frames(
 
     frames_dict = {}
 
+    df_video_frames = df_frames[frame_dir.name == df_frames["video_name"]]
+
     for frame_filepath in frame_filepaths:
 
         frame_img = imageio.imread(frame_filepath)
 
-        frame_index = int(frame_filepath.stem.split("___")[-1])
+        _, frame_index = frame_filepath.stem.split("___")
 
-        target = frame_filepath.parent.stem
+        frame_index = int(frame_index)
+
+        target = df_video_frames.loc[df_video_frames["frame_ind"] == frame_index, "target"].item()
 
         logger.debug("Frame %s target class is %s", frame_filepath.name, target)
 
-        frames_dict[frame_index] = {"img": frame_img, "target": target}
+        frames_dict[frame_index] = {"image": frame_img, "target": target}
     return frames_dict
 
 
@@ -60,13 +67,11 @@ def save_frames(
     logger = logging.getLogger(__name__)
 
     dst_video_path = dst_root_dir / video_name
+    dst_video_path.mkdir(exist_ok=True, parents=True)
 
     logger.debug("Saving frames to %s", dst_video_path)
 
     for frame_ind, f_dict in frames_dict.items():
         frame_filename = f"{video_name}___{frame_ind}.jpeg"
-
-        label_dir = dst_video_path / f_dict["target"]
-        label_dir.mkdir(exist_ok=True, parents=True)
-        total_path = label_dir / frame_filename
-        imageio.imwrite(total_path, f_dict["img"])
+        total_path = dst_video_path / frame_filename
+        imageio.imwrite(total_path, f_dict["image"])
