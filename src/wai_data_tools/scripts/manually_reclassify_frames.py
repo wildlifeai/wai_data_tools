@@ -6,8 +6,8 @@ import pathlib
 import pandas as pd
 import tqdm
 
-import wai_data_tools.file_handling
-from wai_data_tools import config, manual_labeling
+from wai_data_tools import config, file_handling
+from wai_data_tools.manual_annotation import controller, model, view
 
 
 def manually_reclassify_frames(
@@ -35,11 +35,20 @@ def manually_reclassify_frames(
     logger.info("Starting GUI for reclassification")
     video_dirs = [dir_path for dir_path in dataset_dir.iterdir() if dir_path.is_dir()]
     for video_dir in tqdm.tqdm(video_dirs):
-        frames_dict = wai_data_tools.file_handling.load_frames(frame_dir=video_dir, df_frames=df_frames)
-        manual_labeling.manual_annotation_plot(
+        frames_dict = file_handling.load_frames(frame_dir=video_dir, df_frames=df_frames)
+
+        annotation_model = model.ManualAnnotationModel(
             frame_dict=frames_dict,
             df_frames=df_frames,
             video_name=video_dir.name,
             src_dir=src_root_dir,
             classes=classes,
         )
+
+        annotation_view = view.ManualAnnotationView()
+
+        annotation_controller = controller.ManualAnnotationController(model=annotation_model, view=annotation_view)
+
+        annotation_view.set_controller(controller=annotation_controller)
+        annotation_view.update_view()
+        annotation_view.show()

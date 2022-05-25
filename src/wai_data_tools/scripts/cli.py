@@ -1,6 +1,7 @@
 """CLI Group implementation."""
 
 import pathlib
+import shutil
 
 import click
 
@@ -10,6 +11,7 @@ from wai_data_tools.scripts import (
     create_edge_impulse_dataset,
     create_frame_image_dataset,
     create_label_based_data_structure,
+    filter_empty_videos,
     manually_reclassify_frames,
     preprocess_images,
 )
@@ -279,6 +281,34 @@ def create_ei_dataset(
         src_video_dir=src_video_dir,
         dst_root_dir=dst_root_dir,
     )
+
+
+@cli.command()
+@click.option("--src", default=".", type=click.Path(exists=True))
+@click.option("--dest", default="empty_videos", type=click.Path())
+@click.option("--dry-run", is_flag=True)
+def filter_empty(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
+    """Copy all non-empty videos to a folder specified by the user.
+
+    Args:
+        src: Path that must already exist with the videos to process
+        dest: Path, where to dump the files
+        dry_run: boolean
+    """
+    dest.mkdir(parents=True, exist_ok=True)
+
+    for src_file in src.iterdir():
+        if src_file.suffix == ".mjpg":
+            click.echo(f"Found a non video file named: {src_file.name}")
+            continue
+
+        click.echo(f"Processing file {src_file.name} ...")
+        is_empty = filter_empty_videos.video_process_content(src_file)
+        if not is_empty:
+            dest_file = dest / src_file.name
+            click.echo(f"Moving {src_file} to {dest_file}")
+            if not dry_run:
+                shutil.copy(src_file, dest_file)
 
 
 if __name__ == "__main__":
