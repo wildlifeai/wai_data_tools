@@ -8,7 +8,6 @@ import pandas as pd
 import tqdm
 
 from wai_data_tools import file_handling
-from wai_data_tools.file_handling import get_video_reader
 
 
 def calculate_frames_in_timespan(t_start: float, t_end: float, fps: float) -> np.ndarray:
@@ -102,7 +101,7 @@ def split_video_file_to_frame_files(
 
     logger.debug("Splitting video file to frame files...")
 
-    reader = get_video_reader(video_filepath=video_filepath)
+    reader = file_handling.get_video_reader(video_filepath=video_filepath)
     meta = reader.get_meta_data()
 
     if is_target:

@@ -1,11 +1,12 @@
 """Tests for movie_to_images.py module."""
 from typing import Dict, List, Union
+from unittest.mock import MagicMock
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from wai_data_tools import movie_to_images
+from wai_data_tools import file_handling, movie_to_images
 
 
 @pytest.mark.parametrize(
@@ -72,6 +73,45 @@ def test_read_frames_in_video(n_frames: int, frames_with_target: np.ndarray, sam
 
         assert np.allclose(result_frame_dict["image"], expected_frame_dict["image"])
         assert result_frame_dict["contains_target"] == expected_frame_dict["contains_target"]
+
+
+def test_split_video_file_to_frame_files_is_target_true(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test case for split_video_file_to_frame_files when is_target in label config is True.
+
+    Args:
+        monkeypatch: MonkeyPatch object for mocking functions
+    """
+    mock_get_reader = MagicMock()
+    monkeypatch.setattr(target=file_handling, name="get_video_reader", value=mock_get_reader)
+    mock_calculate_frames_in_timespan = MagicMock()
+    monkeypatch.setattr(
+        target=movie_to_images, name="calculate_frames_in_timespan", value=mock_calculate_frames_in_timespan
+    )
+    mock_read_frames_in_video = MagicMock()
+    monkeypatch.setattr(target=movie_to_images, name="read_frames_in_video", value=mock_read_frames_in_video)
+
+    movie_to_images.split_video_file_to_frame_files(
+        video_filepath=MagicMock(), video_row=MagicMock(), label_config={"is_target": True, "sampling_frequency": 1}
+    )
+    assert mock_calculate_frames_in_timespan.call_count == 1
+    assert mock_read_frames_in_video.call_count == 1
+
+
+def test_split_video_file_to_frame_files_is_target_false(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test case for split_video_file_to_frame_files when is_target in label config is False.
+
+    Args:
+        monkeypatch: MonkeyPatch object for mocking functions
+    """
+    mock_get_reader = MagicMock()
+    monkeypatch.setattr(target=file_handling, name="get_video_reader", value=mock_get_reader)
+    mock_read_frames_in_video = MagicMock()
+    monkeypatch.setattr(target=movie_to_images, name="read_frames_in_video", value=mock_read_frames_in_video)
+
+    movie_to_images.split_video_file_to_frame_files(
+        video_filepath=MagicMock(), video_row=MagicMock(), label_config={"is_target": False, "sampling_frequency": 1}
+    )
+    assert mock_read_frames_in_video.call_count == 1
 
 
 @pytest.mark.parametrize(
