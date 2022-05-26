@@ -27,7 +27,7 @@
 |
 
 ==============
-wai_data_tools
+Wildlife Watcher Data Tools
 ==============
 
 Tools and scripts for manipulating the wildlife AI camera data for working with Edge Impulse.
