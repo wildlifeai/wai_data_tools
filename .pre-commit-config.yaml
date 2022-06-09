@@ -39,7 +39,9 @@ repos:
         entry: pylint
         language: python
         types: [python]
-        additional_dependencies: [pylint]
+        additional_dependencies:
+        - .
+        - pylint
         args:
             [
               "--ignore-paths=docs",
