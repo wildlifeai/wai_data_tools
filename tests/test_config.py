@@ -1,5 +1,4 @@
 """Tests for config module."""
-import pathlib
 from unittest.mock import MagicMock
 
 import pytest
@@ -17,5 +16,5 @@ def test_load_config(monkeypatch: pytest.MonkeyPatch):
     """
     mocked_yaml_safe_load = MagicMock(return_value={"test": "dict"})
     monkeypatch.setattr(target=yaml, name="safe_load", value=mocked_yaml_safe_load)
-    content = config.load_config(config_filepath=pathlib.Path("./test_config.yml"))
+    content = config.load_config(config_filepath=MagicMock())
     assert isinstance(content, dict)
