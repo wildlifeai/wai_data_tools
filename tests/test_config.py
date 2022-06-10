@@ -12,7 +12,7 @@ def test_load_config(monkeypatch: pytest.MonkeyPatch):
     """Test cases for load_config function.
 
     Args:
-        monkeypatch: Monkeypath fixture for mocking yaml load function
+        monkeypatch: MonkeyPatch fixture for mocking yaml load function
     """
     mocked_yaml_safe_load = MagicMock(return_value={"test": "dict"})
     monkeypatch.setattr(target=yaml, name="safe_load", value=mocked_yaml_safe_load)
