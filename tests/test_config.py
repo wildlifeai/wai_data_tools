@@ -1,17 +1,21 @@
 """Tests for config module."""
 import pathlib
+from unittest.mock import MagicMock
 
 import pytest
+import yaml
 
 from wai_data_tools import config
 
 
-@pytest.mark.parametrize("config_filepath", [pathlib.Path("./test_config.yml")])
-def test_load_config(config_filepath: pathlib.Path):
+@pytest.mark.usefixtures("monkeypatch")
+def test_load_config(monkeypatch: pytest.MonkeyPatch):
     """Test cases for load_config function.
 
     Args:
-        config_filepath: Path to config file
+        monkeypatch: Monkeypath fixture for mocking yaml load function
     """
-    content = config.load_config(config_filepath=config_filepath)
+    mocked_yaml_safe_load = MagicMock(return_value={"test": "dict"})
+    monkeypatch.setattr(target=yaml, name="safe_load", value=mocked_yaml_safe_load)
+    content = config.load_config(config_filepath=pathlib.Path("./test_config.yml"))
     assert isinstance(content, dict)
