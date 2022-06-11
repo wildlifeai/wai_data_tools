@@ -6,7 +6,7 @@ import pytest
 from wai_data_tools import config
 
 
-@pytest.mark.parametrize("config_filepath", [pathlib.Path("./test_config.yml")])
+@pytest.mark.parametrize("config_filepath", [pathlib.Path("tests/test_config.yml")])
 def test_load_config(config_filepath: pathlib.Path):
     """Test cases for load_config function.
 
