@@ -3,8 +3,8 @@
 import itertools
 import pathlib
 
+import cv2
 import numpy as np
-from cv2 import cv2
 
 
 # taken from itertools recipes(exists in 3.10+)
@@ -33,7 +33,7 @@ def convert_video_to_frames(src_file: pathlib.Path):
     Returns:
         list of all frames from the video
     """
-    reader = cv2.VideoCapture(str(src_file))
+    reader = cv2.VideoCapture(str(src_file))  # pylint: disable=no-member
     frames = []
     success = True
     while success:
@@ -57,7 +57,8 @@ def check_frames_differences(frames):
         if frame2 is None:
             diff = 0
         else:
-            diff = np.sum(cv2.absdiff(frame1, frame2) >= 50)  # this gave me surprisingly good results so far
+            # this gave me surprisingly good results so far
+            diff = np.sum(cv2.absdiff(frame1, frame2) >= 50)  # pylint: disable=no-member
         diffs.append(diff)
     return diffs
 
