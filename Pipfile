@@ -15,6 +15,7 @@ imageio = {extras = ["ffmpeg"], version = "*"}
 torchvision = "*"
 click = "*"
 opencv-python = "*"
+numpy = "*"
 
 [dev-packages]
 tox = "*"
