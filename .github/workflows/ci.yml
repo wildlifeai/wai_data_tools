@@ -56,13 +56,13 @@ jobs:
     strategy:
       matrix:
         python:
-        - 3.8
-        - 3.9
+        - "3.8"
+        - "3.9"
         - "3.10"  # newest Python that is stable
         platform:
         - ubuntu-latest
-        - macos-latest
-        - windows-latest
+          #- macos-latest TODO: currently it is run on all worker and jobs
+          #- windows-latest
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
@@ -74,7 +74,7 @@ jobs:
         with: {name: python-distribution-files, path: dist/}
       - name: Run tests
         run: >-
-          pipx run tox
+          pipx run tox --skip-missing-interpreters
           --installpkg '${{ needs.prepare.outputs.wheel-distribution }}'
           -- -rFEx --durations 10 --color yes
       - name: Generate coverage report
