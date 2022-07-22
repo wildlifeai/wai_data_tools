@@ -19,6 +19,7 @@ repos:
     rev: 1.7.4
     hooks:
     -   id: bandit
+        exclude: tests/.*
 -   repo: https://github.com/PyCQA/pydocstyle
     rev: 6.1.1
     hooks:
@@ -48,5 +49,7 @@ repos:
         types: [python]
         args:
             [
+              "--ignore-paths=docs",
+              "--extension-pkg-whitelist=cv2",
               "-rn", # Only display messages
             ]

@@ -3,37 +3,19 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Union
 
-import imageio
 import numpy as np
 import pandas as pd
 import tqdm
 
-# This hotfix is added since imageio checks compability by file extension name instead of probing.
-from imageio.plugins.ffmpeg import FfmpegFormat
-
-from wai_data_tools import io
-
-FfmpegFormat.can_read = lambda x, y: True
+from wai_data_tools import file_handling
 
 
-def get_video_reader(video_filepath: Path) -> Any:
-    """Get a imageio reader object for the provided video file. Assumes ffmpeg encoding.
-
-    Args:
-        video_filepath: Path to ffmpeg compatible video file
-
-    Returns:
-        reader object for parsing video
-    """
-    return imageio.get_reader(video_filepath, "FFMPEG")
-
-
-def calculate_frames_in_timespan(t_start: np.ndarray, t_end: np.ndarray, fps: float) -> np.ndarray:
+def calculate_frames_in_timespan(t_start: float, t_end: float, fps: float) -> np.ndarray:
     """Calculate the frames in the given timespan. Will include one more frame at each end if possible.
 
     Args:
-        t_start: start of time interval
-        t_end: end of time interval
+        t_start: start of time interval in seconds
+        t_end: end of time interval in seconds
         fps: frames per second
 
     Returns:
@@ -119,7 +101,7 @@ def split_video_file_to_frame_files(
 
     logger.debug("Splitting video file to frame files...")
 
-    reader = get_video_reader(video_filepath=video_filepath)
+    reader = file_handling.get_video_reader(video_filepath=video_filepath)
     meta = reader.get_meta_data()
 
     if is_target:
@@ -185,7 +167,7 @@ def split_video_files_to_frame_files(
 
         frame_rows.extend(create_frame_information_rows(video_row=video_row, frames_dict=frames_dict))
 
-        io.save_frames(video_name=video_filepath.stem, dst_root_dir=dst_frame_dir, frames_dict=frames_dict)
+        file_handling.save_frames(video_name=video_filepath.stem, dst_root_dir=dst_frame_dir, frames_dict=frames_dict)
 
     label_frame_df = pd.DataFrame(data=frame_rows)
     return label_frame_df
