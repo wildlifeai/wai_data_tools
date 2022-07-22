@@ -25,7 +25,9 @@ def create_frame_image_dataset(
     logger = logging.getLogger(__name__)
 
     logger.info("Reading and formatting excel dataframe")
+
     content = read_excel.read_excel_to_dataframe(excel_filepath=excel_filepath)
+
     dataframe = read_excel.stack_rows_from_dataframe_dictionary(dataframe_dict=content)
 
     dataset_config = config.load_config(config_filepath=config_filepath)
