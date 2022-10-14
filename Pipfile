@@ -16,6 +16,7 @@ torchvision = "*"
 click = "*"
 opencv-python = "*"
 numpy = "*"
+p2j = "*"
 
 [dev-packages]
 tox = "*"
@@ -32,3 +33,4 @@ safety = "*"
 pre-commit = "*"
 toml = "*"
 pyscaffold = "*"
+p2j = "*"
