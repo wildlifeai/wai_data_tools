@@ -16,7 +16,6 @@ torchvision = "*"
 click = "*"
 opencv-python = "*"
 numpy = "*"
-p2j = "*"
 
 [dev-packages]
 tox = "*"
