@@ -36,8 +36,9 @@ INDEX = -1
 
 # Main prediction loop.
 # While condition controls how long you will run capture loop.
+# Default is to predict 10 frames, please modify the script to your classification needs.
 # Set to True if you want to run forever.
-while True:
+while INDEX < 10:
 
     INDEX += 1
 
