@@ -13,9 +13,11 @@ sensor.set_windowing((48, 48))  # Set 48x48 window.
 sensor.skip_frames(time=2000)  # Let the camera adjust for 2000 ms.
 
 # Set this to the filename of the model you want to use
-MODEL_FILE = "ei-rat-float32-backbone-trained.lite"
+MODEL_FILE = "<path/to/model.lite>"
+# Set this to the path where the labels.txt file is
+PATH_TO_LABELS_FILE = "<path/to/labels.txt>"
 
-with open("../../../Users/david/Desktop/wildlife.ai/to-victor-charles/labels.txt") as file:
+with open(PATH_TO_LABELS_FILE) as file:
     labels = [line.rstrip("\n") for line in file]
 
 # Create predictions directory to save predictions results
