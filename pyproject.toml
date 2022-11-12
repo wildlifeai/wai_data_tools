@@ -9,4 +9,4 @@ version_scheme = "no-guess-dev"
 
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 120
-disable = "duplicate-code, too-many-instance-attributes, too-many-arguments, too-many-locals"
+disable = "duplicate-code, too-many-instance-attributes, too-many-arguments, too-many-locals, consider-using-f-string, unspecified-encoding"
