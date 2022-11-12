@@ -16,18 +16,22 @@ class WildlifeDataset(Dataset):
     def __init__(self, dataset_dir: pathlib.Path, train: bool, transform: Callable) -> None:
         """Initialise object."""
         # load csv with labels
-        dataframe = pd.read_csv(dataset_dir)
+        dataframe = pd.read_csv(dataset_dir / "frame_information.csv")
         split_key = "Train" if train else "Test"
-        self.dataframe = dataframe[dataframe["split"] == split_key]
+        self.dataframe = dataframe[dataframe["split"] == split_key].reset_index()
         self.dataset_dir = dataset_dir
         self.transform = transform
 
     def __getitem__(self, item):
         """Get item."""
-        image_path = self.dataset_dir / self.dataframe.loc[item, "filename"]
+        image_path = (
+            self.dataset_dir
+            / "dataset"
+            / self.dataframe.loc[item, "video_name"]
+            / self.dataframe.loc[item, "file_name"]
+        )
         with Image.open(image_path) as image:
-            input_image = image.load()
-            input_image = self.transform(input_image)
+            input_image = self.transform(image)
         label = self.dataframe.loc[item, "label"]
         return input_image, label
 
@@ -43,10 +47,9 @@ def get_wildlifeai_dataset(data, load_train=True, load_test=True):
     if load_train:
         train_transform = transforms.Compose(
             [
-                transforms.RandomCrop(48, padding=4),
                 transforms.RandomAffine(degrees=20, translate=(0.1, 0.1), shear=5),
                 transforms.ToTensor(),
-                # ai8x.normalize(args=args)
+                ai8x.normalize(args=args),  # pylint: disable=undefined-variable
             ]
         )
 
@@ -56,10 +59,7 @@ def get_wildlifeai_dataset(data, load_train=True, load_test=True):
 
     if load_test:
         test_transform = transforms.Compose(
-            [
-                transforms.ToTensor(),
-                # ai8x.normalize(args=args)
-            ]
+            [transforms.ToTensor(), ai8x.normalize(args=args)]  # pylint: disable=undefined-variable
         )
 
         test_dataset = WildlifeDataset(dataset_dir=data_dir, train=False, transform=test_transform)
