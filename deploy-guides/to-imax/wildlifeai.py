@@ -2,14 +2,12 @@
 import pathlib
 from typing import Callable
 
+import ai8x  # pylint: disable=import-error
 import pandas as pd
 from PIL import Image
+from sklearn.preprocessing import LabelEncoder
 from torch.utils.data import Dataset
 from torchvision import transforms
-from sklearn.preprocessing import LabelEncoder
-
-import ai8x
-
 
 DATASET_DIR = "/PATH/TO/DATASET"
 
@@ -70,7 +68,7 @@ def get_wildlifeai_dataset(data, load_train=True, load_test=True):
             [
                 transforms.Resize((28, 28)),
                 transforms.ToTensor(),
-                ai8x.normalize(args=args)
+                ai8x.normalize(args=args),
             ]  # pylint: disable=undefined-variable
         )
 
@@ -86,9 +84,9 @@ def get_wildlifeai_dataset(data, load_train=True, load_test=True):
 
 datasets = [
     {
-        'name': 'WILDLIFE',
-        'input': (3, 28, 28),
-        'output': list(map(str, range(3))),
-        'loader': get_wildlifeai_dataset,
+        "name": "WILDLIFE",
+        "input": (3, 28, 28),
+        "output": list(map(str, range(3))),
+        "loader": get_wildlifeai_dataset,
     },
 ]
