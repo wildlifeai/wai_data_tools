@@ -16,6 +16,7 @@ torchvision = "*"
 click = "*"
 opencv-python = "*"
 numpy = "*"
+sklearn = "*"
 
 [dev-packages]
 tox = "*"
