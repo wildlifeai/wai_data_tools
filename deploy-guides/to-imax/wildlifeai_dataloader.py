@@ -9,6 +9,7 @@ from sklearn.preprocessing import LabelEncoder
 from torch.utils.data import Dataset
 from torchvision import transforms
 
+# Set this to the path where your data files are stored.
 DATASET_DIR = "/PATH/TO/DATASET"
 
 

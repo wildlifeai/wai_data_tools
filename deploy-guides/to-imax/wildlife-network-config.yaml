@@ -1,8 +1,8 @@
 ---
-# CHW (big data) configuration for MNIST
+# CHW (big data) configuration for WILDLIFE
 
 arch: ai85net5
-dataset: MNIST
+dataset: WILDLIFE
 
 # Define layer parameters in order of the layer sequence
 layers:
