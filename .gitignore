@@ -13,6 +13,7 @@ __pycache__/*
 .*.swp
 */.ipynb_checkpoints/*
 .DS_Store
+.python-version
 
 # Project files
 .ropeproject
@@ -54,3 +55,6 @@ MANIFEST
 
 # Pipenv lock file
 *.lock
+
+# Ignore notebook files with .ipynb extension since we do not want to add these files by mistake.
+*.ipynb
