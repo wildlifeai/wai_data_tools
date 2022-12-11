@@ -284,8 +284,8 @@ def create_ei_dataset(
 
 
 @cli.command()
-@click.option("--src", default=".", type=click.Path(exists=True))
-@click.option("--dest", default="empty_videos", type=click.Path())
+@click.option("--src", default=".", type=click.Path(exists=True, path_type=pathlib.Path))
+@click.option("--dest", default="empty_videos", type=click.Path(path_type=pathlib.Path))
 @click.option("--dry-run", is_flag=True)
 def filter_empty(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
     """Copy all non-empty videos to a folder specified by the user.
@@ -298,10 +298,6 @@ def filter_empty(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
     dest.mkdir(parents=True, exist_ok=True)
 
     for src_file in src.iterdir():
-        if src_file.suffix == ".mjpg":
-            click.echo(f"Found a non video file named: {src_file.name}")
-            continue
-
         click.echo(f"Processing file {src_file.name} ...")
         is_empty = filter_empty_videos.video_process_content(src_file)
         if not is_empty:
