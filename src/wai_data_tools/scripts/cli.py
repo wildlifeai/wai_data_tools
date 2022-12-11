@@ -284,8 +284,8 @@ def create_ei_dataset(
 
 
 @cli.command()
-@click.option("--src", default=".", type=click.Path(exists=True))
-@click.option("--dest", default="empty_videos", type=click.Path())
+@click.option("--src", default=".", type=click.Path(exists=True, path_type=pathlib.Path))
+@click.option("--dest", default="empty_videos", type=click.Path(path_type=pathlib.Path))
 @click.option("--dry-run", is_flag=True)
 def filter_empty(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
     """Copy all non-empty videos to a folder specified by the user.
