@@ -298,10 +298,6 @@ def filter_empty(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
     dest.mkdir(parents=True, exist_ok=True)
 
     for src_file in src.iterdir():
-        if src_file.suffix == ".mjpg":
-            click.echo(f"Found a non video file named: {src_file.name}")
-            continue
-
         click.echo(f"Processing file {src_file.name} ...")
         is_empty = filter_empty_videos.video_process_content(src_file)
         if not is_empty:
