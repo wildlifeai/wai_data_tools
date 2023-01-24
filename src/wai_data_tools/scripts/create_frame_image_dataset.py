@@ -1,7 +1,7 @@
 """Script for constructing a image dataset by splitting the raw video files into frame images."""
-
 import logging
 import pathlib
+from typing import Optional
 
 import fiftyone as fo
 import pandas as pd
@@ -112,3 +112,24 @@ def export_dataset(dataset_name: str, export_location: pathlib.Path) -> None:
 def delete_dataset(dataset_name: str) -> None:
     """Delete a dataset in database."""
     fo.delete_dataset(dataset_name, verbose=True)
+
+
+def create_annotation_job(dataset_name: str, anno_key: str, subset: Optional[int] = None):
+    """Create annotation job in CVAT."""
+    dataset: fo.Dataset = fo.load_dataset(dataset_name)
+    if subset:
+        dataset = dataset.take(subset)
+    class_set = set()
+    for sample in dataset:
+        for frame_ind in sample.frames:
+            class_set.add(sample.frames[frame_ind].ground_truth.label)
+
+    dataset.annotate(
+        anno_key=anno_key, label_field="frames.detections", label_type="detections", classes=list(class_set)
+    )
+
+
+def read_annotations(dataset_name: str, anno_key: str, cleanup: Optional[bool] = False):
+    """Read annotations from CVAT."""
+    dataset: fo.Dataset = fo.load_dataset(dataset_name)
+    dataset.load_annotations(anno_key, cleanup=cleanup)
