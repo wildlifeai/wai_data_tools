@@ -4,8 +4,10 @@ import pathlib
 import shutil
 
 import click
+import yaml
 
 from wai_data_tools import config, setup_logging
+from wai_data_tools.defaults import default_config
 from wai_data_tools.scripts import (
     convert_to_upload_format,
     create_edge_impulse_dataset,
@@ -16,7 +18,7 @@ from wai_data_tools.scripts import (
     preprocess_images,
 )
 
-DEFAULT_CONFIG_PATH = pathlib.Path(__file__).parents[1] / "configs/default_config.yml"
+DEFAULT_CONFIG_PATH = pathlib.Path(__file__).parents[1] / "defaults/default_config.yml"
 
 
 @click.group()
@@ -367,6 +369,16 @@ def read_annotations(dataset_name: str, anno_key: str, cleanup: bool) -> None:
     click.echo(f"Creating annotation job for dataset {dataset_name}...")
     create_frame_image_dataset.read_annotations(dataset_name, anno_key, cleanup)
     click.echo("Annotation job created!")
+
+
+@cli.command()
+@click.option("--dst", type=click.Path(path_type=pathlib.Path))
+def create_config_file(dst: pathlib.Path) -> None:
+    """Generate a default configuration file at destination."""
+    click.echo(f"Creating default config file at {dst}...")
+    with dst.open(mode="w") as file_stream:
+        yaml.dump(default_config.config, file_stream)
+    click.echo("Default config file created!")
 
 
 if __name__ == "__main__":
