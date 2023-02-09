@@ -76,7 +76,7 @@ def add_classifications(dataset: fo.Dataset, df_labels: pd.DataFrame) -> fo.Data
     return dataset
 
 
-def create_dataset(label_info_path: pathlib.Path, data_dir: pathlib.Path, dataset_name: str) -> fo.Dataset:
+def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: pathlib.Path) -> fo.Dataset:
     """Reads video files and label info into a fiftyone dataset."""
     for mjpg_file in data_dir.glob("*.mjpg"):
         new_name = mjpg_file.parent / f"{mjpg_file.stem}.mpeg"

@@ -307,5 +307,67 @@ def filter_empty(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
                 shutil.copy(src_file, dest_file)
 
 
+@cli.command()
+@click.option("--dataset-name", type=str)
+@click.option("--data-dir", type=click.Path(path_type=pathlib.Path))
+@click.option("--label-info-path", type=click.Path(path_type=pathlib.Path))
+def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: pathlib.Path) -> None:
+    """Create and store dataset."""
+    click.echo(f"Creating dataset with name {dataset_name}")
+    create_frame_image_dataset.create_dataset(dataset_name, data_dir, label_info_path)
+    click.echo("Dataset created!")
+
+
+@cli.command()
+@click.option("--dataset-name", type=str)
+def show_dataset(dataset_name: str) -> None:
+    """Show dataset in FiftyOne web app."""
+    click.echo("Launching app...")
+    create_frame_image_dataset.show_dataset(dataset_name)
+    click.echo("App closed.")
+
+
+@cli.command()
+@click.option("--dataset-name", type=str)
+@click.option("--dst", type=click.Path(path_type=pathlib.Path))
+def export_dataset(dataset_name: str, dst: pathlib.Path) -> None:
+    """Package and export dataset to destination."""
+    click.echo(f"Exporting dataset {dataset_name}...")
+    create_frame_image_dataset.export_dataset(dataset_name, dst)
+    click.echo("Dataset exported!")
+
+
+@cli.command()
+@click.option("--dataset-name", type=str)
+def delete_dataset(dataset_name: str) -> None:
+    """Delete dataset from database."""
+    click.echo(f"Deleting dataset {dataset_name}...")
+    create_frame_image_dataset.delete_dataset(dataset_name)
+    click.echo("Dataset deleted!")
+
+
+@cli.command()
+@click.option("--dataset-name", type=str)
+@click.option("--anno-key", type=str)
+@click.option("--take", default=-1, type=int)
+def create_annotation_job(dataset_name: str, anno_key: str, take: int) -> None:
+    """Create annotation job in CVAT."""
+    click.echo(f"Creating annotation job for dataset {dataset_name}...")
+    subset = take if take > 0 else None
+    create_frame_image_dataset.create_annotation_job(dataset_name, anno_key, subset)
+    click.echo("Annotation job created!")
+
+
+@cli.command()
+@click.option("--dataset-name", type=str)
+@click.option("--anno-key", type=str)
+@click.option("--cleanup", default=False, type=str)
+def read_annotations(dataset_name: str, anno_key: str, cleanup: bool) -> None:
+    """Read annotations from CVAT."""
+    click.echo(f"Creating annotation job for dataset {dataset_name}...")
+    create_frame_image_dataset.read_annotations(dataset_name, anno_key, cleanup)
+    click.echo("Annotation job created!")
+
+
 if __name__ == "__main__":
     cli()
