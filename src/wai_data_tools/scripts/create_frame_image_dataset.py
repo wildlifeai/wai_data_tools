@@ -11,7 +11,7 @@ from fiftyone.utils.video import reencode_videos, transform_videos
 
 from wai_data_tools import config_utils, data, movie_to_images, read_excel
 
-_EI_EXPORT_FORMAT = "edge_impulse"
+EI_EXPORT_FORMAT = "edge_impulse"
 
 
 def add_classifications(dataset: fo.Dataset, df_labels: pd.DataFrame) -> fo.Dataset:
@@ -78,14 +78,14 @@ def show_dataset(dataset_name: str) -> None:
 def export_dataset(
     dataset_name: str,
     export_location: pathlib.Path,
-    export_format: str = _EI_EXPORT_FORMAT,
+    export_format: str = EI_EXPORT_FORMAT,
     config_filepath: Optional[pathlib.Path] = None,
 ) -> None:
     """Export a dataset."""
     logger = logging.getLogger(__name__)
     logger.info("Exporting dataset %s to format %s to %s ...", dataset_name, export_format, export_location)
     dataset: fo.Dataset = fo.load_dataset(dataset_name)
-    if export_format == _EI_EXPORT_FORMAT:
+    if export_format == EI_EXPORT_FORMAT:
         export_to_edge_impulse_format(dataset, export_location=export_location, config_filepath=config_filepath)
     else:
         dataset.export(
