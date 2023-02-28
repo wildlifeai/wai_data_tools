@@ -32,4 +32,4 @@ def setup_logging(logging_dir: Optional[str] = None, logging_config_file: Option
         logging.config.fileConfig(logging_config_file, defaults={"logfilename": log_filepath})
 
     logger = logging.getLogger(__name__)
-    logger.info("Configured to logger to log content to directory %s with config %s", logging_dir, logging_config_file)
+    logger.debug("Configured to logger to log content to directory %s with config %s", logging_dir, logging_config_file)

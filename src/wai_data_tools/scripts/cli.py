@@ -8,7 +8,7 @@ import yaml
 
 from wai_data_tools import setup_logging
 from wai_data_tools.defaults import default_config
-from wai_data_tools.scripts import create_frame_image_dataset, filter_empty_videos
+from wai_data_tools.scripts import dataset_handling, filter_empty_videos
 
 
 @click.group()
@@ -50,7 +50,7 @@ def filter_empty(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
 def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: pathlib.Path) -> None:
     """Create and store dataset."""
     click.echo(f"Creating dataset with name {dataset_name}")
-    create_frame_image_dataset.create_dataset(dataset_name, data_dir, label_info_path)
+    dataset_handling.create_dataset(dataset_name, data_dir, label_info_path)
     click.echo("Dataset created!")
 
 
@@ -59,18 +59,21 @@ def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: p
 def show_dataset(dataset_name: str) -> None:
     """Show dataset in FiftyOne web app."""
     click.echo("Launching app...")
-    create_frame_image_dataset.show_dataset(dataset_name)
+    dataset_handling.show_dataset(dataset_name)
     click.echo("App closed.")
 
 
 @cli.command()
 @click.option("--dataset-name", type=str)
 @click.option("--dst", type=click.Path(path_type=pathlib.Path))
-@click.option("--export-format", type=str, default=create_frame_image_dataset.EI_EXPORT_FORMAT, show_default=True)
-def export_dataset(dataset_name: str, dst: pathlib.Path, export_format: str) -> None:
+@click.option("--export-format", type=str, default=dataset_handling.EI_EXPORT_FORMAT, show_default=True)
+@click.option("--config-filepath", type=click.Path(path_type=pathlib.Path), default=None)
+def export_dataset(
+    dataset_name: str, dst: pathlib.Path, export_format: str, config_filepath: Optional[pathlib.Path]
+) -> None:
     """Package and export dataset to destination."""
     click.echo(f"Exporting dataset {dataset_name}...")
-    create_frame_image_dataset.export_dataset(dataset_name, dst, export_format=export_format)
+    dataset_handling.export_dataset(dataset_name, dst, export_format=export_format, config_filepath=config_filepath)
     click.echo("Dataset exported!")
 
 
@@ -79,7 +82,7 @@ def export_dataset(dataset_name: str, dst: pathlib.Path, export_format: str) -> 
 def delete_dataset(dataset_name: str) -> None:
     """Delete dataset from database."""
     click.echo(f"Deleting dataset {dataset_name}...")
-    create_frame_image_dataset.delete_dataset(dataset_name)
+    dataset_handling.delete_dataset(dataset_name)
     click.echo("Dataset deleted!")
 
 
@@ -91,7 +94,7 @@ def create_annotation_job(dataset_name: str, anno_key: str, take: int) -> None:
     """Create annotation job in CVAT."""
     click.echo(f"Creating annotation job for dataset {dataset_name}...")
     subset = take if take > 0 else None
-    create_frame_image_dataset.create_annotation_job(dataset_name, anno_key, subset)
+    dataset_handling.create_annotation_job(dataset_name, anno_key, subset)
     click.echo("Annotation job created!")
 
 
@@ -102,7 +105,7 @@ def create_annotation_job(dataset_name: str, anno_key: str, take: int) -> None:
 def read_annotations(dataset_name: str, anno_key: str, cleanup: bool) -> None:
     """Read annotations from CVAT."""
     click.echo(f"Creating annotation job for dataset {dataset_name}...")
-    create_frame_image_dataset.read_annotations(dataset_name, anno_key, cleanup)
+    dataset_handling.read_annotations(dataset_name, anno_key, cleanup)
     click.echo("Annotation job created!")
 
 
@@ -119,7 +122,7 @@ def create_config_file(dst: pathlib.Path) -> None:
 @cli.command()
 def list_datasets() -> None:
     """List datasets in fiftyone database."""
-    create_frame_image_dataset.list_datasets()
+    dataset_handling.list_datasets()
 
 
 @cli.command()
@@ -127,7 +130,7 @@ def list_datasets() -> None:
 @click.option("--config-filepath", type=click.Path(path_type=pathlib.Path, exists=True))
 def preprocess_dataset(dataset_name: str, config_filepath: pathlib.Path) -> None:
     """Preprocess videos according to config."""
-    create_frame_image_dataset.preprocess_dataset(dataset_name=dataset_name, config_filepath=config_filepath)
+    dataset_handling.preprocess_dataset(dataset_name=dataset_name, config_filepath=config_filepath)
 
 
 if __name__ == "__main__":
