@@ -6,7 +6,7 @@ import pathlib
 import pandas as pd
 import tqdm
 
-from wai_data_tools import config, file_handling
+from wai_data_tools import config_utils, file_handling
 from wai_data_tools.manual_annotation import controller, model, view
 
 
@@ -23,7 +23,7 @@ def manually_reclassify_frames(
     logger = logging.getLogger(__name__)
 
     logger.info("Reading config file")
-    dataset_config = config.load_config(config_filepath=config_filepath)
+    dataset_config = config_utils.load_config(config_filepath=config_filepath)
 
     classes = [label_config["name"] for label_config in dataset_config["labels"] if label_config["is_target"]]
     classes.append("background")

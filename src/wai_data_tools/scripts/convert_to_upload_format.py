@@ -6,7 +6,7 @@ import shutil
 import pandas as pd
 import tqdm
 
-from wai_data_tools import config
+from wai_data_tools import config_utils
 from wai_data_tools.data import calc_test_split_indices
 
 
@@ -27,7 +27,7 @@ def convert_file_structure_to_upload_format(
     src_dataset_dir = src_root_dir / "dataset"
 
     logger.info("Reading config")
-    config_dict = config.load_config(config_filepath=config_filepath)
+    config_dict = config_utils.load_config(config_filepath=config_filepath)
 
     test_split_size = config_dict["data_split"]["test_size"]
 

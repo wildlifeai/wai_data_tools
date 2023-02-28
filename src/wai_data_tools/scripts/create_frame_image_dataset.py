@@ -1,13 +1,14 @@
 """Script for constructing a image dataset by splitting the raw video files into frame images."""
 import logging
 import pathlib
-from typing import Optional
+from typing import List, Optional
 
+import cv2
 import fiftyone as fo
 import pandas as pd
-from fiftyone.utils.video import reencode_videos
+from fiftyone.utils.video import reencode_videos, transform_videos
 
-from wai_data_tools import config, movie_to_images, read_excel
+from wai_data_tools import config_utils, data, movie_to_images, read_excel
 
 
 def create_frame_image_dataset(
@@ -32,7 +33,7 @@ def create_frame_image_dataset(
 
     dataframe = read_excel.stack_rows_from_dataframe_dictionary(dataframe_dict=content)
 
-    dataset_config = config.load_config(config_filepath=config_filepath)
+    dataset_config = config_utils.load_config(config_filepath=config_filepath)
     label_config_list = dataset_config["labels"]
     frame_df = None
     for label_config in label_config_list:
@@ -103,10 +104,23 @@ def show_dataset(dataset_name: str) -> None:
     input("Exit? type anything")
 
 
-def export_dataset(dataset_name: str, export_location: pathlib.Path) -> None:
+_EI_EXPORT_FORMAT = "edge_impulse"
+
+
+def export_dataset(
+    dataset_name: str,
+    export_location: pathlib.Path,
+    export_format: str = _EI_EXPORT_FORMAT,
+    config_filepath: Optional[pathlib.Path] = None,
+) -> None:
     """Export a dataset."""
     dataset: fo.Dataset = fo.load_dataset(dataset_name)
-    dataset.export(export_dir=str(export_location), dataset_type=fo.types.FiftyOneVideoLabelsDataset, export_media=True)
+    if export_format == _EI_EXPORT_FORMAT:
+        export_to_edge_impulse_format(dataset, export_location=export_location, config_filepath=config_filepath)
+    else:
+        dataset.export(
+            export_dir=str(export_location), dataset_type=fo.types.FiftyOneVideoLabelsDataset, export_media=True
+        )
 
 
 def delete_dataset(dataset_name: str) -> None:
@@ -133,3 +147,55 @@ def read_annotations(dataset_name: str, anno_key: str, cleanup: Optional[bool] =
     """Read annotations from CVAT."""
     dataset: fo.Dataset = fo.load_dataset(dataset_name)
     dataset.load_annotations(anno_key, cleanup=cleanup)
+
+
+def preprocess_dataset(dataset_name: str, config_filepath: pathlib.Path) -> None:
+    """Preprocess dataset to specified fps and size."""
+    config = config_utils.load_config(config_filepath=config_filepath)
+    dataset = fo.load_dataset(dataset_name)
+    processing_config = config["transformations"]
+    transform_videos(dataset, fps=processing_config["fps"], size=processing_config["size"])
+
+
+def export_to_edge_impulse_format(
+    dataset: fo.Dataset, export_location: pathlib.Path, config_filepath: pathlib.Path
+) -> None:
+    """Export dataset to edge impulse upload format."""
+    export_location.mkdir(parents=True, exist_ok=True)
+    config = config_utils.load_config(config_filepath=config_filepath)
+    test_file_inds = data.calc_test_split_indices(
+        n_files=len(dataset), test_split_size=config["data_split"]["test_size"]
+    )
+
+    for video_ind, video_sample in enumerate(dataset):
+        split_dir = "test" if video_ind in test_file_inds else "train"
+
+        video = cv2.VideoCapture(video_sample.filepath)  # pylint: disable=no-member
+
+        success = True
+        frame_ind = 0
+        while success:
+            success, frame = video.read()
+            if success:
+                frame_ind += 1
+            else:
+                break
+
+            dst_dir = export_location / split_dir
+            dst_dir.mkdir(exist_ok=True)
+
+            if video_sample[frame_ind].ground_truth:
+                target_name = video_sample[frame_ind].ground_truth.label
+            else:
+                target_name = "nothing"
+
+            frame_filename = f"{target_name}.{video_sample.filename.split('.')[0]}___{frame_ind}.jpg"
+            dst_path = dst_dir / frame_filename
+            cv2.imwrite(str(dst_path), frame)  # pylint: disable=no-member
+
+
+def list_datasets() -> List[str]:
+    """List datasets in database."""
+    datasets = fo.list_datasets()
+    print(datasets)
+    return datasets

@@ -6,7 +6,7 @@ import shutil
 import click
 import yaml
 
-from wai_data_tools import config, setup_logging
+from wai_data_tools import config_utils, setup_logging
 from wai_data_tools.defaults import default_config
 from wai_data_tools.scripts import (
     convert_to_upload_format,
@@ -58,7 +58,7 @@ def create_data_structure(
         src_root_dir: Path to the root directory containing the raw Weta Watcher file structure.
         dst_root_dir: Path to the root directory destination to store the label based file structure.
     """
-    config_dict = config.load_config(config_filepath=config_filepath)
+    config_dict = config_utils.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
     create_label_based_data_structure.create_label_based_file_structure(
         src_root_dir=src_root_dir,
@@ -106,7 +106,7 @@ def create_frame_dataset(
         src_video_dir: Path to the source directory containing video files
         dst_frame_dir: Path to the destination root directory to save frame images
     """
-    config_dict = config.load_config(config_filepath=config_filepath)
+    config_dict = config_utils.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
 
     create_frame_image_dataset.create_frame_image_dataset(
@@ -141,7 +141,7 @@ def reclassify_frames(
         src_root_dir: Path to the source root directory to read frame images
         config_filepath: Path to configuration file
     """
-    config_dict = config.load_config(config_filepath=config_filepath)
+    config_dict = config_utils.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
 
     manually_reclassify_frames.manually_reclassify_frames(
@@ -182,7 +182,7 @@ def preprocess(
         src_root_dir: Source root directory to read images from.
         dst_root_dir: Destination root directory to store images.
     """
-    config_dict = config.load_config(config_filepath=config_filepath)
+    config_dict = config_utils.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
 
     preprocess_images.preprocess_images(
@@ -227,7 +227,7 @@ def to_upload_format(
         dst_root_dir: Destination root directory to store new file structure.
         config_filepath: Path to configuration file
     """
-    config_dict = config.load_config(config_filepath=config_filepath)
+    config_dict = config_utils.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
     convert_to_upload_format.convert_file_structure_to_upload_format(
         src_root_dir=src_root_dir, dst_root_dir=dst_root_dir, config_filepath=config_filepath
@@ -274,7 +274,7 @@ def create_ei_dataset(
         src_video_dir: Path to the source directory containing video files
         dst_root_dir: Path to the destination root directory to store dataset and intermediate data
     """
-    config_dict = config.load_config(config_filepath=config_filepath)
+    config_dict = config_utils.load_config(config_filepath=config_filepath)
     setup_logging.setup_logging(**config_dict["logging"])
 
     create_edge_impulse_dataset.create_edge_impulse_dataset(

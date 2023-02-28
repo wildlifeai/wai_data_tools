@@ -6,7 +6,7 @@ import pathlib
 import pandas as pd
 import tqdm
 
-from wai_data_tools import config, file_handling, preprocessing
+from wai_data_tools import config_utils, file_handling, preprocessing
 
 
 def preprocess_images(
@@ -23,7 +23,7 @@ def preprocess_images(
     """
     logger = logging.getLogger(__name__)
 
-    config_dict = config.load_config(config_filepath=config_filepath)
+    config_dict = config_utils.load_config(config_filepath=config_filepath)
     preprocess_config = config_dict["preprocessing"]
 
     logger.info("Composing transforms")
