@@ -9,7 +9,7 @@ import pandas as pd
 import tqdm
 from fiftyone.utils.video import reencode_videos, transform_videos
 
-from wai_data_tools import config_utils, data, movie_to_images, read_excel
+from wai_data_tools import config_utils, data, read_excel
 
 EI_EXPORT_FORMAT = "edge_impulse"
 
@@ -26,7 +26,7 @@ def add_classifications(dataset: fo.Dataset, df_labels: pd.DataFrame) -> fo.Data
         sample_row = df_labels[df_labels["video_name"] == video_name].iloc[0]
 
         label = sample_row.label
-        label_frame_numbers = movie_to_images.calculate_frames_in_timespan(
+        label_frame_numbers = data.calculate_frames_in_timespan(
             t_start=sample_row.start, t_end=sample_row.end, fps=frame_rate
         )
         label_frame_numbers += 1

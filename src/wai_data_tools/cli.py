@@ -6,9 +6,8 @@ from typing import Optional
 import click
 import yaml
 
-from wai_data_tools import setup_logging
+from wai_data_tools import dataset_handling, filter_empty_videos, setup_logging
 from wai_data_tools.defaults import default_config
-from wai_data_tools.scripts import dataset_handling, filter_empty_videos
 
 
 @click.group()
