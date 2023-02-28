@@ -6,60 +6,20 @@ from typing import List, Optional
 import cv2
 import fiftyone as fo
 import pandas as pd
+import tqdm
 from fiftyone.utils.video import reencode_videos, transform_videos
 
 from wai_data_tools import config_utils, data, movie_to_images, read_excel
 
-
-def create_frame_image_dataset(
-    excel_filepath: pathlib.Path,
-    config_filepath: pathlib.Path,
-    src_video_dir: pathlib.Path,
-    dst_frame_dir: pathlib.Path,
-) -> None:
-    """Copy all frames for all .mjpg video files in a directory to a new directory and stores them as jpg files.
-
-    Args:
-        excel_filepath: Path to the excel file with label information
-        config_filepath: Path to configuration file
-        src_video_dir: Path to the source directory containing video files
-        dst_frame_dir: Path to the destination root directory to save frame images
-    """
-    logger = logging.getLogger(__name__)
-
-    logger.info("Reading and formatting excel dataframe")
-
-    content = read_excel.read_excel_to_dataframe(excel_filepath=excel_filepath)
-
-    dataframe = read_excel.stack_rows_from_dataframe_dictionary(dataframe_dict=content)
-
-    dataset_config = config_utils.load_config(config_filepath=config_filepath)
-    label_config_list = dataset_config["labels"]
-    frame_df = None
-    for label_config in label_config_list:
-        label_name = label_config["name"]
-        logger.info("Processing video files for label %s", label_name)
-
-        label_frame_df = movie_to_images.split_video_files_to_frame_files(
-            src_video_dir=src_video_dir,
-            video_dataframe=dataframe,
-            dst_frame_dir=dst_frame_dir / "dataset",
-            label_config=label_config,
-        )
-
-        if frame_df is not None:
-            frame_df = pd.concat([frame_df, label_frame_df], ignore_index=True)
-        else:
-            frame_df = label_frame_df
-
-    frame_df.to_csv(dst_frame_dir / "frame_information.csv")
+_EI_EXPORT_FORMAT = "edge_impulse"
 
 
 def add_classifications(dataset: fo.Dataset, df_labels: pd.DataFrame) -> fo.Dataset:
     """Adds classification labels to dataset."""
+    logger = logging.getLogger(__name__)
     df_labels["video_name"] = df_labels.apply(lambda row: row.filename.split(".")[0], axis=1)
-
     for sample in dataset:
+        logger.info("Adding classifications for video %s", sample.filepath)
         frame_rate = sample.metadata.frame_rate
         video_name = sample.filepath.split("/")[-1].split(".")[0]
 
@@ -79,17 +39,25 @@ def add_classifications(dataset: fo.Dataset, df_labels: pd.DataFrame) -> fo.Data
 
 def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: pathlib.Path) -> fo.Dataset:
     """Reads video files and label info into a fiftyone dataset."""
+    logger = logging.getLogger(__name__)
+
+    logger.info("Creating a dataset with name %s from content in %s", dataset_name, data_dir)
+
+    logger.info("Renaming files to .mpeg...")
     for mjpg_file in data_dir.glob("*.mjpg"):
         new_name = mjpg_file.parent / f"{mjpg_file.stem}.mpeg"
         mjpg_file.rename(new_name)
 
+    logger.info("Reencoding videos to .mp4...")
     dataset = fo.Dataset.from_dir(dataset_dir=data_dir, dataset_type=fo.types.VideoDirectory, name=dataset_name)
     reencode_videos(dataset, force_reencode=False)
     dataset.compute_metadata()
 
+    logger.info("Removing .mpeg files...")
     for mpeg_file in data_dir.glob("*.mpeg"):
         mpeg_file.unlink()
 
+    logger.info("Adding classifications...")
     content = read_excel.read_excel_to_dataframe(excel_filepath=label_info_path)
     df_labels = read_excel.stack_rows_from_dataframe_dictionary(dataframe_dict=content)
     dataset = add_classifications(dataset=dataset, df_labels=df_labels)
@@ -99,12 +67,12 @@ def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: p
 
 def show_dataset(dataset_name: str) -> None:
     """Get dataset from database."""
+    logger = logging.getLogger(__name__)
+    logger.info("Launching app for dataset %s ...", dataset_name)
     dataset = fo.load_dataset(dataset_name)
     fo.launch_app(dataset)
     input("Exit? type anything")
-
-
-_EI_EXPORT_FORMAT = "edge_impulse"
+    logger.info("Closed app.")
 
 
 def export_dataset(
@@ -114,6 +82,8 @@ def export_dataset(
     config_filepath: Optional[pathlib.Path] = None,
 ) -> None:
     """Export a dataset."""
+    logger = logging.getLogger(__name__)
+    logger.info("Exporting dataset %s to format %s to %s ...", dataset_name, export_format, export_location)
     dataset: fo.Dataset = fo.load_dataset(dataset_name)
     if export_format == _EI_EXPORT_FORMAT:
         export_to_edge_impulse_format(dataset, export_location=export_location, config_filepath=config_filepath)
@@ -125,18 +95,23 @@ def export_dataset(
 
 def delete_dataset(dataset_name: str) -> None:
     """Delete a dataset in database."""
+    logging.getLogger(__name__).info("Removing dataset %s ...", dataset_name)
     fo.delete_dataset(dataset_name, verbose=True)
 
 
 def create_annotation_job(dataset_name: str, anno_key: str, subset: Optional[int] = None):
     """Create annotation job in CVAT."""
+    logger = logging.getLogger(__name__)
+    logger.info("Creating annotation job for dataset %s with annotation key %s", dataset_name, anno_key)
     dataset: fo.Dataset = fo.load_dataset(dataset_name)
     if subset:
+        logger.info("Taking subset of %s samples from dataset...", subset)
         dataset = dataset.take(subset)
     class_set = set()
     for sample in dataset:
         for frame_ind in sample.frames:
             class_set.add(sample.frames[frame_ind].ground_truth.label)
+    logger.info("found classes %s", class_set)
 
     dataset.annotate(
         anno_key=anno_key, label_field="frames.detections", label_type="detections", classes=list(class_set)
@@ -145,12 +120,16 @@ def create_annotation_job(dataset_name: str, anno_key: str, subset: Optional[int
 
 def read_annotations(dataset_name: str, anno_key: str, cleanup: Optional[bool] = False):
     """Read annotations from CVAT."""
+    logger = logging.getLogger(__name__)
+    logger.info("Reading annotations from CVAT for dataset %s with annotaiton key %s", dataset_name, anno_key)
     dataset: fo.Dataset = fo.load_dataset(dataset_name)
     dataset.load_annotations(anno_key, cleanup=cleanup)
 
 
 def preprocess_dataset(dataset_name: str, config_filepath: pathlib.Path) -> None:
     """Preprocess dataset to specified fps and size."""
+    logger = logging.getLogger(__name__)
+    logger.info("Preprocessing dataset %s ...", dataset_name)
     config = config_utils.load_config(config_filepath=config_filepath)
     dataset = fo.load_dataset(dataset_name)
     processing_config = config["transformations"]
@@ -161,13 +140,16 @@ def export_to_edge_impulse_format(
     dataset: fo.Dataset, export_location: pathlib.Path, config_filepath: pathlib.Path
 ) -> None:
     """Export dataset to edge impulse upload format."""
+    logger = logging.getLogger(__name__)
+
     export_location.mkdir(parents=True, exist_ok=True)
     config = config_utils.load_config(config_filepath=config_filepath)
+    logger.info("splitting dataset...")
     test_file_inds = data.calc_test_split_indices(
         n_files=len(dataset), test_split_size=config["data_split"]["test_size"]
     )
 
-    for video_ind, video_sample in enumerate(dataset):
+    for video_ind, video_sample in tqdm.tqdm(enumerate(dataset)):
         split_dir = "test" if video_ind in test_file_inds else "train"
 
         video = cv2.VideoCapture(video_sample.filepath)  # pylint: disable=no-member
@@ -196,6 +178,7 @@ def export_to_edge_impulse_format(
 
 def list_datasets() -> List[str]:
     """List datasets in database."""
+    logging.getLogger(__name__).info("Listing datasets...")
     datasets = fo.list_datasets()
     print(datasets)
     return datasets
