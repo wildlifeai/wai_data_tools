@@ -5,6 +5,9 @@ description = "Package with logic for WDP project"
 authors = ["David Andersson"]
 readme = "README.rst"
 
+[tool.poetry.group.dev]
+optional = true
+
 [tool.poetry.dependencies]
 python = "^3.8"
 click = "^8.1.3"
