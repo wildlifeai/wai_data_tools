@@ -14,9 +14,9 @@ tqdm = "*"
 imageio = {extras = ["ffmpeg"], version = "*"}
 torchvision = "*"
 click = "*"
-opencv-python = "*"
 numpy = "*"
 scikit-learn = "*"
+opencv-python = "*"
 
 [dev-packages]
 tox = "*"

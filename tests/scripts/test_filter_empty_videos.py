@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import pytest
 
-from wai_data_tools.scripts import filter_empty_videos
+from wai_data_tools import filter_empty_videos
 
 
 @pytest.mark.parametrize(
