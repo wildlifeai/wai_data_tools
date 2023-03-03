@@ -2,7 +2,7 @@
 name = "wai_data_tools"
 version = "1.0.0"
 description = "Package with logic for WDP project"
-authors = ["Olle Kåhre Zäll", "David Andersson", "Bella Tapper", "Noah Tell"]
+authors = ["David Andersson"]
 readme = "README.rst"
 
 [tool.poetry.dependencies]
