@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "wai_data_tools"
 version = "1.0.0"
-description = "Package with logic for WDP project"
+description = "Helpful tools for data handling for the Weta Watcher project at Wildlife AI"
 authors = ["David Andersson"]
 readme = "README.rst"
 
@@ -37,3 +37,6 @@ version_scheme = "no-guess-dev"
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 120
 disable = "duplicate-code, too-many-instance-attributes, too-many-arguments, too-many-locals, consider-using-f-string, unspecified-encoding"
+
+[tool.poetry.scripts]
+wildlifeai-cli = 'wai_data_tools.cli:cli'
