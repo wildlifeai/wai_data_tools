@@ -110,7 +110,9 @@ def create_annotation_job(dataset_name: str, anno_key: str, subset: Optional[int
     class_set = set()
     for sample in dataset:
         for frame_ind in sample.frames:
-            class_set.add(sample.frames[frame_ind].ground_truth.label)
+            ground_truth = sample.frames[frame_ind].ground_truth
+            if ground_truth is not None:
+                class_set.add(ground_truth.label)
     logger.info("found classes %s", class_set)
 
     dataset.annotate(
