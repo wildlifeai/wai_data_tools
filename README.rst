@@ -30,7 +30,7 @@
 Wildlife Watcher Data Tools
 ==============
 
-Tools and scripts for manipulating the wildlife AI camera data for working with Edge Impulse.
+Tools and scripts for manipulating the wildlife AI camera data to analyse the footage, create your own models and transfer them to the cameras.
 
 This repository contains good tools for formatting data for the Weta Watcher project.
 Typically you would want to use this package if you:
