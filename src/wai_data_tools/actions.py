@@ -36,7 +36,9 @@ def filter_empty_videos(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) ->
                 shutil.copy(src_file, dest_file)
 
 
-def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: Optional[pathlib.Path]) -> fo.Dataset:
+def create_dataset(
+    dataset_name: str, data_dir: pathlib.Path, label_info_path: Optional[pathlib.Path] = None
+) -> fo.Dataset:
     """Reads video files and label info into a fiftyone dataset."""
     logger = logging.getLogger(__name__)
 
