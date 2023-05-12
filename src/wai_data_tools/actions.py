@@ -36,29 +36,6 @@ def filter_empty_videos(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) ->
                 shutil.copy(src_file, dest_file)
 
 
-def add_classifications(dataset: fo.Dataset, df_labels: pd.DataFrame) -> fo.Dataset:
-    """Adds classification labels to dataset."""
-    logger = logging.getLogger(__name__)
-    df_labels["video_name"] = df_labels.apply(lambda row: row.filename.split(".")[0], axis=1)
-    for sample in dataset:
-        logger.info("Adding classifications for video %s", sample.filepath)
-        frame_rate = sample.metadata.frame_rate
-        video_name = sample.filepath.split("/")[-1].split(".")[0]
-
-        sample_row = df_labels[df_labels["video_name"] == video_name].iloc[0]
-
-        label = sample_row.label
-        label_frame_numbers = data.calculate_frames_in_timespan(
-            t_start=sample_row.start, t_end=sample_row.end, fps=frame_rate
-        )
-        label_frame_numbers += 1
-        for frame_number in label_frame_numbers:
-            frame = sample[int(frame_number)]
-            frame["ground_truth"] = fo.Classification(label=label)
-        sample.save()
-    return dataset
-
-
 def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: pathlib.Path) -> fo.Dataset:
     """Reads video files and label info into a fiftyone dataset."""
     logger = logging.getLogger(__name__)
@@ -82,7 +59,7 @@ def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: p
     logger.info("Adding classifications...")
     content = read_excel.read_excel_to_dataframe(excel_filepath=label_info_path)
     df_labels = read_excel.stack_rows_from_dataframe_dictionary(dataframe_dict=content)
-    dataset = add_classifications(dataset=dataset, df_labels=df_labels)
+    dataset = _add_classifications(dataset=dataset, df_labels=df_labels)
     dataset.persistent = True
     return dataset
 
@@ -97,6 +74,14 @@ def show_dataset(dataset_name: str) -> None:
     logger.info("Closed app.")
 
 
+def list_datasets() -> List[str]:
+    """List datasets in database."""
+    logging.getLogger(__name__).info("Listing datasets...")
+    datasets = fo.list_datasets()
+    print(datasets)
+    return datasets
+
+
 def export_dataset(
     dataset_name: str,
     export_location: pathlib.Path,
@@ -108,7 +93,7 @@ def export_dataset(
     logger.info("Exporting dataset %s to format %s to %s ...", dataset_name, export_format, export_location)
     dataset: fo.Dataset = fo.load_dataset(dataset_name)
     if export_format == EI_EXPORT_FORMAT:
-        export_to_edge_impulse_format(dataset, export_location=export_location, config_filepath=config_filepath)
+        _export_to_edge_impulse_format(dataset, export_location=export_location, config_filepath=config_filepath)
     else:
         dataset.export(
             export_dir=str(export_location), dataset_type=fo.types.FiftyOneVideoLabelsDataset, export_media=True
@@ -160,7 +145,30 @@ def preprocess_dataset(dataset_name: str, config_filepath: pathlib.Path) -> None
     transform_videos(dataset, fps=processing_config["fps"], size=processing_config["size"])
 
 
-def export_to_edge_impulse_format(
+def _add_classifications(dataset: fo.Dataset, df_labels: pd.DataFrame) -> fo.Dataset:
+    """Adds classification labels to dataset."""
+    logger = logging.getLogger(__name__)
+    df_labels["video_name"] = df_labels.apply(lambda row: row.filename.split(".")[0], axis=1)
+    for sample in dataset:
+        logger.info("Adding classifications for video %s", sample.filepath)
+        frame_rate = sample.metadata.frame_rate
+        video_name = sample.filepath.split("/")[-1].split(".")[0]
+
+        sample_row = df_labels[df_labels["video_name"] == video_name].iloc[0]
+
+        label = sample_row.label
+        label_frame_numbers = data.calculate_frames_in_timespan(
+            t_start=sample_row.start, t_end=sample_row.end, fps=frame_rate
+        )
+        label_frame_numbers += 1
+        for frame_number in label_frame_numbers:
+            frame = sample[int(frame_number)]
+            frame["ground_truth"] = fo.Classification(label=label)
+        sample.save()
+    return dataset
+
+
+def _export_to_edge_impulse_format(
     dataset: fo.Dataset, export_location: pathlib.Path, config_filepath: pathlib.Path
 ) -> None:
     """Export dataset to edge impulse upload format."""
@@ -198,11 +206,3 @@ def export_to_edge_impulse_format(
             frame_filename = f"{target_name}.{video_sample.filename.split('.')[0]}___{frame_ind}.jpg"
             dst_path = dst_dir / frame_filename
             cv2.imwrite(str(dst_path), frame)  # pylint: disable=no-member
-
-
-def list_datasets() -> List[str]:
-    """List datasets in database."""
-    logging.getLogger(__name__).info("Listing datasets...")
-    datasets = fo.list_datasets()
-    print(datasets)
-    return datasets
