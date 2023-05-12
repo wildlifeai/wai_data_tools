@@ -17,6 +17,7 @@ kaleido = "0.2.1"
 fiftyone = "^0.19.1"
 tqdm = "^4.64.1"
 openpyxl = "^3.1.1"
+toml = "^0.10.2"
 
 [tool.poetry.group.dev.dependencies]
 pylint = "^2.16.2"
@@ -31,7 +32,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pylint.'MESSAGES CONTROL']
 max-line-length = 120
-disable = "duplicate-code, too-many-instance-attributes, too-many-arguments, too-many-locals, consider-using-f-string, unspecified-encoding"
+disable = "duplicate-code, too-many-instance-attributes, too-many-arguments, too-many-locals, consider-using-f-string, unspecified-encoding, consider-using-generator"
 
 [tool.poetry.scripts]
 wildlifeai-cli = 'wai_data_tools.cli:cli'
+
+[tool.pydocstyle]
+ignore = "D104"

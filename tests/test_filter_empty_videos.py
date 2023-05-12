@@ -1,4 +1,4 @@
-"""Tests for filter_empty_videos script module."""
+"""Tests for video_filtering script module."""
 import pathlib
 from unittest.mock import MagicMock
 
@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import pytest
 
-from wai_data_tools import filter_empty_videos
+from wai_data_tools.utils import video_filtering
 
 
 @pytest.mark.parametrize(
@@ -19,7 +19,7 @@ from wai_data_tools import filter_empty_videos
 )
 def test_pairwise(iterable, expected):
     """Test case for pairwise."""
-    result = filter_empty_videos.pairwise(iterable=iterable)
+    result = video_filtering.pairwise(iterable=iterable)
     for result_tuple, expected_tuple in zip(result, expected):
         assert result_tuple[0] == expected_tuple[0]
         assert result_tuple[1] == expected_tuple[1]
@@ -41,7 +41,7 @@ def test_convert_video_to_frames(monkeypatch):
     monkeypatch.setattr(
         target=cv2.VideoCapture, name="read", value=mocked_video_reader_read  # pylint: disable=no-member
     )
-    result = filter_empty_videos.convert_video_to_frames(src_file=src_file)
+    result = video_filtering.convert_video_to_frames(src_file=src_file)
     assert len(result) == 3
 
 
@@ -55,21 +55,21 @@ def test_convert_video_to_frames(monkeypatch):
 )
 def test_check_frames_difference(frames, expected_diff_length):
     """Test case for check_frames_difference."""
-    result = filter_empty_videos.check_frames_differences(frames=frames)
+    result = video_filtering.check_frames_differences(frames=frames)
     assert np.sum(result) == expected_diff_length
 
 
 @pytest.mark.usefixtures("monkeypatch")
 def test_video_process_content(monkeypatch):
     """Test case for video_process_content."""
-    monkeypatch.setattr(target=filter_empty_videos, name="convert_video_to_frames", value=MagicMock())
+    monkeypatch.setattr(target=video_filtering, name="convert_video_to_frames", value=MagicMock())
 
     returned_frame_diffs = [0, 0, 1]
 
     monkeypatch.setattr(
-        target=filter_empty_videos, name="check_frames_differences", value=MagicMock(side_effect=[returned_frame_diffs])
+        target=video_filtering, name="check_frames_differences", value=MagicMock(side_effect=[returned_frame_diffs])
     )
 
     expected = False
-    result = filter_empty_videos.video_process_content(pathlib.Path("/path/to/file"))
+    result = video_filtering.video_process_content(pathlib.Path("/path/to/file"))
     assert result == expected

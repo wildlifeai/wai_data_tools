@@ -1,13 +1,13 @@
 """CLI Group implementation."""
 import pathlib
-import shutil
 from typing import Optional
 
 import click
 import yaml
 
-from wai_data_tools import dataset_handling, filter_empty_videos, setup_logging
+from wai_data_tools import actions
 from wai_data_tools.defaults import default_config
+from wai_data_tools.utils import setup_logging
 
 
 @click.group()
@@ -30,16 +30,9 @@ def filter_empty(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
         dest: Path, where to dump the files
         dry_run: boolean
     """
-    dest.mkdir(parents=True, exist_ok=True)
-
-    for src_file in src.iterdir():
-        click.echo(f"Processing file {src_file.name} ...")
-        is_empty = filter_empty_videos.video_process_content(src_file)
-        if not is_empty:
-            dest_file = dest / src_file.name
-            click.echo(f"Moving {src_file} to {dest_file}")
-            if not dry_run:
-                shutil.copy(src_file, dest_file)
+    click.echo("Filtering empty videos...")
+    actions.filter_empty_videos(src=src, dest=dest, dry_run=dry_run)
+    click.echo("Empty videos removed!")
 
 
 @cli.command()
@@ -49,7 +42,7 @@ def filter_empty(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
 def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: pathlib.Path) -> None:
     """Create and store dataset."""
     click.echo(f"Creating dataset with name {dataset_name}")
-    dataset_handling.create_dataset(dataset_name, data_dir, label_info_path)
+    actions.create_dataset(dataset_name, data_dir, label_info_path)
     click.echo("Dataset created!")
 
 
@@ -58,21 +51,21 @@ def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: p
 def show_dataset(dataset_name: str) -> None:
     """Show dataset in FiftyOne web app."""
     click.echo("Launching app...")
-    dataset_handling.show_dataset(dataset_name)
+    actions.show_dataset(dataset_name)
     click.echo("App closed.")
 
 
 @cli.command()
 @click.option("--dataset-name", type=str)
 @click.option("--dst", type=click.Path(path_type=pathlib.Path))
-@click.option("--export-format", type=str, default=dataset_handling.EI_EXPORT_FORMAT, show_default=True)
+@click.option("--export-format", type=str, default=actions.EI_EXPORT_FORMAT, show_default=True)
 @click.option("--config-filepath", type=click.Path(path_type=pathlib.Path), default=None)
 def export_dataset(
     dataset_name: str, dst: pathlib.Path, export_format: str, config_filepath: Optional[pathlib.Path]
 ) -> None:
     """Package and export dataset to destination."""
     click.echo(f"Exporting dataset {dataset_name}...")
-    dataset_handling.export_dataset(dataset_name, dst, export_format=export_format, config_filepath=config_filepath)
+    actions.export_dataset(dataset_name, dst, export_format=export_format, config_filepath=config_filepath)
     click.echo("Dataset exported!")
 
 
@@ -81,7 +74,7 @@ def export_dataset(
 def delete_dataset(dataset_name: str) -> None:
     """Delete dataset from database."""
     click.echo(f"Deleting dataset {dataset_name}...")
-    dataset_handling.delete_dataset(dataset_name)
+    actions.delete_dataset(dataset_name)
     click.echo("Dataset deleted!")
 
 
@@ -93,7 +86,7 @@ def create_annotation_job(dataset_name: str, anno_key: str, take: int) -> None:
     """Create annotation job in CVAT."""
     click.echo(f"Creating annotation job for dataset {dataset_name}...")
     subset = take if take > 0 else None
-    dataset_handling.create_annotation_job(dataset_name, anno_key, subset)
+    actions.create_annotation_job(dataset_name, anno_key, subset)
     click.echo("Annotation job created!")
 
 
@@ -104,7 +97,7 @@ def create_annotation_job(dataset_name: str, anno_key: str, take: int) -> None:
 def read_annotations(dataset_name: str, anno_key: str, cleanup: bool) -> None:
     """Read annotations from CVAT."""
     click.echo(f"Creating annotation job for dataset {dataset_name}...")
-    dataset_handling.read_annotations(dataset_name, anno_key, cleanup)
+    actions.read_annotations(dataset_name, anno_key, cleanup)
     click.echo("Annotation job created!")
 
 
@@ -121,7 +114,7 @@ def create_config_file(dst: pathlib.Path) -> None:
 @cli.command()
 def list_datasets() -> None:
     """List datasets in fiftyone database."""
-    dataset_handling.list_datasets()
+    actions.list_datasets()
 
 
 @cli.command()
@@ -129,7 +122,7 @@ def list_datasets() -> None:
 @click.option("--config-filepath", type=click.Path(path_type=pathlib.Path, exists=True))
 def preprocess_dataset(dataset_name: str, config_filepath: pathlib.Path) -> None:
     """Preprocess videos according to config."""
-    dataset_handling.preprocess_dataset(dataset_name=dataset_name, config_filepath=config_filepath)
+    actions.preprocess_dataset(dataset_name=dataset_name, config_filepath=config_filepath)
 
 
 if __name__ == "__main__":

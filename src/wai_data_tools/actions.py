@@ -1,6 +1,7 @@
 """Script for constructing a image dataset by splitting the raw video files into frame images."""
 import logging
 import pathlib
+import shutil
 from typing import List, Optional
 
 import cv2
@@ -9,9 +10,30 @@ import pandas as pd
 import tqdm
 from fiftyone.utils.video import reencode_videos, transform_videos
 
-from wai_data_tools import config_utils, data, read_excel
+from wai_data_tools.utils import config_utils, data, read_excel, video_filtering
 
 EI_EXPORT_FORMAT = "edge_impulse"
+
+
+def filter_empty_videos(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
+    """Copy all non-empty videos to a folder specified by the user.
+
+    Args:
+        src: Path that must already exist with the videos to process
+        dest: Path, where to dump the files
+        dry_run: boolean
+    """
+    logger = logging.getLogger(__name__)
+    dest.mkdir(parents=True, exist_ok=True)
+
+    for src_file in src.iterdir():
+        logger.info("Processing file %s ...", src_file.name)
+        is_empty = video_filtering.video_process_content(src_file)
+        if not is_empty:
+            dest_file = dest / src_file.name
+            logger.info("Moving %s to %s", src_file, dest_file)
+            if not dry_run:
+                shutil.copy(src_file, dest_file)
 
 
 def add_classifications(dataset: fo.Dataset, df_labels: pd.DataFrame) -> fo.Dataset:
