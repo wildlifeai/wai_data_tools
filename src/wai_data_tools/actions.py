@@ -109,7 +109,9 @@ def delete_dataset(dataset_name: str) -> None:
     fo.delete_dataset(dataset_name, verbose=True)
 
 
-def create_annotation_job(dataset_name: str, anno_key: str, subset: Optional[int] = None):
+def create_annotation_job(
+    dataset_name: str, anno_key: str, subset: Optional[int] = None, classes: Optional[List[str]] = None
+):
     """Create annotation job in CVAT."""
     logger = logging.getLogger(__name__)
     logger.info("Creating annotation job for dataset %s with annotation key %s", dataset_name, anno_key)
@@ -117,17 +119,17 @@ def create_annotation_job(dataset_name: str, anno_key: str, subset: Optional[int
     if subset:
         logger.info("Taking subset of %s samples from dataset...", subset)
         dataset = dataset.take(subset)
-    class_set = set()
-    for sample in dataset:
-        for frame_ind in sample.frames:
-            ground_truth = sample.frames[frame_ind].ground_truth
-            if ground_truth is not None:
-                class_set.add(ground_truth.label)
-    logger.info("found classes %s", class_set)
+    if classes is None:
+        class_set = set()
+        for sample in dataset:
+            for frame_ind in sample.frames:
+                ground_truth = sample.frames[frame_ind].ground_truth
+                if ground_truth is not None:
+                    class_set.add(ground_truth.label)
+        classes = list(class_set)
+    logger.info("found classes %s", classes)
 
-    dataset.annotate(
-        anno_key=anno_key, label_field="frames.detections", label_type="detections", classes=list(class_set)
-    )
+    dataset.annotate(anno_key=anno_key, label_field="frames.detections", label_type="detections", classes=classes)
 
 
 def read_annotations(dataset_name: str, anno_key: str, cleanup: Optional[bool] = False):
