@@ -38,8 +38,8 @@ def filter_empty(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
 @cli.command()
 @click.option("--dataset-name", type=str)
 @click.option("--data-dir", type=click.Path(path_type=pathlib.Path))
-@click.option("--label-info-path", type=click.Path(path_type=pathlib.Path))
-def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: pathlib.Path) -> None:
+@click.option("--label-info-path", type=click.Path(path_type=pathlib.Path), default=None)
+def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: Optional[pathlib.Path]) -> None:
     """Create and store dataset."""
     click.echo(f"Creating dataset with name {dataset_name}")
     actions.create_dataset(dataset_name, data_dir, label_info_path)
