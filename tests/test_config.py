@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 import yaml
 
-from wai_data_tools import config_utils
+from wai_data_tools.utils import config_utils
 
 
 @pytest.mark.usefixtures("monkeypatch")

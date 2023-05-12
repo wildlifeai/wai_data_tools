@@ -1,30 +1,6 @@
-.. These are examples of badges you might want to add to your README:
-   please update the URLs accordingly
-
-    .. image:: https://readthedocs.org/projects/wai_data_tools/badge/?version=latest
-        :alt: ReadTheDocs
-        :target: https://wai_data_tools.readthedocs.io/en/stable/
-    .. image:: https://img.shields.io/coveralls/github/<USER>/wai_data_tools/main.svg
-        :alt: Coveralls
-        :target: https://coveralls.io/r/<USER>/wai_data_tools
-    .. image:: https://img.shields.io/pypi/v/wai_data_tools.svg
-        :alt: PyPI-Server
-        :target: https://pypi.org/project/wai_data_tools/
-    .. image:: https://img.shields.io/conda/vn/conda-forge/wai_data_tools.svg
-        :alt: Conda-Forge
-        :target: https://anaconda.org/conda-forge/wai_data_tools
-    .. image:: https://pepy.tech/badge/wai_data_tools/month
-        :alt: Monthly Downloads
-        :target: https://pepy.tech/project/wai_data_tools
-    .. image:: https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter
-        :alt: Twitter
-        :target: https://twitter.com/wai_data_tools
-
 .. image:: https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold
     :alt: Project generated with PyScaffold
     :target: https://pyscaffold.org/
-
-|
 
 ==============
 Wildlife Watcher Data Tools
@@ -34,50 +10,50 @@ Tools and scripts for manipulating the wildlife AI camera data to analyse the fo
 
 This repository contains good tools for formatting data for the Weta Watcher project.
 Typically you would want to use this package if you:
- - Want to format the file structure of your image files
- - Create dataset for Edge impulse image classification models
- - Split video files to image files
- - Re-label incorrect or missing images
- - Apply preprocessing transformations(TODO)
- - Convert structure to a format which is easier to upload to Edge Impulse
+
+- Want to create datasets from videos captured using camera traps
+- Annotate your dataset
+- Export for training in Edge Impulse
 
 ==========
 Installing
 ==========
 
-``pip install wai_data_tools``
+Clone this repo and install it using
+
+``pip install <path-to-repo>``
 
 =====
 Usage
 =====
 
-Generating a dataset from .mjpg to a new file structure based on labels
+You can either use the actions using python functions in scripts or notebooks or run actions using our CLI.
 
-``wildlifeai-cli dataset labels create --excel_filepath EXCEL_PATH --raw_data_root_dir YOUR_PATH --dst_root_dir SECOND_PATH``
+=====
+Actions
+=====
 
-Generating a dataset of all the frames in the .mjpg and store them as .jpg
+Supported actions:
 
-``wildlifeai-cli dataset frame create --config_filepath CONFIG_PATH --excel_filepath EXCEL_PATH --src_video_dir YOUR_PATH --dst_frame_dir SECOND_PATH``
+- filter_empty_videos: Removes videos where no movement occurs.
+- create_dataset: Creates a dataset in FiftyOne.
+- show_dataset: Launch FiftyOne App where dataset can be inspected.
+- list_datasets: List your datasets.
+- create_annotation_job: Send dataset to CVAT for annotation.
+- read_annotations: Read annotations from CVAT back to FiftyOne.
+- preprocess_dataset: Process dataset to given FPS and size.
+- export_dataset: Export dataset to disk in either a FiftyOne format or Edge Impulse.
+- delete_dataset: Delete dataset from FiftyOne.
 
-Generate a dataset for image classification in edge impulse
+All actions can be found at src/wai_data_tools_actions.py
 
-``wildlifeai-cli dataset ei create --config-filepath CONFIG_PATH --excel_filepath EXCEL_PATH --src_video_dir YOUR_PATH --dst_root_dir SECOND_PATH``
+=====
+CLI
+=====
 
-Converts a dataset to Edge impulse friendly format, from labels structure
+To check out the CLI install the package and run the following in your terminal to get started:
 
-``wildlifeai-cli dataset ei import labels --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH``
-
-Preprocessing via a configfile
-
-``wildlifeai-cli dataset preprocess --config_filepath CONFIG_PATH --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH``
-
-Filter empty videos from source directory and output in the destination directory
-
-``wildlifeai-cli dataset filter_empty --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH``
-
-Manually reclassify
-
-``wildlifeai-cli annotate classify --config_filepath CONFIG_PATH --src_root_dir YOUR_PATH --dst_root_dir SECOND_PATH``
+``wildlifeai-cli --help``
 
 .. _pyscaffold-notes:
 

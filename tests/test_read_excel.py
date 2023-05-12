@@ -4,7 +4,7 @@ from typing import Dict
 import pandas as pd
 import pytest
 
-from wai_data_tools import read_excel
+from wai_data_tools.utils import read_excel
 
 
 @pytest.mark.parametrize(

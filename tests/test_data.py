@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from wai_data_tools import data
+from wai_data_tools.utils import data
 
 
 @pytest.mark.parametrize("n_files, test_split_size, expected_indices", [[10, 0.2, np.array([2, 8])]])
