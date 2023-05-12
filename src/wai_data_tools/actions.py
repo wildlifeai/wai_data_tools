@@ -36,7 +36,7 @@ def filter_empty_videos(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) ->
                 shutil.copy(src_file, dest_file)
 
 
-def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: pathlib.Path) -> fo.Dataset:
+def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: Optional[pathlib.Path]) -> fo.Dataset:
     """Reads video files and label info into a fiftyone dataset."""
     logger = logging.getLogger(__name__)
 
@@ -56,10 +56,11 @@ def create_dataset(dataset_name: str, data_dir: pathlib.Path, label_info_path: p
     for mpeg_file in data_dir.glob("*.mpeg"):
         mpeg_file.unlink()
 
-    logger.info("Adding classifications...")
-    content = read_excel.read_excel_to_dataframe(excel_filepath=label_info_path)
-    df_labels = read_excel.stack_rows_from_dataframe_dictionary(dataframe_dict=content)
-    dataset = _add_classifications(dataset=dataset, df_labels=df_labels)
+    if label_info_path:
+        logger.info("Adding classifications...")
+        content = read_excel.read_excel_to_dataframe(excel_filepath=label_info_path)
+        df_labels = read_excel.stack_rows_from_dataframe_dictionary(dataframe_dict=content)
+        dataset = _add_classifications(dataset=dataset, df_labels=df_labels)
     dataset.persistent = True
     return dataset
 
