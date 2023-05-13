@@ -6,14 +6,15 @@
 Wildlife Watcher Data Tools
 ==============
 
-Tools and scripts for manipulating the wildlife AI camera data to analyse the footage, create your own models and transfer them to the cameras.
+Tools and scripts for working with datasets captured using the Weta Watcher camera traps.
 
 This repository contains good tools for formatting data for the Weta Watcher project.
-Typically you would want to use this package if you:
 
-- Want to create datasets from videos captured using camera traps
-- Annotate your dataset
-- Export for training in Edge Impulse
+Demo can be found here:
+
+.. image:: https://mybinder.org/badge_logo.svg
+ :target: https://mybinder.org/v2/gh/wildlifeai/wai_data_tools.git/main?labpath=notebooks%2Fwildlifeai_demo.ipynb
+
 
 ==========
 Installing
