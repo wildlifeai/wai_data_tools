@@ -168,7 +168,7 @@ def _add_classifications(dataset: fo.Dataset, df_labels: pd.DataFrame) -> fo.Dat
         label_frame_numbers += 1
         for frame_number in label_frame_numbers:
             frame = sample[int(frame_number)]
-            frame["ground_truth"] = fo.Classification(label=label)
+            frame["ground_truth"] = fo.Detection(label=label)
         sample.save()
     return dataset
 
