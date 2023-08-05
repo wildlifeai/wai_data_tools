@@ -99,7 +99,10 @@ def export_dataset(
         _export_to_edge_impulse_format(dataset, export_location=export_location, config_filepath=config_filepath)
     else:
         dataset.export(
-            export_dir=str(export_location), dataset_type=fo.types.FiftyOneVideoLabelsDataset, export_media=True
+            export_dir=str(export_location),
+            dataset_type=fo.types.FiftyOneVideoLabelsDataset,
+            export_media=True,
+            label_field="frames.ground_truth",
         )
 
 
@@ -162,13 +165,16 @@ def _add_classifications(dataset: fo.Dataset, df_labels: pd.DataFrame) -> fo.Dat
         sample_row = df_labels[df_labels["video_name"] == video_name].iloc[0]
 
         label = sample_row.label
+        if label == "nothing":
+            continue
         label_frame_numbers = data.calculate_frames_in_timespan(
             t_start=sample_row.start, t_end=sample_row.end, fps=frame_rate
         )
         label_frame_numbers += 1
         for frame_number in label_frame_numbers:
-            frame = sample[int(frame_number)]
-            frame["ground_truth"] = fo.Detection(label=label)
+            sample[int(frame_number)]["ground_truth"] = fo.Classifications(
+                classifications=[fo.Classification(label=label)]
+            )
         sample.save()
     return dataset
 
