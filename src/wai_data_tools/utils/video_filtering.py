@@ -42,11 +42,12 @@ def convert_video_to_frames(src_file: pathlib.Path):
     return frames
 
 
-def check_frames_differences(frames):
+def check_frames_differences(frames, threshold=50):
     """Return a list of differences between 2 adjacent frames.
 
     Args:
         frames: List of frames
+        threshold: Threshold for activity to use when filtering
 
     Returns:
         List of differences between any two adjacent frames
@@ -58,22 +59,23 @@ def check_frames_differences(frames):
             diff = 0
         else:
             # this gave me surprisingly good results so far
-            diff = np.sum(cv2.absdiff(frame1, frame2) >= 50)  # pylint: disable=no-member
+            diff = np.sum(cv2.absdiff(frame1, frame2) >= threshold)  # pylint: disable=no-member
         diffs.append(diff)
     return diffs
 
 
-def video_process_content(src_file: pathlib.Path) -> bool:
+def video_process_content(src_file: pathlib.Path, threshold: int = 50) -> bool:
     """Check content of the video and returns if the video is empty.
 
     Args:
         src_file: full path filename
+        threshold: Threshold for activity to use when filtering
 
     Returns:
         True if video is empty. Otherwise, False.
     """
     frames = convert_video_to_frames(src_file)
-    frame_diff = check_frames_differences(frames)
+    frame_diff = check_frames_differences(frames, threshold=threshold)
     if any(x > 0 for x in frame_diff):
         return False
     return True

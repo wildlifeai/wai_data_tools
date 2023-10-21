@@ -15,20 +15,21 @@ from wai_data_tools.utils import config_utils, data, read_excel, video_filtering
 EI_EXPORT_FORMAT = "edge_impulse"
 
 
-def filter_empty_videos(src: pathlib.Path, dest: pathlib.Path, dry_run: bool) -> None:
+def filter_empty_videos(src: pathlib.Path, dest: pathlib.Path, dry_run: bool, threshold: int = 50) -> None:
     """Copy all non-empty videos to a folder specified by the user.
 
     Args:
         src: Path that must already exist with the videos to process
         dest: Path, where to dump the files
         dry_run: boolean
+        threshold: int, difference threshold for deciding if video is empty or not
     """
     logger = logging.getLogger(__name__)
     dest.mkdir(parents=True, exist_ok=True)
 
     for src_file in src.iterdir():
         logger.info("Processing file %s ...", src_file.name)
-        is_empty = video_filtering.video_process_content(src_file)
+        is_empty = video_filtering.video_process_content(src_file, threshold=threshold)
         if not is_empty:
             dest_file = dest / src_file.name
             logger.info("Moving %s to %s", src_file, dest_file)
