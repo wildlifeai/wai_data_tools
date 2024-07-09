@@ -1,0 +1,9 @@
+﻿observationID,deploymentID,mediaID,eventID,eventStart,eventEnd,observationLevel,observationType,cameraSetupType,scientificName,taxonRank,count,lifeStage,sex,behavior,individualID,individualPositionRadius,individualPositionAngle,individualSpeed,bboxX,bboxY,bboxWidth,bboxHeight,classificationMethod,classifiedBy,classificationTimestamp,classificationProbability,observationTags,observationComments
+89bb0355,00a2c20e,89bb0355,hdsuad12,2023-12-06T04:33:28+12:00,2023-12-06T04:33:34+12:00,media,animal,,Rattus rattus,species,1,adult,,,,,,,,,,,human,Victor Anton,2024-01-09T09:39:52Z,,,
+6aa925c4,00a2c20e,6aa925c4,rrqwrw15,2023-12-06T05:33:28+12:00,2023-12-06T05:33:34+12:00,media,animal,,Rhaphidophoridae,family,1,adult,,,,,,,,,,,human,Victor Anton,2024-01-09T09:39:52Z,,,
+a4c9b59d,00a2c20e,a4c9b59d,re9kk596,2023-12-06T05:55:28+12:00,2023-12-06T05:55:34+12:00,media,animal,,Opiliones,order,1,,,,,,,,,,,,human,Victor Anton,2024-01-09T09:39:52Z,,,
+d3494c50,00a2c20e,d3494c50,3jjhh58t9,2023-12-06T06:07:28+12:00,2023-12-06T06:07:34+12:00,media,animal,,Rhaphidophoridae,family,1,adult,,,,,,,,,,,human,Victor Anton,2024-01-09T09:39:52Z,,,
+7db2bb4e,00b4q88t,e3aaf5ea,nuh588hf,2023-12-07T04:16:47+12:00,2023-12-07T04:16:53+12:00,media,animal,,Rattus norvegicus,,1,adult,,,,,,,,,,,machine,Western Europe species model Version 1,2024-07-05T11:44:15Z,0.88,,
+92aacfcf,00b4q88t,15eb0fa1,m4558hrf,2023-12-07T04:16:58+12:00,2023-12-07T04:17:04+12:00,media,animal,,Rattus norvegicus,,1,adult,,,,,,,,,,,human,Victor Anton,2024-01-09T09:39:52Z,,,
+tdd223dr,00b4q88t,,nuh5j807,2023-12-07T04:16:47+12:00,2023-12-07T04:17:04+12:00,event,animal,,Rattus norvegicus,,1,adult,,,,,,,,,,,human,Victor Anton,2024-01-09T09:39:52Z,,,
+tmmu32jw,00b4q88t,m8m5g55s,e3344n9a,2023-12-07T07:16:58+12:00,2023-12-07T07:17:04+12:00,media,blank,,,,,,,,,,,,,,,,human,Victor Anton,2024-01-09T09:39:52Z,,,

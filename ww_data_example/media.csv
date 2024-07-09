@@ -1,0 +1,8 @@
+mediaID,deploymentID,captureMethod,timestamp,filePath,filePublic,fileName,fileMediatype,exifData,favorite,mediaComments
+89bb0355,00a2c20e,activityDetection,2023-12-06T04:33:28+12:00,http://wildlife.ai/wp-content/uploads/2024/07/20231206043328-MOV000001.mp4,TRUE,20231206043328-MOV000001.mp4,video/mp4,,,
+6aa925c4,00a2c20e,activityDetection,2023-12-06T05:33:28+12:00,http://wildlife.ai/wp-content/uploads/2024/07/20231206053328-MOV000002.mp4,TRUE,20231206053328-MOV000002.mp4,video/mp4,,,
+a4c9b59d,00a2c20e,activityDetection,2023-12-06T05:55:28+12:00,http://wildlife.ai/wp-content/uploads/2024/07/20231206055428-MOV000003.mp4,TRUE,20231206055428-MOV000003.mp4,video/mp4,,,
+d3494c50,00a2c20e,activityDetection,2023-12-06T06:07:28+12:00,http://wildlife.ai/wp-content/uploads/2024/07/20231206060728-MOV000004.mp4,TRUE,20231206060728-MOV000004.mp4,video/mp4,,,
+e3aaf5ea,00b4q88t,activityDetection,2023-12-07T04:16:47+12:00,http://wildlife.ai/wp-content/uploads/2024/07/20231207041647-MOV000001.mp4,TRUE,20231207041647-MOV000001.mp4,video/mp4,,,
+15eb0fa1,00b4q88t,activityDetection,2023-12-07T04:16:58+12:00,http://wildlife.ai/wp-content/uploads/2024/07/20231207041658-MOV000002.mp4,TRUE,20231207041658-MOV000002.mp4,video/mp4,,,
+m8m5g55s,00b4q88t,activityDetection,2023-12-07T07:16:58+12:00,http://wildlife.ai/wp-content/uploads/2024/07/20231207081658-MOV000003.mp4,TRUE,20231207081658-MOV000003.mp4,video/mp4,,,

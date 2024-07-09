@@ -1,0 +1,3 @@
+deploymentID,locationID,locationName,latitude,longitude,coordinateUncertainty,deploymentStart,deploymentEnd,setupBy,cameraID,cameraModel,cameraDelay,cameraHeight,cameraDepth,cameraTilt,cameraHeading,detectionDistance,timestampIssues,baitUse,featureType,habitat,deploymentGroups,deploymentTags,deploymentComments
+00a2c20e,e254a13c,Taranaki_powell_01,-39.274444,174.065278,5,2023-12-05T15:30:20+12:00,2023-12-08T15:30:20+12:00,Lucas Larraman,WW01,WW0.1,0,0.2,,90,,0.2,FALSE,FALSE,,shrub,,,Deployed on the south side of pekura track
+00b4q88t,2df5259b,Taranaki_powell_02,-39.273056,174.065278,5,2023-12-06T11:00:54+12:00,2023-12-08T15:30:20+12:00,Lucas Larraman,WW02,WW0.1,0,0.2,,90,,0.2,FALSE,FALSE,,grassland,,,Deployed on the east hill of the valley

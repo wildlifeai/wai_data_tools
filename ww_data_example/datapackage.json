@@ -1,0 +1,143 @@
+{
+  "resources": [
+    {
+      "name": "deployments",
+      "path": "deployments.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": "https://raw.githubusercontent.com/tdwg/camtrap-dp/1.0/deployments-table-schema.json"
+    },
+    {
+      "name": "media",
+      "path": "media.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": "https://raw.githubusercontent.com/tdwg/camtrap-dp/1.0/media-table-schema.json"
+    },
+    {
+      "name": "observations",
+      "path": "observations.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "schema": "https://raw.githubusercontent.com/tdwg/camtrap-dp/1.0/observations-table-schema.json"
+    }
+  ],
+  "profile": "https://raw.githubusercontent.com/tdwg/camtrap-dp/1.0/camtrap-dp-profile.json",
+  "name": "camtrap-ww-example-dataset",
+  "id": "7cca70f5-ef8c-1111-85fb-8f070937d7ab",
+  "created": "2024-07-06T14:33:28+12:00",
+  "title": "Sample from: Powelliphanta monitring in Taranaki with the first version of the Wildlife Watchers, Aotearoa New Zealand",
+  "contributors": [
+    {
+      "title": "Victor Anton",
+      "email": "example@wildlife.ai",
+      "path": "https://orcid.org/0000-0002-1471-5571",
+      "role": "contributor",
+      "organization": "Wildlife.ai Trust"
+    }
+  ],
+  "description": "Sample of the camtrapdata collected by the Wildlife Watchers",
+  "version": "0.1.0",
+  "keywords": [
+    "camera traps",
+    "wildlife watcher",
+    "powelliphanta"
+  ],
+  "image": "",
+  "homepage": "https://wildlife.ai/projects/wildlife-watcher/",
+  "sources": [
+    {
+      "title": "Wildlife Watcher",
+      "path": "https://wildlife.ai/projects/wildlife-watcher/",
+      "email": "contact@wildlife.ai",
+      "version": "v0.1.0"
+    }
+  ],
+  "licenses": [
+    {
+      "name": "CC0-1.0",
+      "scope": "data"
+    },
+    {
+      "path": "http://creativecommons.org/licenses/by/4.0/",
+      "scope": "media"
+    }
+  ],
+  "bibliographicCitation": "Anton V (2024). Sample from: Powelliphanta monitring in Taranaki with the first version of the Wildlife Watchers, Aotearoa New Zealand. Version 0.1.0. Wildlife.ai Trust",
+  "project": {
+    "id": "7cca70f5-ef8c-1111-85fb-8f070937d7ab",
+    "title": "camtrap-ww-example-dataset",
+    "acronym": "WWSample",
+    "description": "Sample from: Powelliphanta monitring in Taranaki with the first version of the Wildlife Watchers, Aotearoa New Zealand.",
+    "samplingDesign": "random",
+    "individualAnimals": false,
+    "observationLevel": [
+      "media",
+      "event"
+    ]
+  },
+  "coordinatePrecision": 0.001,
+  "spatial": {
+    "type": "Polygon",
+    "bbox": [
+      -39.270444,
+      174.062278,
+      -39.276444,
+      174.067278
+    ],
+    "coordinates": [
+      [
+        [
+          -39.274444,
+          174.065278
+        ],
+        [
+          -39.273056,
+          174.065278
+        ]
+      ]
+    ]
+  },
+  "temporal": {
+    "start": "2023-12-05",
+    "end": "2023-12-08"
+  },
+  "taxonomic": [
+    {
+      "scientificName": "Opiliones",
+      "taxonID": "https://www.gbif.org/species/174720277",
+      "taxonRank": "order"
+    },
+    {
+      "scientificName": "Rattus rattus",
+      "taxonID": "https://treatment.plazi.org/id/1E30E27534C7FF75E1872E3B743F80AD",
+      "taxonRank": "species"
+    },
+    {
+      "scientificName": "Rhaphidophoridae",
+      "taxonID": "https://www.gbif.org/species/189926842",
+      "taxonRank": "family"
+    }
+  ],
+  "relatedIdentifiers": [
+    {
+      "relationType": "IsDerivedFrom",
+      "relatedIdentifier": "https://doi.org/10.15468/5tb6ze",
+      "resourceTypeGeneral": "Dataset",
+      "relatedIdentifierType": "DOI"
+    },
+    {
+      "relationType": "IsSupplementTo",
+      "relatedIdentifier": "https://inbo.github.io/camtraptor/",
+      "resourceTypeGeneral": "Software",
+      "relatedIdentifierType": "URL"
+    }
+  ],
+  "references": []
+}
